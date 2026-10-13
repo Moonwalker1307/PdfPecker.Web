@@ -73,6 +73,8 @@ jobs:
           done
           curl -fsS http://localhost:8080/health
           curl -fsS http://localhost:8080/ -o /dev/null
+          curl -fsS http://localhost:8080/html-to-pdf/ -o /dev/null
+          curl -fsS http://localhost:8080/markdown/ -o /dev/null
           docker rm -f web
 
       - name: Package

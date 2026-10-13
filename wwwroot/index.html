@@ -3,71 +3,288 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PdfPecker – HTML and Markdown to PDF</title>
-<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="site.css">
+<title>PdfPecker · Fast HTML to PDF for .NET</title>
+<meta name="description" content="PdfPecker is a fast, dependency-free HTML and Markdown to PDF library for .NET. No browser, no native binaries, no third-party packages.">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/site.css">
 </head>
-<body>
-<header>
-  <h1><img class="logo" src="logo.png" alt="" width="40" height="40">PdfPecker</h1>
-  <span class="tag">HTML and Markdown to PDF in milliseconds. Nothing is stored.</span>
+<body class="home">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="PdfPecker home"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
+  <nav aria-label="Main">
+    <a href="/" aria-current="page">Home</a>
+    <a href="/html-to-pdf/">HTML to PDF</a>
+    <a href="/markdown/">Markdown</a>
+    <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
+    <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
+  </nav>
 </header>
 
-<div class="toolbar">
-  <label>Example
-    <select id="example">
-      <option value="invoice">Invoice</option>
-      <option value="article">Article</option>
-      <option value="readme">Markdown README</option>
-      <option value="blank">Blank</option>
-    </select>
-  </label>
-  <label>Input
-    <select id="inputFormat">
-      <option value="html">HTML</option>
-      <option value="markdown">Markdown</option>
-    </select>
-  </label>
-  <label>Output
-    <select id="output">
-      <option value="pdf">PDF</option>
-      <option value="html" disabled>HTML</option>
-    </select>
-  </label>
-  <label>Page
-    <select id="pageSize">
-      <option>A4</option><option>Letter</option><option>Legal</option><option>A3</option><option>A5</option>
-    </select>
-  </label>
-  <label><input type="checkbox" id="landscape"> Landscape</label>
-  <label>Margin (mm) <input type="number" id="margin" value="12.7" min="0" max="50" step="0.1"></label>
-  <label><input type="checkbox" id="pageNumbers" checked> Page numbers</label>
-  <label>Watermark <input type="text" id="watermark" size="10" maxlength="200" placeholder="none"></label>
-  <label>Password <input type="password" id="password" size="8" autocomplete="new-password" placeholder="none"></label>
-  <label title="Archival PDF/A-2b; cannot be combined with a password"><input type="checkbox" id="pdfa"> PDF/A</label>
-  <span class="spacer"></span>
-  <label class="button" for="file">Open file</label>
-  <input type="file" id="file" accept=".html,.htm,.md,.markdown,text/html,text/markdown" hidden>
-  <button class="primary" id="convert" title="Ctrl+Enter">Convert</button>
-</div>
-
-<main>
-  <section class="pane">
-    <div class="pane-head"><span id="inputLabel">HTML</span> <span class="spacer"></span><span>Drop an .html or .md file here, or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to convert</span></div>
-    <textarea id="html" spellcheck="false" aria-label="Document to convert"></textarea>
-  </section>
-  <section class="pane">
-    <div class="pane-head">
-      <span id="outputLabel">PDF</span> <span class="status" id="status"></span>
-      <span class="spacer"></span>
-      <a class="button" id="download" hidden>Download</a>
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Open source · MIT · .NET 10</p>
+        <h1>HTML to PDF in <em>under a millisecond</em>.</h1>
+        <p class="lead">PdfPecker turns HTML and Markdown into PDFs, and PDFs into images, from plain .NET.
+          No browser to start, no native binaries to ship, no third-party packages. Just one small DLL.</p>
+        <div class="cta">
+          <a class="button primary big" href="/html-to-pdf/">Try it in your browser</a>
+          <a class="button ghost big" href="https://www.nuget.org/packages/PdfPecker">Get it on NuGet</a>
+          <a class="button ghost big" href="https://github.com/Moonwalker1307/PdfPecker">View on GitHub</a>
+        </div>
+        <div class="install">
+          <code>dotnet add package PdfPecker</code>
+          <button type="button" class="copy" data-copy="dotnet add package PdfPecker" aria-label="Copy the install command">Copy</button>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="/logo-large.png" alt="PdfPecker: a pixel-art woodpecker pecking a PDF" width="480" height="480">
+      </div>
     </div>
-    <div class="empty" id="empty">Your PDF will appear here.</div>
-    <iframe id="preview" title="Preview" hidden></iframe>
+  </section>
+
+  <section class="stats" aria-label="At a glance">
+    <div class="wrap stat-grid">
+      <div class="stat"><b>0.86 ms</b><span>for a one-page invoice</span></div>
+      <div class="stat"><b>962</b><span>documents a second on 4 cores</span></div>
+      <div class="stat"><b>83 MB</b><span>peak memory under load</span></div>
+      <div class="stat"><b>0</b><span>dependencies beyond .NET</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <h2>Three lines to your first PDF</h2>
+        <p>Every method is static and thread-safe, so you can convert many documents at once. Write the HTML the way you
+          already do, with modern CSS, and get a PDF back as bytes, a stream or a file.</p>
+        <ul class="checks">
+          <li>Runs wherever .NET 10 runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
+          <li>Pure managed code: a 3.1 MB DLL instead of a 600 MB browser</li>
+          <li>Never touches the network or your files unless you allow it</li>
+        </ul>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span class="dots"><i></i><i></i><i></i></span>Program.cs</div>
+<pre><code class="cs">using PdfPecker;
+
+byte[] pdf = HtmlToPdf.Convert("&lt;h1&gt;Hello&lt;/h1&gt;&lt;p&gt;World&lt;/p&gt;");
+File.WriteAllBytes("hello.pdf", pdf);
+
+// Or straight from ASP.NET Core
+app.MapGet("/invoice", () =&gt;
+    Results.File(HtmlToPdf.Convert(html), "application/pdf", "invoice.pdf"));</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <h2 class="center">Everything a business document needs</h2>
+      <p class="center sub">Built for invoices, payslips, reports, tickets and statements: the templates you control.</p>
+      <div class="features">
+        <article class="feature"><span class="icon" aria-hidden="true">🎨</span><h3>Modern CSS</h3>
+          <p>Flexbox, grid, <code>var()</code>, <code>calc()</code>, transforms, gradients, rounded corners, shadows, opacity and <code>@page</code>.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">📝</span><h3>Markdown</h3>
+          <p>CommonMark 0.31 plus GitHub tables, task lists and strikethrough. Out comes a styled PDF or HTML page.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🔤</span><h3>Real fonts</h3>
+          <p>TrueType, OpenType, WOFF and WOFF2, subset and embedded, with kerning, ligatures and full Unicode.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">📄</span><h3>Proper paging</h3>
+          <p>Running headers and footers with page numbers, repeated table headers, orphans, widows and break control.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🖼️</span><h3>Images and SVG</h3>
+          <p>PNG, JPEG, GIF and WebP, and SVG drawn as crisp vectors, inline or from files.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🔒</span><h3>PDF/A and passwords</h3>
+          <p>Archival PDF/A-2b and 3b, AES-256 encryption, permissions and watermarks.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">✍️</span><h3>Digital signatures</h3>
+          <p>PAdES signatures with your certificate, visible signature boxes and trusted timestamps.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🧾</span><h3>E-invoices</h3>
+          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🗂️</span><h3>Merge PDFs</h3>
+          <p>Combine any PDFs, streamed one at a time, with links, bookmarks and form fields kept.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image</h3>
+          <p>Its own renderer turns any PDF page into a PNG, with no Ghostscript or native code.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🔗</span><h3>Links and bookmarks</h3>
+          <p>Clickable links, jumps inside the document, and bookmarks from your headings.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🛡️</span><h3>Safe by default</h3>
+          <p>No JavaScript, no network, no file access unless allowed, page limits and cancellation for untrusted input.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="center">Fast. Really fast.</h2>
+      <p class="center sub">Documents a second with one conversion per core on a 4-core cloud VM, on a 5-page document.</p>
+      <div class="bars" role="img" aria-label="Documents per second: PdfPecker 962, HtmlRenderer.PdfSharp 88, wkhtmltopdf 12, PuppeteerSharp 12, Playwright 11">
+        <div class="bar win"><span class="name">PdfPecker</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">962</span></div>
+        <div class="bar"><span class="name">HtmlRenderer.PdfSharp</span><span class="track"><span class="fill" style="width:9.15%"></span></span><span class="val">88</span></div>
+        <div class="bar"><span class="name">wkhtmltopdf</span><span class="track"><span class="fill" style="width:1.25%"></span></span><span class="val">12</span></div>
+        <div class="bar"><span class="name">PuppeteerSharp</span><span class="track"><span class="fill" style="width:1.25%"></span></span><span class="val">12</span></div>
+        <div class="bar"><span class="name">Playwright</span><span class="track"><span class="fill" style="width:1.14%"></span></span><span class="val">11</span></div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="compare">
+          <thead><tr><th scope="col">Converter</th><th scope="col">Engine</th><th scope="col">To deploy</th><th scope="col">Invoice, 1 page</th><th scope="col">Report, 30 pages</th><th scope="col">Peak memory</th></tr></thead>
+          <tbody>
+            <tr class="win"><th scope="row">PdfPecker</th><td data-label="Engine">own, managed</td><td data-label="To deploy">3.1 MB DLL</td><td data-label="Invoice, 1 page">0.86 ms</td><td data-label="Report, 30 pages">39 ms</td><td data-label="Peak memory">83 MB</td></tr>
+            <tr><th scope="row">HtmlRenderer.PdfSharp</th><td data-label="Engine">own, managed (CSS 2)</td><td data-label="To deploy">2.4 MB of DLLs</td><td data-label="Invoice, 1 page">5.0 ms</td><td data-label="Report, 30 pages">473 ms</td><td data-label="Peak memory">255 MB</td></tr>
+            <tr><th scope="row">wkhtmltopdf</th><td data-label="Engine">Qt WebKit, native</td><td data-label="To deploy">about 90 MB</td><td data-label="Invoice, 1 page">289 ms</td><td data-label="Report, 30 pages">693 ms</td><td data-label="Peak memory">164 MB</td></tr>
+            <tr><th scope="row">PuppeteerSharp</th><td data-label="Engine">Chromium</td><td data-label="To deploy">about 600 MB</td><td data-label="Invoice, 1 page">128 ms</td><td data-label="Report, 30 pages">539 ms</td><td data-label="Peak memory">849 MB</td></tr>
+            <tr><th scope="row">Playwright</th><td data-label="Engine">Chromium</td><td data-label="To deploy">browser + 135 MB</td><td data-label="Invoice, 1 page">142 ms</td><td data-label="Report, 30 pages">522 ms</td><td data-label="Peak memory">986 MB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Medians after warm-up, Linux, .NET 10. Chromium runs JavaScript and is the reference for CSS; PdfPecker does not run scripts.
+        <a href="https://github.com/Moonwalker1307/PdfPecker#how-it-compares">How it was measured</a></p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <h2 class="center">A tour of the API</h2>
+      <div class="tabs" role="tablist" aria-label="Code examples">
+        <button role="tab" aria-selected="true" aria-controls="tab-md" id="t-md">Markdown</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-opt" id="t-opt" tabindex="-1">Options</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-fonts" id="t-fonts" tabindex="-1">Fonts</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-sec" id="t-sec" tabindex="-1">PDF/A</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-merge" id="t-merge" tabindex="-1">Merge</button>
+        <button role="tab" aria-selected="false" aria-controls="tab-img" id="t-img" tabindex="-1">To image</button>
+      </div>
+      <div class="code-card tab-panel" role="tabpanel" id="tab-md" aria-labelledby="t-md">
+        <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
+<pre><code class="cs">// Markdown to PDF, styled like a GitHub README
+byte[] pdf = MarkdownToPdf.Convert(File.ReadAllText("README.md"));
+
+// Markdown to HTML: a body fragment, or a complete page with the stylesheet
+string fragment = MarkdownToHtml.Convert("# Hello\n\n*World*");
+string page = MarkdownToHtml.ConvertDocument(markdown);</code></pre>
+      </div>
+      <div class="code-card tab-panel" role="tabpanel" id="tab-opt" aria-labelledby="t-opt" hidden>
+        <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
+<pre><code class="cs">var options = new PdfOptions
+{
+    PageSize = PageSize.Letter.Landscape,
+    Margins = PageMargins.FromMillimeters(20, 15, 20, 15),
+    BaseDirectory = "/var/app/templates",       // where relative images and stylesheets come from
+    FooterText = "Page {page} of {pages}",
+    Title = "Invoice 42", Author = "Accounts",
+    MaxPages = 1000,
+};
+byte[] pdf = HtmlToPdf.Convert(html, options);</code></pre>
+      </div>
+      <div class="code-card tab-panel" role="tabpanel" id="tab-fonts" aria-labelledby="t-fonts" hidden>
+        <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
+<pre><code class="cs">var options = new PdfOptions();
+options.Fonts.AddFile("fonts/OpenSans-Regular.ttf")
+             .AddFile("fonts/OpenSans-Bold.ttf");   // only the glyphs you use are embedded
+
+byte[] pdf = HtmlToPdf.Convert(
+    "&lt;p style=\"font-family: 'Open Sans'\"&gt;Łódź, Ελλάδα, Москва&lt;/p&gt;", options);</code></pre>
+      </div>
+      <div class="code-card tab-panel" role="tabpanel" id="tab-sec" aria-labelledby="t-sec" hidden>
+        <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
+<pre><code class="cs">var archived = new PdfOptions { Conformance = PdfConformance.PdfA2b };
+
+var secret = new PdfOptions
+{
+    Watermark = new PdfWatermark { Text = "CONFIDENTIAL", Opacity = 0.25f },
+    Security = new PdfSecurity { UserPassword = "1234", Permissions = PdfPermissions.Print },
+};
+
+var eInvoice = new PdfOptions { EInvoice = new PdfEInvoice(File.ReadAllBytes("invoice.xml")) };</code></pre>
+      </div>
+      <div class="code-card tab-panel" role="tabpanel" id="tab-merge" aria-labelledby="t-merge" hidden>
+        <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
+<pre><code class="cs">byte[] merged = PdfMerger.Merge(invoicePdf, termsPdf, attachmentPdf);
+
+// Streams in and out: one input in memory at a time
+await PdfMerger.MergeAsync(uploads.Select(f =&gt; f.OpenReadStream()), response.Body);</code></pre>
+      </div>
+      <div class="code-card tab-panel" role="tabpanel" id="tab-img" aria-labelledby="t-img" hidden>
+        <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
+<pre><code class="cs">// Every page as PNG bytes, rendered in parallel
+byte[][] pages = PdfToImage.Convert(pdfBytes, new ImageOptions { Dpi = 150 });
+
+// report.pdf -&gt; out/report-1.png, out/report-2.png, ...
+PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="center">Try it right here</h2>
+      <p class="center sub">Converted on our server in milliseconds and sent straight back. Nothing is stored.</p>
+      <div class="tools">
+        <a class="tool" href="/html-to-pdf/">
+          <span class="icon" aria-hidden="true">🧾</span>
+          <h3>HTML to PDF</h3>
+          <p>Paste HTML or drop a file, then set any PdfOptions setting: page, header and footer, watermark, password, PDF/A and more.</p>
+          <span class="go">Open the converter →</span>
+        </a>
+        <a class="tool" href="/markdown/">
+          <span class="icon" aria-hidden="true">📝</span>
+          <h3>Markdown to HTML or PDF</h3>
+          <p>Write Markdown and get a clean PDF, or a complete HTML page with its stylesheet.</p>
+          <span class="go">Open the converter →</span>
+        </a>
+        <a class="tool" href="/html-to-pdf/?output=png">
+          <span class="icon" aria-hidden="true">📸</span>
+          <h3>Images</h3>
+          <p>Render each page to a PNG at the resolution you need, for previews, thumbnails or chat.</p>
+          <span class="go">Make images →</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap split fit">
+      <div>
+        <h2>Made for templates you control</h2>
+        <p>PdfPecker is a document engine, not a web browser. That is what makes it fast and small.</p>
+      </div>
+      <div class="fit-grid">
+        <div class="fit-card yes"><h3>Great for</h3>
+          <ul><li>Invoices, payslips and receipts</li><li>Reports and statements</li><li>Tickets, labels and letters</li><li>Docs and READMEs from Markdown</li></ul></div>
+        <div class="fit-card no"><h3>Not for</h3>
+          <ul><li>Pages that need JavaScript to render</li><li>Screenshots of live websites</li><li>Fetching images from the web on its own</li><li>Right-to-left and complex scripts (yet)</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Peck your first PDF.</h2>
+      <div class="install">
+        <code>dotnet add package PdfPecker</code>
+        <button type="button" class="copy" data-copy="dotnet add package PdfPecker" aria-label="Copy the install command">Copy</button>
+      </div>
+      <div class="cta">
+        <a class="button primary big" href="https://github.com/Moonwalker1307/PdfPecker#readme">Read the docs</a>
+        <a class="button ghost big" href="/html-to-pdf/">Open the converter</a>
+      </div>
+    </div>
   </section>
 </main>
 
-<script src="app.js"></script>
+<footer class="site-footer">
+  <div class="wrap">
+    <span>PdfPecker is open source under the MIT license.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
+      <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
+      <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/LICENSE">License</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/home.js"></script>
 </body>
 </html>
