@@ -3,6 +3,13 @@ const $ = id => document.getElementById(id);
 const mode = document.body.dataset.input; // "html" or "markdown"
 const editor = $("source"), statusEl = $("status"), convertBtn = $("convert"), form = $("settingsForm");
 const MAX_IMAGE_PAGES = 10;
+// Safari (and every browser on iOS) leaves a PDF in a frame blank or shows only its first page, and Android has no
+// built-in PDF viewer, so there the PDF preview shows the pages as images from the image API instead.
+const ua = navigator.userAgent;
+const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isSafari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(ua);
+const pdfAsImages = isIOS || isSafari || navigator.pdfViewerEnabled === false;
+const PDF_PREVIEW_PAGES = 5;
 let urls = [], fileName = "document", lastPdf = null, run = 0;
 let wmImage = null, eInvoiceXml = null; // files picked in the settings
 
@@ -245,9 +252,16 @@ async function convert() {
     let summary;
     if (o === "png") {
       lastPdf = blob;
-      const pages = await renderImages(blob, thisRun);
+      const pages = await renderImages(blob, thisRun, MAX_IMAGE_PAGES, $("dpi").value, true);
       if (thisRun !== run) return;
       summary = pages === 1 ? "1 page" : `${pages} pages`;
+      dl.removeAttribute("download");
+      if (pages === 1) {
+        dl.href = $("images").querySelector("img").src;
+        dl.download = fileName + ".png";
+      } else {
+        dl.href = "#zip";
+      }
       dl.textContent = pages === 1 ? "Download PNG" : "Download all (ZIP)";
     } else {
       const u = blobUrl(blob);
@@ -257,15 +271,21 @@ async function convert() {
         $("preview").style.background = "#fff";
         $("htmlSource").textContent = await blob.text();
         $("viewSource").hidden = false;
+        $("preview").src = u;
+        showOnly($("viewSource").getAttribute("aria-pressed") === "true" ? "htmlSource" : "preview");
+      } else if (pdfAsImages) {
+        const pages = await renderImages(blob, thisRun, PDF_PREVIEW_PAGES, 150, false);
+        if (thisRun !== run) return;
+        if (pages > PDF_PREVIEW_PAGES) $("images").lastChild.textContent = `Showing the first ${PDF_PREVIEW_PAGES} of ${pages} pages. Download the PDF for all of them.`;
       } else {
         $("preview").removeAttribute("sandbox");
         $("preview").style.background = "";
+        $("preview").src = u;
+        showOnly("preview");
       }
-      $("preview").src = u;
-      showOnly($("viewSource").getAttribute("aria-pressed") === "true" && o === "html" ? "htmlSource" : "preview");
       dl.href = u;
       dl.download = fileName + "." + o;
-      dl.textContent = "Download";
+      dl.textContent = o === "pdf" ? "Download PDF" : "Download";
       summary = (blob.size / 1024).toFixed(1) + " KB";
     }
     if (o !== "html") $("viewSource").hidden = true;
@@ -287,17 +307,18 @@ function imageForm(pdf) {
   return body;
 }
 
-// Renders the PDF's pages to PNG with the image API, one request per page, and shows them.
-async function renderImages(pdf, thisRun) {
+// Renders up to limit pages of the PDF to PNG with the image API, one request per page, and shows them. Returns the
+// PDF's page count. pageLinks adds a download link under each page.
+async function renderImages(pdf, thisRun, limit, dpi, pageLinks) {
   const box = $("images");
   const page = async n => {
-    const q = new URLSearchParams({ page: n, dpi: $("dpi").value });
+    const q = new URLSearchParams({ page: n, dpi });
     const res = await fetch("/api/pdf-to-image?" + q, { method: "POST", body: imageForm(pdf) });
     if (!res.ok) throw await problem(res);
     return { png: await res.blob(), count: parseInt(res.headers.get("X-Page-Count"), 10) || 1 };
   };
   const first = await page(1);
-  const shown = Math.min(first.count, MAX_IMAGE_PAGES);
+  const shown = Math.min(first.count, limit);
   const pngs = [first.png];
   for (let n = 2; n <= shown && thisRun === run; n++) pngs.push((await page(n)).png);
   if (thisRun !== run) return first.count;
@@ -308,11 +329,15 @@ async function renderImages(pdf, thisRun) {
     img.src = u;
     img.alt = `Page ${i + 1}`;
     const cap = document.createElement("figcaption");
-    const a = document.createElement("a");
-    a.href = u;
-    a.download = `${fileName}-${i + 1}.png`;
-    a.textContent = `Page ${i + 1} · ${(png.size / 1024).toFixed(0)} KB`;
-    cap.append(a);
+    if (pageLinks) {
+      const a = document.createElement("a");
+      a.href = u;
+      a.download = `${fileName}-${i + 1}.png`;
+      a.textContent = `Page ${i + 1} · ${(png.size / 1024).toFixed(0)} KB`;
+      cap.append(a);
+    } else {
+      cap.textContent = `Page ${i + 1}`;
+    }
     fig.append(img, cap);
     return fig;
   }));
@@ -321,14 +346,6 @@ async function renderImages(pdf, thisRun) {
     more.className = "more";
     more.textContent = `Showing the first ${shown} of ${first.count} pages. Download all of them as a ZIP.`;
     box.append(more);
-  }
-  const dl = $("download");
-  dl.removeAttribute("download");
-  if (first.count === 1) {
-    dl.href = box.querySelector("img").src;
-    dl.download = fileName + ".png";
-  } else {
-    dl.href = "#zip";
   }
   showOnly("images");
   return first.count;
