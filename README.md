@@ -7,8 +7,8 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
 ([source](https://github.com/Moonwalker1307/PdfPecker)). The static pages in `wwwroot` are:
 
 - `/` (`index.html`): the home page, introducing the library.
-- `/html-to-pdf/`: paste or open an `.html` file (or drag one onto the page), pick page size, orientation, margins,
-  page numbers, watermark, password or PDF/A, and preview or download the PDF or PNG images of its pages.
+- `/html-to-pdf/`: paste or open an `.html` file (or drag one onto the page), set any `PdfOptions` setting in the
+  settings panel (and copy them as C#), and preview or download the PDF or PNG images of its pages.
 - `/markdown/`: the same for Markdown, which can also be converted to HTML.
 
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
@@ -42,6 +42,20 @@ curl -X POST http://localhost:8080/api/pdf-to-image -F "file=@report.pdf" -o pag
 `POST /api/convert` also accepts JSON: `{ "html": "...", "pageSize": "A4", "landscape": false, "marginMm": 12.7, "pageNumbers": true }`.
 Add `watermark` (text stamped on every page), `password` (AES-256, needed to open the PDF) or `pdfa: true` (PDF/A-2b) in
 any of the three forms; send passwords in the form or JSON body rather than the query string, which servers tend to log.
+
+The JSON form also takes an `options` object with the rest of `PdfOptions` that is safe to take from a visitor:
+page size (or `pageWidthMm`/`pageHeightMm`), `landscape`, the four `margin*Mm`, `scale`, `headerText`, `footerText`,
+`userStyleSheet`, `embedStandardFonts`, `watermark` (text or base64 image, font, colour, opacity, angle, ...),
+`security` (passwords and `permissions` by name), `conformance`, `eInvoiceXml`, the document properties,
+`customProperties`, `bookmarks`, `compress`, `compressionLevel` and `maxPages` (at most 1,000). Every value is checked
+and anything out of range is refused with a 400. Fonts are always the standard ones: registered fonts, system fonts,
+file access, resource loading and signatures cannot be turned on from a request, and the HTML never runs scripts or
+reaches the network.
+
+```
+curl -X POST http://localhost:8080/api/convert -H "Content-Type: application/json" \
+     -d '{"html":"<h1>Hi</h1>","options":{"pageSize":"Letter","footerText":"Page {page} of {pages}","watermark":{"text":"DRAFT"}}}' -o hi.pdf
+```
 
 Markdown works the same way. The input is read as Markdown when it is uploaded as a `.md`/`.markdown` file, sent as
 `"markdown"` in JSON or as a `markdown` form field, posted with `Content-Type: text/markdown`, or marked with

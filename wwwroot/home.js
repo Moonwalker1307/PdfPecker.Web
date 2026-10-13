@@ -2,7 +2,8 @@
 for (const b of document.querySelectorAll("button.copy")) {
   b.addEventListener("click", async () => {
     try {
-      await navigator.clipboard.writeText(b.dataset.copy);
+      // Install buttons say what to copy; code buttons copy the code next to them.
+      await navigator.clipboard.writeText(b.dataset.copy ?? b.parentElement.querySelector("code").textContent);
       b.textContent = "Copied!";
     } catch {
       b.textContent = "Select and copy";

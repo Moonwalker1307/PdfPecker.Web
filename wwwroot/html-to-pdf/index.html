@@ -4,20 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HTML to PDF converter · PdfPecker</title>
-<meta name="description" content="Convert HTML to PDF or PNG images in your browser with PdfPecker. Nothing is stored.">
+<meta name="description" content="Convert HTML to PDF or PNG images in your browser with PdfPecker, with every PdfOptions setting. Nothing is stored.">
 <meta name="theme-color" content="#0b0b0f">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/site.css">
 </head>
 <body class="app" data-input="html">
+<a class="skip" href="#source">Skip to the editor</a>
 <header class="site-header">
-  <a class="brand" href="/"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
+  <a class="brand" href="/" aria-label="PdfPecker home"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
   <nav aria-label="Main">
     <a href="/">Home</a>
     <a href="/html-to-pdf/" aria-current="page">HTML to PDF</a>
     <a href="/markdown/">Markdown</a>
-    <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
+    <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
+    <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
   </nav>
 </header>
 
@@ -47,33 +49,18 @@
   <span class="spacer"></span>
   <label class="button" for="file">Open file</label>
   <input type="file" id="file" accept=".html,.htm,text/html" hidden>
+  <button type="button" id="settingsToggle" aria-expanded="false" aria-controls="settings">PDF settings <span class="badge" id="changedCount" hidden></span></button>
   <button class="primary" id="convert" title="Ctrl+Enter">Convert</button>
-  <details id="options">
-    <summary>Page options</summary>
-    <div class="option-list">
-      <label>Page
-        <select id="pageSize">
-          <option>A4</option><option>Letter</option><option>Legal</option><option>A3</option><option>A5</option>
-        </select>
-      </label>
-      <label><input type="checkbox" id="landscape"> Landscape</label>
-      <label>Margin (mm) <input type="number" id="margin" value="12.7" min="0" max="50" step="0.1"></label>
-      <label><input type="checkbox" id="pageNumbers" checked> Page numbers</label>
-      <label>Watermark <input type="text" id="watermark" size="10" maxlength="200" placeholder="none"></label>
-      <label>Password <input type="password" id="password" size="8" autocomplete="new-password" placeholder="none"></label>
-      <label title="Archival PDF/A-2b; cannot be combined with a password"><input type="checkbox" id="pdfa"> PDF/A</label>
-    </div>
-  </details>
 </div>
 
-<main class="panes">
+<main class="panes" id="panes">
   <section class="pane">
     <div class="pane-head"><span>HTML</span><span class="spacer"></span><span class="hint">Drop an .html file here, or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
     <textarea id="source" spellcheck="false" aria-label="HTML to convert"></textarea>
   </section>
   <section class="pane">
     <div class="pane-head">
-      <span id="outputLabel">PDF</span> <span class="status" id="status" role="status"></span>
+      <span id="outputLabel">PDF</span> <span class="status" id="status" role="status" aria-live="polite"></span>
       <span class="spacer"></span>
       <button type="button" class="small" id="viewSource" aria-pressed="false" hidden>Show code</button>
       <a class="button small" id="download" hidden>Download</a>
@@ -83,6 +70,119 @@
     <div class="images" id="images" hidden></div>
     <pre class="html-source" id="htmlSource" hidden></pre>
   </section>
+
+  <aside class="settings" id="settings" hidden aria-labelledby="settingsTitle">
+    <div class="settings-head">
+      <h2 id="settingsTitle">PDF settings</h2>
+      <span class="spacer"></span>
+      <button type="button" class="small" id="resetSettings">Reset</button>
+      <button type="button" class="small icon-only" id="closeSettings" aria-label="Close settings">✕</button>
+    </div>
+    <form class="settings-body" id="settingsForm" autocomplete="off">
+      <p class="settings-note">Every option of <code>PdfOptions</code> you can safely set from a browser. Fonts are the
+        standard ones (Helvetica, Times and Courier); the server never reads its own files for your document.</p>
+
+      <details open><summary>Page</summary>
+        <div class="grid2">
+          <label class="field">Size
+            <select name="pageSize" id="pageSize">
+              <option>A4</option><option>Letter</option><option>Legal</option><option>A3</option><option>A5</option><option value="custom">Custom…</option>
+            </select></label>
+          <label class="check"><input type="checkbox" name="landscape"> Landscape</label>
+          <label class="field custom-size" hidden>Width (mm)<input type="number" name="pageWidthMm" value="210" min="50" max="2000" step="0.1"></label>
+          <label class="field custom-size" hidden>Height (mm)<input type="number" name="pageHeightMm" value="297" min="50" max="2000" step="0.1"></label>
+        </div>
+        <fieldset class="margins"><legend>Margins (mm)</legend>
+          <label>Top<input type="number" name="marginTopMm" value="12.7" min="0" max="100" step="0.1"></label>
+          <label>Right<input type="number" name="marginRightMm" value="12.7" min="0" max="100" step="0.1"></label>
+          <label>Bottom<input type="number" name="marginBottomMm" value="12.7" min="0" max="100" step="0.1"></label>
+          <label>Left<input type="number" name="marginLeftMm" value="12.7" min="0" max="100" step="0.1"></label>
+        </fieldset>
+        <label class="field">Scale <small>0.1 to 2, like Chrome's print scale</small><input type="number" name="scale" value="1" min="0.1" max="2" step="0.01"></label>
+        <label class="check"><input type="checkbox" name="ignoreCssPageRules"> Ignore <code>@page</code> size and margins in the CSS</label>
+        <label class="check"><input type="checkbox" name="truncateBandsToWholePoints"> Round header and footer heights down to whole points</label>
+      </details>
+
+      <details><summary>Header and footer</summary>
+        <label class="field">Header text<input type="text" name="headerText" maxlength="300" placeholder="none"></label>
+        <label class="field">Footer text<input type="text" name="footerText" maxlength="300" value="Page {page} of {pages}"></label>
+        <p class="help"><code>{page}</code> and <code>{pages}</code> become the page number and page count.</p>
+      </details>
+
+      <details><summary>Fonts and CSS</summary>
+        <label class="check"><input type="checkbox" name="embedStandardFonts"> Embed the fonts <small>(Liberation copies of Helvetica, Times and Courier; adds Greek, Cyrillic and Central European)</small></label>
+        <label class="field">Extra CSS <small>applied after the document's own</small><textarea name="userStyleSheet" rows="4" maxlength="100000" spellcheck="false" placeholder="body { font-size: 10pt }"></textarea></label>
+      </details>
+
+      <details><summary>Watermark</summary>
+        <label class="field">Text<input type="text" name="wmText" maxlength="200" placeholder="e.g. DRAFT"></label>
+        <label class="field">Or an image <small>PNG, JPEG, GIF or WebP, up to 2 MB</small><input type="file" id="wmImage" accept="image/png,image/jpeg,image/gif,image/webp"></label>
+        <div class="grid2">
+          <label class="field">Font
+            <select name="wmFontFamily"><option value="sans-serif">Helvetica</option><option value="serif">Times</option><option value="monospace">Courier</option></select></label>
+          <label class="field">Colour<span class="color-row"><input type="color" name="wmColor" value="#808080"></span></label>
+          <label class="field">Size (pt) <small>0 = fit</small><input type="number" name="wmFontSize" value="0" min="0" max="300"></label>
+          <label class="field">Angle (°) <small>empty = diagonal</small><input type="number" name="wmAngle" min="-360" max="360" placeholder="auto"></label>
+          <label class="field">Letter spacing<input type="number" name="wmLetterSpacing" value="0" min="-20" max="100" step="0.5"></label>
+          <label class="field">Image width (pt) <small>0 = half</small><input type="number" name="wmImageWidth" value="0" min="0" max="2000"></label>
+        </div>
+        <label class="field">Opacity <output id="wmOpacityOut">0.3</output><input type="range" name="wmOpacity" min="0" max="1" step="0.05" value="0.3"></label>
+        <label class="check"><input type="checkbox" name="wmBold" checked> Bold</label>
+        <label class="check"><input type="checkbox" name="wmBehind"> Behind the content</label>
+      </details>
+
+      <details><summary>Password and permissions</summary>
+        <label class="field">Password to open<input type="password" name="userPassword" maxlength="128" autocomplete="new-password" placeholder="none"></label>
+        <label class="field">Owner password <small>empty = random</small><input type="password" name="ownerPassword" maxlength="128" autocomplete="new-password" placeholder="none"></label>
+        <fieldset class="perms"><legend>With a password, allow</legend>
+          <label class="check"><input type="checkbox" name="perm" value="Print" checked> Printing</label>
+          <label class="check"><input type="checkbox" name="perm" value="PrintHighQuality" checked> High-quality printing</label>
+          <label class="check"><input type="checkbox" name="perm" value="Copy"> Copying text</label>
+          <label class="check"><input type="checkbox" name="perm" value="Modify"> Changing content</label>
+          <label class="check"><input type="checkbox" name="perm" value="Annotate"> Comments</label>
+          <label class="check"><input type="checkbox" name="perm" value="FillForms"> Filling in forms</label>
+          <label class="check"><input type="checkbox" name="perm" value="Assemble"> Rearranging pages</label>
+          <label class="check"><input type="checkbox" name="perm" value="ExtractForAccessibility" checked> Screen readers</label>
+        </fieldset>
+      </details>
+
+      <details><summary>PDF/A and e-invoice</summary>
+        <label class="field">Archival format
+          <select name="conformance"><option value="None">None</option><option value="PdfA2b">PDF/A-2b</option><option value="PdfA3b">PDF/A-3b</option></select></label>
+        <p class="help">PDF/A embeds the fonts and cannot have a password.</p>
+        <label class="field">Factur-X / ZUGFeRD XML <small>makes a PDF/A-3 e-invoice</small><input type="file" id="eInvoiceFile" accept=".xml,text/xml,application/xml"></label>
+        <label class="field">Profile
+          <select name="eInvoiceProfile"><option value="">From the XML</option><option>Minimum</option><option value="BasicWL">Basic WL</option><option>Basic</option><option value="En16931">EN 16931</option><option>Extended</option><option value="XRechnung">XRechnung</option></select></label>
+        <p class="help">The EN 16931 profile is the European standard required by <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj" target="_blank" rel="noopener">EU Directive 2014/55/EU</a> on electronic invoicing.</p>
+      </details>
+
+      <details><summary>Document properties</summary>
+        <div class="grid2">
+          <label class="field">Title <small>default: &lt;title&gt;</small><input type="text" name="title" maxlength="500"></label>
+          <label class="field">Author<input type="text" name="author" maxlength="500"></label>
+          <label class="field">Subject<input type="text" name="subject" maxlength="500"></label>
+          <label class="field">Keywords<input type="text" name="keywords" maxlength="500"></label>
+          <label class="field">Creator<input type="text" name="creator" maxlength="500"></label>
+          <label class="field">Producer<input type="text" name="producer" maxlength="500" placeholder="PdfPecker"></label>
+        </div>
+        <label class="field">Custom properties <small>one <code>Name=value</code> per line, up to 20</small><textarea name="customProperties" rows="3" spellcheck="false" placeholder="OrderNumber=42"></textarea></label>
+      </details>
+
+      <details><summary>Output</summary>
+        <label class="check"><input type="checkbox" name="bookmarks" checked> Bookmarks from headings</label>
+        <label class="check"><input type="checkbox" name="compress" checked> Compress page content</label>
+        <div class="grid2">
+          <label class="field">Compression
+            <select name="compressionLevel"><option>Fastest</option><option>Optimal</option><option value="SmallestSize">Smallest size</option></select></label>
+          <label class="field">Most pages <small>1 to 1,000</small><input type="number" name="maxPages" value="1000" min="1" max="1000"></label>
+        </div>
+      </details>
+    </form>
+    <div class="settings-foot">
+      <button type="button" id="copyCode">Copy as C#</button>
+      <button type="button" class="primary" id="applySettings">Convert</button>
+    </div>
+  </aside>
 </main>
 
 <script src="/examples.js"></script>
