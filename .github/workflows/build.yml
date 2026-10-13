@@ -1,5 +1,5 @@
-# Builds the web API and the website (the site is wwwroot), checks the Docker image starts and serves both,
-# and attaches the builds to a GitHub release.
+# Builds the web API and the website (the site is wwwroot), checks the Docker image starts and serves both, checks the
+# Cloudflare Worker, and attaches the builds to a GitHub release. Deploy (deploy.yml) runs after this succeeds on main.
 name: Build
 
 on:
@@ -90,6 +90,22 @@ jobs:
             PdfPecker.Web.*.zip
             pdfpecker-web.*.docker.tar.gz
           if-no-files-found: error
+
+  # Type-checks the Cloudflare Worker and checks wrangler.jsonc (the image itself is built and tested above).
+  worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: 22
+
+      - run: npm ci
+      - run: npx tsc
+      - run: npx wrangler deploy --dry-run --containers-rollout=none
 
   release:
     if: github.event_name == 'release'

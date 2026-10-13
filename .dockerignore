@@ -2,3 +2,6 @@ bin/
 obj/
 .git/
 .github/
+node_modules/
+.wrangler/
+worker/

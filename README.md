@@ -61,6 +61,22 @@ script) along with the usual security headers.
 .NET 10. The container needs about 2 GB (`--memory 2g`): it runs one conversion per 512 MB of its memory limit (up to
 one per core) and refuses documents over 1,000 pages, so 2 GB lets four large documents convert at once.
 
+## Hosting
+
+pdfpecker.net runs on [Cloudflare Containers](https://developers.cloudflare.com/containers/). A small Worker
+(`worker/index.ts`, configured in `wrangler.jsonc`) answers every request: Cloudflare serves the page from `wwwroot`
+itself (with the headers in `wwwroot/_headers`), and everything else goes to one container built from the
+`Dockerfile`. The container sleeps after 10 minutes without requests and starts again on the next one, so the page
+loads at once and only the first conversion after a quiet spell waits for it.
+
+- **Size:** Cloudflare has no 2 GB instance, so the container has 1 vCPU and 3 GiB with the .NET heap capped at 2 GB
+  (`DOTNET_GCHeapHardLimit`), which gives the same limits as `--memory 2g`.
+- **Visitor addresses:** the Worker sets `X-Forwarded-For` to the visitor's address and the container trusts it
+  (`TrustedProxies`), so the rate limit applies per visitor. Nothing but the Worker can reach the container.
+- **No internet:** the container cannot make outbound connections.
+- **Deploys:** `.github/workflows/deploy.yml` deploys `main` after the Build workflow passes, using the repository
+  secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Locally: `npm ci && npx wrangler deploy` (needs Docker).
+
 ## Updating PdfPecker
 
 The site uses the published PdfPecker package, so it gets new library features when a new version is released on
