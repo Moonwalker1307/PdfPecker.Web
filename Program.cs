@@ -51,6 +51,7 @@ if (trustedProxies.Length > 0)
 
 // The page loads its script and stylesheet from this site; previews are blob: frames. Inline styles stay allowed for
 // the Markdown-to-HTML preview, which inherits this policy; inline script does not.
+// On pdfpecker.net Cloudflare serves the page itself with the headers in wwwroot/_headers; keep them in step.
 const string SiteCsp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; "
     + "connect-src 'self'; frame-src blob:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
 // API responses are documents, never pages that load anything.

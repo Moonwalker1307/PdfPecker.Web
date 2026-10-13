@@ -1,0 +1,25 @@
+// Cloudflare deployment of pdfpecker.net: a Worker serving wwwroot and passing everything else to the container
+// built from the Dockerfile. Deployed by the Deploy job in .github/workflows/build.yml on every push to main.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pdfpecker-web",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  "routes": [{ "pattern": "pdfpecker.net", "custom_domain": true }],
+  "assets": { "directory": "./wwwroot" },
+  "containers": [
+    {
+      "class_name": "PdfPeckerWeb",
+      "image": "./Dockerfile",
+      // Cloudflare has no 2 GB size: the smallest custom type is 1 vCPU with 3 GiB. The Worker caps the .NET heap at
+      // 2 GB, the rest is for the runtime and the OS. CPU is billed by use, memory while the container is awake.
+      "instance_type": { "vcpu": 1, "memory_mib": 3072, "disk_mb": 2000 },
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "WEB", "class_name": "PdfPeckerWeb" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["PdfPeckerWeb"] }]
+}
