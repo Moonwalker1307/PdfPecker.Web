@@ -330,3 +330,51 @@ kbd { font: 12px var(--mono); border: 1px solid var(--border); border-radius: 4p
   .compare th:first-child { padding-left: 8px; }
   .compare td:last-child, .compare th:last-child { padding-right: 8px; }
 }
+
+/* ---------- Markdown page: visual editor and formatting toolbar ---------- */
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; padding: 2px; background: var(--alt); }
+.seg button { border: 0; background: transparent; font-size: 13px; padding: 3px 12px; border-radius: 6px; color: var(--muted); }
+.seg button[aria-pressed=true] { background: var(--panel); color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, .15); }
+.fmt { display: flex; align-items: center; gap: 2px; padding: 6px 14px; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: thin; }
+.fmt button { flex: none; width: 32px; height: 32px; padding: 0; border-color: transparent; background: transparent; font-size: 15px; font-family: Georgia, serif; }
+.fmt button:hover { border-color: var(--border); background: var(--alt); }
+.fmt button[aria-pressed=true] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.fmt select { flex: none; font: inherit; font-size: 13px; padding: 5px 7px; margin-right: 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--code-bg); color: var(--text); }
+.fmt .sep { flex: none; width: 1px; height: 20px; margin: 0 6px; background: var(--border); }
+
+.visual { flex: 1; overflow: auto; padding: 18px 28px 40px; outline: none; color: var(--text); background: var(--panel); caret-color: var(--accent);
+  font: 15px/1.6 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; overflow-wrap: anywhere; }
+.visual:focus, .visual:focus-visible { outline: none; box-shadow: inset 3px 0 0 var(--accent); }
+.visual[aria-busy=true] { opacity: .6; }
+body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px; }
+.visual > :first-child { margin-top: 0; }
+.visual h1, .visual h2 { padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+.visual h1 { font-size: 1.9em; margin: .8em 0 .5em; }
+.visual h2 { font-size: 1.45em; margin: 1.1em 0 .5em; }
+.visual h3 { font-size: 1.2em; margin: 1em 0 .4em; }
+.visual h4, .visual h5, .visual h6 { font-size: 1em; margin: 1em 0 .4em; }
+.visual p, .visual ul, .visual ol, .visual blockquote, .visual pre, .visual table { margin: 0 0 1em; }
+.visual ul, .visual ol { padding-left: 1.8em; }
+.visual li + li { margin-top: .2em; }
+.visual ul.contains-task-list { list-style: none; padding-left: 1.2em; }
+.visual li > input[type=checkbox] { margin: 0 .4em 0 -1.3em; vertical-align: -1px; accent-color: var(--accent); cursor: pointer; }
+.visual blockquote { padding: 0 1em; color: var(--muted); border-left: 4px solid var(--border); }
+.visual code { font: .88em var(--mono); background: var(--alt); border: 1px solid var(--border); border-radius: 5px; padding: .1em .35em; }
+.visual pre { font: 13px/1.5 var(--mono); background: var(--alt); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; overflow-x: auto; white-space: pre; }
+.visual pre code { font: inherit; background: none; border: 0; padding: 0; }
+.visual a { color: var(--accent); }
+.visual img { max-width: 100%; }
+.visual hr { border: 0; height: 3px; background: var(--border); margin: 1.4em 0; }
+.visual table { border-collapse: collapse; display: block; max-width: 100%; overflow-x: auto; }
+.visual th, .visual td { border: 1px solid var(--border); padding: 6px 12px; min-width: 3em; }
+.visual th { background: var(--alt); }
+.visual .raw { outline: 1px dashed var(--muted); outline-offset: 2px; border-radius: 3px; cursor: default; }
+
+@media (max-width: 640px) {
+  .editor-pane .pane-head .hint { display: none; }
+  .fmt { padding: 4px 8px; }
+  .fmt button { width: 40px; height: 40px; }
+  .fmt select { font-size: 16px; }
+  .visual { padding: 14px 14px 32px; font-size: 16px; }
+}
+@media (max-width: 1500px) { .panes.with-settings .editor-pane .pane-head .hint { display: none; } }
