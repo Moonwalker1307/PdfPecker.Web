@@ -129,13 +129,13 @@ app.MapGet("/invoice", () =&gt;
 
       <div class="table-scroll">
         <table class="compare">
-          <thead><tr><th scope="col">Converter</th><th scope="col">Engine</th><th scope="col">To deploy</th><th scope="col">Invoice, 1 page</th><th scope="col">Report, 30 pages</th><th scope="col">Peak memory</th></tr></thead>
+          <thead><tr><th scope="col">Converter</th><th scope="col" class="wide">Engine</th><th scope="col" class="wide">To deploy</th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>30 pages</th><th scope="col" class="num"><span class="wide">Peak memory</span><span class="narrow">Memory</span></th></tr></thead>
           <tbody>
-            <tr class="win"><th scope="row">PdfPecker</th><td data-label="Engine">own, managed</td><td data-label="To deploy">3.1 MB DLL</td><td data-label="Invoice, 1 page">0.86 ms</td><td data-label="Report, 30 pages">39 ms</td><td data-label="Peak memory">83 MB</td></tr>
-            <tr><th scope="row">HtmlRenderer.PdfSharp</th><td data-label="Engine">own, managed (CSS 2)</td><td data-label="To deploy">2.4 MB of DLLs</td><td data-label="Invoice, 1 page">5.0 ms</td><td data-label="Report, 30 pages">473 ms</td><td data-label="Peak memory">255 MB</td></tr>
-            <tr><th scope="row">wkhtmltopdf</th><td data-label="Engine">Qt WebKit, native</td><td data-label="To deploy">about 90 MB</td><td data-label="Invoice, 1 page">289 ms</td><td data-label="Report, 30 pages">693 ms</td><td data-label="Peak memory">164 MB</td></tr>
-            <tr><th scope="row">PuppeteerSharp</th><td data-label="Engine">Chromium</td><td data-label="To deploy">about 600 MB</td><td data-label="Invoice, 1 page">128 ms</td><td data-label="Report, 30 pages">539 ms</td><td data-label="Peak memory">849 MB</td></tr>
-            <tr><th scope="row">Playwright</th><td data-label="Engine">Chromium</td><td data-label="To deploy">browser + 135 MB</td><td data-label="Invoice, 1 page">142 ms</td><td data-label="Report, 30 pages">522 ms</td><td data-label="Peak memory">986 MB</td></tr>
+            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">3.1 MB DLL</td><td class="num">0.86 ms</td><td class="num">39 ms</td><td class="num">83 MB</td></tr>
+            <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">2.4 MB of DLLs</td><td class="num">5.0 ms</td><td class="num">473 ms</td><td class="num">255 MB</td></tr>
+            <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">289 ms</td><td class="num">693 ms</td><td class="num">164 MB</td></tr>
+            <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">128 ms</td><td class="num">539 ms</td><td class="num">849 MB</td></tr>
+            <tr><th scope="row">Playwright</th><td class="wide">Chromium</td><td class="wide">browser + 135 MB</td><td class="num">142 ms</td><td class="num">522 ms</td><td class="num">986 MB</td></tr>
           </tbody>
         </table>
       </div>

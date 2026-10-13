@@ -37,7 +37,7 @@ code { font-family: var(--mono); font-size: .9em; }
 .site-header nav a { color: var(--on-ink-muted); text-decoration: none; font-size: 14px; font-weight: 500; padding: 7px 12px; border-radius: 8px; white-space: nowrap; }
 .site-header nav a:hover { color: var(--on-ink); background: #20202a; }
 .site-header nav a[aria-current=page] { color: var(--on-ink); background: #262631; }
-.site-header nav a.ext { display: inline-flex; align-items: center; gap: 6px; }
+.site-header nav a.ext { display: inline-flex; align-items: center; gap: 6px; position: relative; }
 .site-header nav a.ext svg { flex: none; }
 .skip { position: absolute; left: 12px; top: -48px; z-index: 50; padding: 10px 14px; border-radius: 8px; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; }
 .skip:focus { top: 10px; }
@@ -60,6 +60,7 @@ button:disabled { opacity: .6; cursor: progress; }
   background-image: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px),
     radial-gradient(60% 80% at 80% 40%, rgba(224, 37, 43, .28), transparent 70%);
   background-size: 24px 24px, 24px 24px, auto; }
+.hero-grid > * { min-width: 0; }
 .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; padding-top: 72px; padding-bottom: 80px; }
 .eyebrow { display: inline-block; margin: 0 0 18px; font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
   color: #ff8a8e; border: 1px solid rgba(255, 59, 66, .45); padding: 7px 10px; border-radius: 999px; }
@@ -133,6 +134,8 @@ button:disabled { opacity: .6; cursor: progress; }
 .compare tbody th { font-weight: 500; }
 .compare tr.win td, .compare tr.win th { font-weight: 700; background: var(--accent-soft); }
 .compare tr.win th { color: var(--accent); }
+.compare .narrow { display: none; }
+.compare .num { text-align: right; }
 .note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
 
 .tabs { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 26px 0 22px; }
@@ -276,23 +279,20 @@ kbd { font: 12px var(--mono); border: 1px solid var(--border); border-radius: 4p
   .section { padding: 56px 0; }
   .sub { font-size: 16px; margin-bottom: 30px; }
   .cta .button { flex: 1 1 100%; }
-  .install { display: flex; }
+  .install { display: flex; width: 100%; }
+  .install code { min-width: 0; }
   .stat { padding: 18px 14px; }
   .bar { grid-template-columns: 1fr 44px; gap: 4px 10px; }
   .bar .name { grid-column: 1 / -1; text-align: left; font-size: 14px; }
   .fit-grid { grid-template-columns: 1fr; }
-  /* The comparison table becomes one card per converter. */
-  .table-scroll { overflow: visible; border: 0; background: none; }
-  .compare, .compare tbody, .compare tr, .compare th, .compare td { display: block; white-space: normal; }
-  .compare thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-  .compare tr { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
-  .compare tr.win { border-color: var(--accent); }
-  .compare tbody th { font-size: 16px; font-weight: 700; padding: 12px 16px; background: var(--alt); }
-  .compare td { display: flex; justify-content: space-between; gap: 16px; padding: 9px 16px; text-align: right; }
-  .compare td::before { content: attr(data-label); color: var(--muted); font-weight: 400; text-align: left; }
-  .compare tr.win td { background: none; }
-  .compare tbody tr:last-child td { border-bottom: 1px solid var(--border); }
-  .compare tr td:last-child, .compare tbody tr:last-child td:last-child { border-bottom: 0; }
+  /* On phones the comparison keeps the columns that matter most, so the table fits without scrolling. */
+  .compare { font-size: 13px; white-space: normal; }
+  .compare th, .compare td { padding: 10px 8px; }
+  .compare th:first-child { padding-left: 12px; }
+  .compare td:last-child, .compare th:last-child { padding-right: 12px; }
+  .compare .wide { display: none; }
+  .compare .narrow { display: inline; }
+  .compare td.num, .compare th.num { text-align: right; white-space: nowrap; }
   .hero-art img { max-width: 168px; }
   .features { gap: 12px; }
   .feature { display: grid; grid-template-columns: 42px 1fr; column-gap: 14px; padding: 16px; }
@@ -323,4 +323,10 @@ kbd { font: 12px var(--mono); border: 1px solid var(--border); border-radius: 4p
   .pane-head .hint { display: none; }
   textarea { font-size: 16px; } /* 16px stops iOS from zooming into the editor */
   .images { padding: 12px; }
+}
+@media (max-width: 360px) {
+  .compare { font-size: 12px; }
+  .compare th, .compare td { padding: 9px 4px; }
+  .compare th:first-child { padding-left: 8px; }
+  .compare td:last-child, .compare th:last-child { padding-right: 8px; }
 }
