@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markdown to HTML and PDF converter · PdfPecker</title>
+<meta name="description" content="Convert Markdown to PDF, HTML or PNG images in your browser with PdfPecker. Nothing is stored.">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body class="app" data-input="markdown">
+<header class="site-header">
+  <a class="brand" href="/"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
+  <nav aria-label="Main">
+    <a href="/">Home</a>
+    <a href="/html-to-pdf/">HTML to PDF</a>
+    <a href="/markdown/" aria-current="page">Markdown</a>
+    <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
+  </nav>
+</header>
+
+<div class="toolbar">
+  <h1>Markdown to HTML or PDF</h1>
+  <label>Example
+    <select id="example">
+      <option value="readme">README</option>
+      <option value="recipe">Recipe</option>
+      <option value="blank">Blank</option>
+    </select>
+  </label>
+  <label>Output
+    <select id="output">
+      <option value="pdf">PDF</option>
+      <option value="html">HTML</option>
+      <option value="png">PNG images</option>
+    </select>
+  </label>
+  <label id="dpiLabel" hidden>Resolution
+    <select id="dpi">
+      <option value="96">96 DPI</option>
+      <option value="150" selected>150 DPI</option>
+      <option value="200">200 DPI</option>
+      <option value="300">300 DPI</option>
+    </select>
+  </label>
+  <span class="spacer"></span>
+  <label class="button" for="file">Open file</label>
+  <input type="file" id="file" accept=".md,.markdown,text/markdown" hidden>
+  <button class="primary" id="convert" title="Ctrl+Enter">Convert</button>
+  <details id="options">
+    <summary>Page options</summary>
+    <div class="option-list">
+      <label>Page
+        <select id="pageSize">
+          <option>A4</option><option>Letter</option><option>Legal</option><option>A3</option><option>A5</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="landscape"> Landscape</label>
+      <label>Margin (mm) <input type="number" id="margin" value="12.7" min="0" max="50" step="0.1"></label>
+      <label><input type="checkbox" id="pageNumbers" checked> Page numbers</label>
+      <label>Watermark <input type="text" id="watermark" size="10" maxlength="200" placeholder="none"></label>
+      <label>Password <input type="password" id="password" size="8" autocomplete="new-password" placeholder="none"></label>
+      <label title="Archival PDF/A-2b; cannot be combined with a password"><input type="checkbox" id="pdfa"> PDF/A</label>
+    </div>
+  </details>
+</div>
+
+<main class="panes">
+  <section class="pane">
+    <div class="pane-head"><span>Markdown</span><span class="spacer"></span><span class="hint">Drop an .md file here, or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
+    <textarea id="source" spellcheck="false" aria-label="Markdown to convert"></textarea>
+  </section>
+  <section class="pane">
+    <div class="pane-head">
+      <span id="outputLabel">PDF</span> <span class="status" id="status" role="status"></span>
+      <span class="spacer"></span>
+      <button type="button" class="small" id="viewSource" aria-pressed="false" hidden>Show code</button>
+      <a class="button small" id="download" hidden>Download</a>
+    </div>
+    <div class="empty" id="empty">Your PDF will appear here.</div>
+    <iframe id="preview" title="Preview" hidden></iframe>
+    <div class="images" id="images" hidden></div>
+    <pre class="html-source" id="htmlSource" hidden></pre>
+  </section>
+</main>
+
+<script src="/examples.js"></script>
+<script src="/converter.js"></script>
+</body>
+</html>

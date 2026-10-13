@@ -226,7 +226,7 @@ app.MapPost("/api/convert", async (HttpRequest request, CancellationToken ct) =>
 // POST /api/pdf-to-image
 //   multipart/form-data with the PDF in the "file" field, or the raw PDF as the body.
 //   Query (or form) options: page (1-based; omit for all pages), dpi (10-300, default 150), width, height, password.
-// Returns image/png for one page, or application/zip with one PNG per page.
+// Returns image/png for one page, or application/zip with one PNG per page; X-Page-Count says how many pages the PDF has.
 app.MapPost("/api/pdf-to-image", async (HttpRequest request, CancellationToken ct) =>
 {
     const long MaxPdfBytes = 25 * 1024 * 1024;
@@ -273,6 +273,8 @@ app.MapPost("/api/pdf-to-image", async (HttpRequest request, CancellationToken c
         // Opening parses the uploaded file, so it runs off the request thread under the same time limit.
         var renderer = await Task.Run(() => PdfRenderer.Open(pdf, options.Password), timeout.Token).WaitAsync(timeout.Token);
         var name = Path.GetFileNameWithoutExtension(SafeFileName(fileName));
+        // The site renders one page per request and needs to know how many there are.
+        request.HttpContext.Response.Headers["X-Page-Count"] = renderer.PageCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
         if (Int(Field("page")) is int page || renderer.PageCount == 1)
         {
             int index = (Int(Field("page")) ?? 1) - 1;

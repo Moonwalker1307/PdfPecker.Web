@@ -4,9 +4,14 @@
 
 The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small ASP.NET Core site built on the
 [PdfPecker](https://www.nuget.org/packages/PdfPecker) NuGet package
-([source](https://github.com/Moonwalker1307/PdfPecker)) for converting HTML and Markdown in the browser:
-paste or open an `.html` or `.md` file (or drag one onto the page), pick page size, orientation, margins and page numbers, and preview or
-download the PDF. Markdown can also be converted to HTML.
+([source](https://github.com/Moonwalker1307/PdfPecker)). The static pages in `wwwroot` are:
+
+- `/` (`index.html`): the home page, introducing the library.
+- `/html-to-pdf/`: paste or open an `.html` file (or drag one onto the page), pick page size, orientation, margins,
+  page numbers, watermark, password or PDF/A, and preview or download the PDF or PNG images of its pages.
+- `/markdown/`: the same for Markdown, which can also be converted to HTML.
+
+Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 
 ```
 dotnet run -c Release        # then open the URL it prints
