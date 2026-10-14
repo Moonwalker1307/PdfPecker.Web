@@ -473,23 +473,6 @@ static void ApplySettings(PdfOptions options, PdfSettings o)
     if (options.Security != null && options.Conformance != PdfConformance.None)
         throw new ArgumentException("PDF/A does not allow passwords: choose one or the other.");
 
-    if (o.Accessibility != null)
-        options.Accessibility = (o.Accessibility ?? "").Trim().ToLowerInvariant() switch
-        {
-            "" or "none" => PdfAccessibility.None,
-            "tagged" => PdfAccessibility.Tagged,
-            "pdfua1" or "pdf/ua-1" => PdfAccessibility.PdfUA1,
-            _ => throw new ArgumentException("accessibility must be None, Tagged or PdfUA1."),
-        };
-    if (!string.IsNullOrWhiteSpace(o.Language))
-    {
-        // A BCP 47 language tag such as "en-US" or "da"; it is written into the PDF as is.
-        var language = o.Language.Trim();
-        if (language.Length > 35 || !System.Text.RegularExpressions.Regex.IsMatch(language, "^[A-Za-z]{1,8}(-[A-Za-z0-9]{1,8})*$"))
-            throw new ArgumentException("language must be a language tag such as \"en-US\" or \"da\".");
-        options.Language = language;
-    }
-
     if (!string.IsNullOrWhiteSpace(o.EInvoiceXml))
     {
         var xml = System.Text.Encoding.UTF8.GetBytes(Limit(o.EInvoiceXml, 1024 * 1024, "eInvoiceXml"));
@@ -636,10 +619,6 @@ public sealed class PdfSettings
     public SecuritySettings? Security { get; set; }
     /// <summary>"None", "PdfA2b" or "PdfA3b".</summary>
     public string? Conformance { get; set; }
-    /// <summary>"None", "Tagged" or "PdfUA1".</summary>
-    public string? Accessibility { get; set; }
-    /// <summary>The document language for a tagged PDF, e.g. "en-US"; default: the HTML's lang attribute.</summary>
-    public string? Language { get; set; }
     /// <summary>A Factur-X / ZUGFeRD invoice's CII XML to attach.</summary>
     public string? EInvoiceXml { get; set; }
     public string? EInvoiceProfile { get; set; }

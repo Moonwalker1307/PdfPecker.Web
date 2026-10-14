@@ -99,8 +99,6 @@ function settings() {
       permissions: [...form.querySelectorAll("input[name=perm]:checked")].map(c => c.value),
     } : null,
     conformance: field("conformance").value,
-    accessibility: field("accessibility").value,
-    language: text("language"),
     eInvoiceXml: eInvoiceXml ? eInvoiceXml.text : null,
     eInvoiceProfile: eInvoiceXml ? field("eInvoiceProfile").value || null : null,
     title: text("title"), author: text("author"), subject: text("subject"),
@@ -155,8 +153,6 @@ function csharp() {
     lines.push(`Security = new PdfSecurity { ${p.join(", ")} },`);
   }
   if (s.conformance !== "None") lines.push(`Conformance = PdfConformance.${s.conformance},`);
-  if (s.accessibility !== "None") lines.push(`Accessibility = PdfAccessibility.${s.accessibility},`);
-  if (s.language) lines.push(`Language = ${str(s.language)},`);
   if (s.eInvoiceXml) lines.push(`EInvoice = new PdfEInvoice(File.ReadAllBytes(${str(eInvoiceXml.name)})${s.eInvoiceProfile ? ", EInvoiceProfile." + s.eInvoiceProfile : ""}),`);
   for (const k of ["title", "author", "subject", "keywords", "creator", "producer"])
     if (s[k]) lines.push(`${k[0].toUpperCase() + k.slice(1)} = ${str(s[k])},`);
