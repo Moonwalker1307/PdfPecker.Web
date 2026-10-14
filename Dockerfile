@@ -6,11 +6,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY PdfPecker.Web.csproj .
-RUN dotnet restore
+# The NuGet cache mount keeps downloaded packages between builds on the same machine, so a changed csproj does not
+# download PdfPecker again unless its version changed. Publish needs the same mount to find the restored packages.
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages dotnet restore
 COPY Program.cs .
 COPY wwwroot/ wwwroot/
 ARG VERSION=0.1.0
-RUN dotnet publish -c Release --no-restore -p:Version=$VERSION -o /app
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    dotnet publish -c Release --no-restore -p:Version=$VERSION -o /app
 
 # Chiseled: Ubuntu without a shell or package manager, only what .NET needs, so there is little to attack.
 # The floating 10.0 tags pick up .NET and OS security patches on every build.
