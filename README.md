@@ -47,7 +47,7 @@ any of the three forms; send passwords in the form or JSON body rather than the 
 The JSON form also takes an `options` object with the rest of `PdfOptions` that is safe to take from a visitor:
 page size (or `pageWidthMm`/`pageHeightMm`), `landscape`, the four `margin*Mm`, `scale`, `headerText`, `footerText`,
 `userStyleSheet`, `embedStandardFonts`, `watermark` (text or base64 image, font, colour, opacity, angle, ...),
-`security` (passwords and `permissions` by name), `conformance`, `eInvoiceXml`, the document properties,
+`security` (passwords and `permissions` by name), `conformance`, `accessibility` (`Tagged` or `PdfUA1`), `language`, `eInvoiceXml`, the document properties,
 `customProperties`, `bookmarks`, `compress`, `compressionLevel` and `maxPages` (at most 1,000). Every value is checked
 and anything out of range is refused with a 400. Fonts are always the standard ones: registered fonts, system fonts,
 file access, resource loading and signatures cannot be turned on from a request, and the HTML never runs scripts or
