@@ -372,6 +372,7 @@ async function downloadZip() {
 function loadExample(name) {
   editor.value = examples[mode][name];
   fileName = name === "blank" ? "document" : name;
+  editor.dispatchEvent(new Event("input")); // lets the Markdown page's visual editor follow
 }
 
 async function openFile(f) {
@@ -383,6 +384,7 @@ async function openFile(f) {
   }
   editor.value = await f.text();
   fileName = f.name.replace(/\.[^.]+$/, "") || "document";
+  editor.dispatchEvent(new Event("input"));
   convert();
 }
 
