@@ -266,12 +266,16 @@ async function convert() {
     } else {
       const u = blobUrl(blob);
       if (o === "html") {
-        // HTML previews are sandboxed: any script in the document stays inert.
+        // HTML previews are sandboxed: any script in the document stays inert. The document goes in srcdoc, not a
+        // blob: URL: Safari leaves a sandboxed frame blank when it points at a blob: URL of the page's origin.
+        const html = await blob.text();
+        if (thisRun !== run) return;
         $("preview").setAttribute("sandbox", "");
         $("preview").style.background = "#fff";
-        $("htmlSource").textContent = await blob.text();
+        $("htmlSource").textContent = html;
         $("viewSource").hidden = false;
-        $("preview").src = u;
+        $("preview").removeAttribute("src");
+        $("preview").srcdoc = html;
         showOnly($("viewSource").getAttribute("aria-pressed") === "true" ? "htmlSource" : "preview");
       } else if (pdfAsImages) {
         const pages = await renderImages(blob, thisRun, PDF_PREVIEW_PAGES, 150, false);
@@ -279,6 +283,7 @@ async function convert() {
         if (pages > PDF_PREVIEW_PAGES) $("images").lastChild.textContent = `Showing the first ${PDF_PREVIEW_PAGES} of ${pages} pages. Download the PDF for all of them.`;
       } else {
         $("preview").removeAttribute("sandbox");
+        $("preview").removeAttribute("srcdoc"); // srcdoc wins over src
         $("preview").style.background = "";
         $("preview").src = u;
         showOnly("preview");
