@@ -9,7 +9,8 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
 - `/` (`index.html`): the home page, introducing the library.
 - `/html-to-pdf/`: paste or open an `.html` file (or drag one onto the page), set any `PdfOptions` setting in the
   settings panel (and copy them as C#), and preview or download the PDF or PNG images of its pages.
-- `/markdown/`: the same for Markdown, which can also be converted to HTML.
+- `/markdown/`: the same for Markdown, which can also be converted to HTML. It has a visual (WYSIWYG) editor and a
+  Markdown editor with a shared formatting toolbar (`md-editor.js`); visual edits are written back as Markdown.
 
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 
