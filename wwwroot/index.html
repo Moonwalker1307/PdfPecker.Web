@@ -101,15 +101,19 @@ app.MapGet("/invoice", () =&gt;
         <article class="feature"><span class="icon" aria-hidden="true">📄</span><h3>Proper paging</h3>
           <p>Running headers and footers with page numbers, repeated table headers, orphans, widows and break control.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🖼️</span><h3>Images and SVG</h3>
-          <p>PNG, JPEG, GIF and WebP, and SVG drawn as crisp vectors, inline or from files.</p></article>
+          <p>PNG, JPEG, GIF and WebP, and SVG drawn as crisp vectors with gradients, masks, patterns and filters, inline or from files.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔒</span><h3>PDF/A and passwords</h3>
           <p>Archival PDF/A-2b and 3b, AES-256 encryption, permissions and watermarks.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">✍️</span><h3>Digital signatures</h3>
           <p>PAdES signatures with your certificate, visible signature boxes and trusted timestamps.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🧾</span><h3>E-invoices</h3>
-          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing.</p></article>
+          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing. For Peppol and OIOUBL, your PDF attached to the UBL invoice XML.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🗂️</span><h3>Merge PDFs</h3>
-          <p>Combine any PDFs, streamed one at a time, with links, bookmarks and form fields kept.</p></article>
+          <p>Combine any PDFs, streamed one at a time, with links, bookmarks and form fields kept. Or add them as they arrive.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">☑️</span><h3>Fillable forms</h3>
+          <p>Inputs, check boxes, radio buttons, selects and text areas become PDF form fields people can fill in.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">♿</span><h3>Accessible PDFs</h3>
+          <p>Tagged PDF and PDF/UA-1 built from your HTML, so screen readers follow headings, tables, lists and images.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image</h3>
           <p>Its own renderer turns any PDF page into a PNG, with no Ghostscript or native code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔗</span><h3>Links and bookmarks</h3>
@@ -201,14 +205,26 @@ var secret = new PdfOptions
     Security = new PdfSecurity { UserPassword = "1234", Permissions = PdfPermissions.Print },
 };
 
-var eInvoice = new PdfOptions { EInvoice = new PdfEInvoice(File.ReadAllBytes("invoice.xml")) };</code></pre>
+var eInvoice = new PdfOptions { EInvoice = new PdfEInvoice(File.ReadAllBytes("invoice.xml")) };
+
+// Tagged for screen readers, and both PDF/UA-1 and PDF/A
+var accessible = new PdfOptions { Accessibility = PdfAccessibility.PdfUA1, Conformance = PdfConformance.PdfA2b };
+
+// Peppol or OIOUBL: the PDF travels inside the UBL invoice XML
+byte[] xml = UblInvoice.AttachPdf(File.ReadAllBytes("invoice.xml"), pdf, "INV-1001.pdf");</code></pre>
       </div>
       <div class="code-card tab-panel" role="tabpanel" id="tab-merge" aria-labelledby="t-merge" hidden>
         <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
 <pre><code class="cs">byte[] merged = PdfMerger.Merge(invoicePdf, termsPdf, attachmentPdf);
 
 // Streams in and out: one input in memory at a time
-await PdfMerger.MergeAsync(uploads.Select(f =&gt; f.OpenReadStream()), response.Body);</code></pre>
+await PdfMerger.MergeAsync(uploads.Select(f =&gt; f.OpenReadStream()), response.Body);
+
+// Or add PDFs as they arrive, and skip the ones that are missing
+var merger = new StreamingPdfMerger(response.Body);
+foreach (var path in paths)
+    if (await storage.DownloadAsync(path) is { Length: &gt; 0 } pdf) await merger.AddAsync(pdf);
+await merger.CompleteAsync();</code></pre>
       </div>
       <div class="code-card tab-panel" role="tabpanel" id="tab-img" aria-labelledby="t-img" hidden>
         <button type="button" class="copy code-copy" aria-label="Copy this code">Copy</button>
