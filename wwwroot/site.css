@@ -414,8 +414,8 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .page-head h1 { font-size: clamp(30px, 4.6vw, 48px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 14px; }
 .matrix-scroll { margin: 0 calc(50% - 50vw + 12px); max-width: none; }
-@media (min-width: 1240px) { .matrix-scroll { margin: 0 -40px; } }
-.matrix { white-space: normal; table-layout: fixed; min-width: 1180px; font-size: 14px; }
+@media (min-width: 1400px) { .matrix-scroll { margin: 0 -100px; } }
+.matrix { white-space: normal; table-layout: fixed; min-width: 1250px; font-size: 14px; }
 .matrix th, .matrix td { padding: 11px 12px; vertical-align: top; }
 .matrix thead th { font-size: 14px; color: var(--text); vertical-align: bottom; }
 .matrix thead th:first-child, .matrix tbody th { width: 170px; }
@@ -439,9 +439,9 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .sources li + li { margin-top: 6px; }
 @media (prefers-color-scheme: dark) { .matrix td.p b { color: #f6ad55; } }
 @media (max-width: 1100px) {
-  /* Below desktop width the matrix shows Yes, No and Partly only, so all nine columns fit a tablet or a phone on its side. */
+  /* Below desktop width the matrix shows Yes, No and Partly only, so all ten columns fit a tablet or a phone on its side. */
   .matrix-scroll { margin: 0; }
-  .matrix { min-width: 640px; font-size: 13px; }
+  .matrix { min-width: 700px; font-size: 13px; }
   .matrix .wide { display: none; }
   .matrix .narrow { display: inline; }
   .matrix th, .matrix td { padding: 9px 6px; }
