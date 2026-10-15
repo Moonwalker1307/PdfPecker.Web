@@ -99,7 +99,7 @@ app.MapGet("/invoice", () =&gt;
         <article class="feature"><span class="icon" aria-hidden="true">📝</span><h3>Markdown</h3>
           <p>CommonMark 0.31 plus GitHub tables, task lists and strikethrough. Out comes a styled PDF or HTML page.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔤</span><h3>Real fonts</h3>
-          <p>TrueType, OpenType, WOFF and WOFF2, subset and embedded, with kerning, ligatures and full Unicode.</p></article>
+          <p>TrueType, OpenType, WOFF and WOFF2, subset and embedded, with kerning, ligatures, full Unicode and automatic hyphenation.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📄</span><h3>Proper paging</h3>
           <p>Page margin boxes and running headers with page numbers, named pages, tables of contents with page numbers, repeated table headers, orphans, widows and break control.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">↔️</span><h3>Right-to-left text</h3>
@@ -107,19 +107,21 @@ app.MapGet("/invoice", () =&gt;
         <article class="feature"><span class="icon" aria-hidden="true">🖼️</span><h3>Images and SVG</h3>
           <p>PNG, JPEG, GIF and WebP, and SVG drawn as crisp vectors with gradients, masks, patterns and filters, inline or from files.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔒</span><h3>PDF/A and passwords</h3>
-          <p>Archival PDF/A-2b and 3b, AES-256 encryption, permissions and watermarks.</p></article>
+          <p>Archival PDF/A-2, 3 and 4, AES-256 encryption, permissions and watermarks.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">✍️</span><h3>Digital signatures</h3>
           <p>PAdES signatures with your certificate, visible signature boxes and trusted timestamps, or signed into the empty signature field of your template.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🧾</span><h3>E-invoices</h3>
-          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing. For Peppol and OIOUBL, your PDF attached to the UBL invoice XML.</p></article>
+          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing. For Peppol and OIOUBL, your PDF attached to the UBL invoice XML. Any other file can be attached too.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🗂️</span><h3>Merge PDFs</h3>
           <p>Combine any PDFs, streamed one at a time, with links, bookmarks and form fields kept, and tagged files staying accessible. Or add them as they arrive.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">✂️</span><h3>Edit existing PDFs</h3>
+          <p>Take out, reorder, rotate and split pages, stamp a PDF or put letterhead under it, add or remove a password, and attach files, on any PDF.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">☑️</span><h3>Fillable forms</h3>
           <p>Inputs, check boxes, radio buttons, selects and text areas become PDF form fields people can fill in.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">♿</span><h3>Accessible PDFs</h3>
-          <p>Tagged PDF and PDF/UA-1 built from your HTML, so screen readers follow headings, tables, lists and images.</p></article>
+          <p>Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML, so screen readers follow headings, tables, lists and images.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image</h3>
-          <p>Its own renderer turns any PDF page into a PNG, with no Ghostscript or native code.</p></article>
+          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image, with no Ghostscript or native code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔗</span><h3>Links and bookmarks</h3>
           <p>Clickable links, jumps inside the document, and bookmarks from your headings.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🛡️</span><h3>Safe by default</h3>
@@ -280,7 +282,7 @@ PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
         <div class="fit-card yes"><h3>Great for</h3>
           <ul><li>Invoices, payslips and receipts</li><li>Reports and statements</li><li>Tickets, labels and letters</li><li>Docs and READMEs from Markdown</li></ul></div>
         <div class="fit-card no"><h3>Not for</h3>
-          <ul><li>Pages that need JavaScript to render</li><li>Screenshots of live websites</li><li>Fetching images from the web on its own</li><li>Right-to-left and complex scripts (yet)</li></ul></div>
+          <ul><li>Pages that need JavaScript to render</li><li>Screenshots of live websites</li><li>Fetching images from the web on its own</li><li>Indic, Thai and other complex scripts (yet)</li></ul></div>
       </div>
     </div>
   </section>
