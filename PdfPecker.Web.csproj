@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- The docs generator is a separate program; its sources and Markdown are not part of the site. -->
+    <Compile Remove="tools/**" />
+    <Content Remove="tools/**;docs/**" />
+    <None Remove="tools/**;docs/**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- The published package from nuget.org; Dependabot opens a pull request when a new version is released. -->
     <PackageReference Include="PdfPecker" Version="1.7.0" />
   </ItemGroup>

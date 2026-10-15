@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Builds the documentation pages in wwwroot/docs from the Markdown in docs/. Run it from the repository root with
+       dotnet run with this project after changing docs/; CI fails when the checked-in pages are stale. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The docs are rendered by PdfPecker's own Markdown converter. -->
+    <PackageReference Include="PdfPecker" Version="1.7.0" />
+  </ItemGroup>
+
+</Project>

@@ -12,6 +12,12 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
 - `/markdown/`: the same for Markdown, which can also be converted to HTML. It has a visual (WYSIWYG) editor and a
   Markdown editor with a shared formatting toolbar (`md-editor.js`); visual edits are written back as Markdown.
 
+- `/compare/`: PdfPecker side by side with other HTML to PDF converters for .NET.
+- `/docs/`: the PdfPecker manual, one page per topic. The pages in `wwwroot/docs` are generated from the Markdown in
+  `docs/` by `tools/DocsBuilder`, which renders it with PdfPecker's own Markdown converter. Edit the Markdown, then run
+  `dotnet run --project tools/DocsBuilder` and commit both; CI fails when they are out of step. The docs describe the
+  PdfPecker version the site uses, so update them together with its `PackageReference`.
+
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 
 ```

@@ -58,6 +58,16 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "Version: $version" >> "$GITHUB_STEP_SUMMARY"
 
+      # The docs pages are generated from docs/*.md and checked in, because Cloudflare serves wwwroot as it is.
+      - name: Check the docs pages are up to date
+        run: |
+          dotnet run --project tools/DocsBuilder -c Release
+          git add -N wwwroot/docs
+          if ! git diff --exit-code --stat -- wwwroot/docs; then
+            echo "::error::wwwroot/docs is out of date with docs/*.md: run 'dotnet run --project tools/DocsBuilder' and commit the result"
+            exit 1
+          fi
+
       - name: Publish
         run: dotnet publish -c Release -p:Version=${{ steps.version.outputs.version }} -o publish
 
@@ -78,6 +88,8 @@ jobs:
           curl -fsS http://localhost:8080/ -o /dev/null
           curl -fsS http://localhost:8080/html-to-pdf/ -o /dev/null
           curl -fsS http://localhost:8080/markdown/ -o /dev/null
+          curl -fsS http://localhost:8080/docs/ -o /dev/null
+          curl -fsS http://localhost:8080/docs/options/ -o /dev/null
           docker rm -f web
 
       - name: Package
