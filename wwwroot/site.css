@@ -301,11 +301,11 @@ kbd { font: 12px var(--mono); border: 1px solid var(--border); border-radius: 4p
 @media (max-width: 640px) {
   .wrap { padding: 0 16px; }
   .site-header { padding: 8px 12px; gap: 6px 12px; flex-wrap: wrap; }
-  .site-header nav { margin-left: 0; width: 100%; }
-  .site-header nav a { padding: 6px 10px; }
+  .site-header nav { margin-left: 0; width: 100%; gap: 0; }
+  .site-header nav a { padding: 6px 7px; font-size: 13.5px; }
   /* GitHub and NuGet keep only their icons so every link fits on a phone. */
-  .site-header nav a.ext { padding: 6px 9px; }
-  .site-header nav a.ext svg { width: 20px; height: 20px; }
+  .site-header nav a.ext { padding: 6px 5px; }
+  .site-header nav a.ext svg { width: 18px; height: 18px; }
   .ext-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .section { padding: 56px 0; }
   .sub { font-size: 16px; margin-bottom: 30px; }
@@ -409,3 +409,38 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
   .visual { padding: 14px 14px 32px; font-size: 16px; }
 }
 @media (max-width: 1500px) { .panes.with-settings .editor-pane .pane-head .hint { display: none; } }
+
+/* ---------- Compare page: feature matrix ---------- */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.page-head h1 { font-size: clamp(30px, 4.6vw, 48px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 14px; }
+.matrix { white-space: normal; table-layout: fixed; min-width: 860px; }
+.matrix thead th { font-size: 14px; color: var(--text); vertical-align: bottom; }
+.matrix thead th:first-child, .matrix tbody th { width: 22%; }
+.matrix thead th.us { color: var(--accent); }
+.matrix .sub-head { display: block; font-size: 12px; font-weight: 500; color: var(--muted); }
+.matrix th, .matrix td { vertical-align: top; }
+.matrix tbody th { position: sticky; left: 0; z-index: 1; background: var(--panel); }
+.matrix td.us { background: var(--accent-soft); }
+.matrix td b { font-weight: 700; }
+.matrix td.y b { color: var(--ok); }
+.matrix td.n b { color: var(--muted); font-weight: 600; }
+.matrix td.p b { color: #b7791f; }
+.matrix .note-in { display: block; font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+.matrix tr.group th { position: static; background: var(--alt); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding-top: 18px; }
+.matrix tbody tr.group th { width: auto; }
+.picks .feature h3 { margin-top: 0; }
+.narrow-wrap { max-width: 760px; }
+.sources { padding-left: 1.2em; color: var(--muted); }
+.sources li + li { margin-top: 6px; }
+@media (prefers-color-scheme: dark) { .matrix td.p b { color: #f6ad55; } }
+@media (max-width: 640px) {
+  /* On phones the matrix shows Yes, No and Partly only; the notes come back on wider screens. */
+  .matrix { min-width: 0; font-size: 12.5px; }
+  .matrix thead th { font-size: 12px; }
+  .matrix th, .matrix td { padding: 9px 5px; }
+  .matrix thead th:first-child, .matrix tbody th { width: 28%; }
+  .matrix th:first-child { padding-left: 10px; }
+  .matrix .wide { display: none; }
+  .matrix .narrow { display: inline; }
+  .picks .feature { display: block; }
+}
