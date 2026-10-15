@@ -100,6 +100,16 @@
     </nav>
   </aside>
   <main id="main" class="docs-body">
+    <div class="docs-tools">
+      <form class="docs-search" role="search">
+        <label class="sr" for="docs-q">Search the docs</label>
+        <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false"
+          aria-controls="docs-results" aria-expanded="false" aria-autocomplete="list">
+        <kbd aria-hidden="true">/</kbd>
+        <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
+      </form>
+      <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+    </div>
     <article class="prose">
 <h1 id="options">Options</h1>
 <p><code>PdfOptions</code> controls the page, the document properties and how resources are loaded. Every conversion method
@@ -163,5 +173,6 @@ Properties &gt; Custom and <code>pdfinfo -custom</code> lists them. For PDF/A th
     </nav>
   </div>
 </footer>
+<script src="/docs-search.js"></script>
 </body>
 </html>

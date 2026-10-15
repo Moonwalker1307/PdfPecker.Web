@@ -469,6 +469,24 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .docs-toc a[aria-current=page] { color: var(--text); font-weight: 650; border-left-color: var(--accent); background: var(--accent-soft); }
 .docs-menu { display: none; }
 
+.docs-tools { display: flex; gap: 12px; align-items: center; max-width: 800px; margin-bottom: 32px; }
+.docs-search { position: relative; flex: 1; min-width: 0; }
+.docs-search input { width: 100%; font: inherit; font-size: 15px; padding: 10px 40px 10px 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel); color: var(--text); }
+.docs-search input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.docs-search kbd { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.docs-search input:focus ~ kbd { display: none; }
+.docs-results { position: absolute; z-index: 20; left: 0; right: 0; top: calc(100% + 6px); margin: 0; padding: 6px; list-style: none;
+  max-height: min(70vh, 520px); overflow-y: auto; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+.docs-results a { display: block; padding: 9px 12px; border-radius: 8px; color: var(--text); text-decoration: none; }
+.docs-results a:hover, .docs-results .active a { background: var(--accent-soft); }
+.docs-results b { display: block; font-size: 14.5px; }
+.docs-results span { display: block; font-size: 13px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+.docs-results mark { background: none; color: var(--accent); font-weight: 700; }
+.docs-results .empty-result { padding: 10px 12px; color: var(--muted); font-size: 14px; }
+.docs-pdf { flex: none; padding: 10px 14px; border-radius: 10px; font-weight: 600; }
+.docs-pdf::before { content: "\2193"; color: var(--accent); font-weight: 800; }
+
 .prose { max-width: 800px; font-size: 16.5px; line-height: 1.7; }
 .prose h1 { font-size: clamp(30px, 4.4vw, 44px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 22px; }
 /* A row of pixels under the title, after the 8-bit logo. */
@@ -516,6 +534,9 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
   .prose pre { margin-left: -16px; margin-right: -16px; padding: 14px 16px; }
 }
 @media (max-width: 520px) {
+  .docs-tools { flex-wrap: wrap; }
+  .docs-search kbd { display: none; }
+  .docs-pdf { width: 100%; }
   .docs-pager { grid-template-columns: 1fr; }
   .docs-pager .next { grid-column: 1; }
 }

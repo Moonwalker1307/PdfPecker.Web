@@ -90,6 +90,8 @@ jobs:
           curl -fsS http://localhost:8080/markdown/ -o /dev/null
           curl -fsS http://localhost:8080/docs/ -o /dev/null
           curl -fsS http://localhost:8080/docs/options/ -o /dev/null
+          curl -fsS http://localhost:8080/docs/search.json -o /dev/null
+          curl -fsS http://localhost:8080/docs/pdfpecker-docs.pdf -o /dev/null
           docker rm -f web
 
       - name: Package
