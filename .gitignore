@@ -485,3 +485,4 @@ $RECYCLE.BIN/
 
 # Cloudflare Worker
 .wrangler/
+wwwroot/docs/pdfpecker-docs.pdf

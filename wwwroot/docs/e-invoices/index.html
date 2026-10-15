@@ -100,6 +100,16 @@
     </nav>
   </aside>
   <main id="main" class="docs-body">
+    <div class="docs-tools">
+      <form class="docs-search" role="search">
+        <label class="sr" for="docs-q">Search the docs</label>
+        <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false"
+          aria-controls="docs-results" aria-expanded="false" aria-autocomplete="list">
+        <kbd aria-hidden="true">/</kbd>
+        <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
+      </form>
+      <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+    </div>
     <article class="prose">
 <h1 id="e-invoices">E-invoices</h1>
 <h2 id="factur-x-and-zugferd">Factur-X and ZUGFeRD</h2>
@@ -154,5 +164,6 @@ OIOUBL 2.1 schematron. PdfPecker does not build or validate the rest of the invo
     </nav>
   </div>
 </footer>
+<script src="/docs-search.js"></script>
 </body>
 </html>
