@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Compare HTML to PDF converters for .NET · PdfPecker</title>
-<meta name="description" content="PdfPecker, PDFsharp with HtmlRenderer, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
+<meta name="description" content="PdfPecker, HtmlRenderer.PdfSharp, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
 <link rel="canonical" href="https://pdfpecker.net/compare/">
 <meta name="theme-color" content="#0b0b0f">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -38,7 +38,7 @@
           <thead><tr>
             <th scope="col"><span class="sr">Feature</span></th>
             <th scope="col" class="us">Pdf<wbr>Pecker</th>
-            <th scope="col">PDF<wbr>sharp<span class="wide sub-head">with HtmlRenderer</span></th>
+            <th scope="col"><span class="wide">HtmlRenderer.<wbr>PdfSharp</span><span class="narrow">Html<wbr>Renderer</span><span class="wide sub-head">on PDFsharp</span></th>
             <th scope="col">Iron<wbr>PDF</th>
             <th scope="col">Sync<wbr>fusion</th>
             <th scope="col">Select<wbr>Pdf</th>
@@ -49,7 +49,7 @@
           </tr></thead>
           <tbody>
             <tr class="group"><th scope="rowgroup" colspan="10"><span>The basics</span></th></tr>
-            <tr><th scope="row">Licence</th><td class="t us"><span class="wide">MIT, free</span><span class="narrow">MIT</span></td><td class="t"><span class="wide">BSD-3, on PDFsharp 6.2 (MIT); PDFsharp 6.5 and later are AGPL or paid</span><span class="narrow">MIT (6.2)</span></td><td class="t"><span class="wide">Commercial, per developer</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial; free community licence for small companies</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial from $499; free edition up to 5 pages</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">AGPL-3.0, or a paid commercial licence</span><span class="narrow">AGPL or paid</span></td><td class="t"><span class="wide">MIT, free</span><span class="narrow">MIT</span></td><td class="t"><span class="wide">LGPL-3.0, free</span><span class="narrow">LGPL</span></td></tr>
+            <tr><th scope="row">Licence</th><td class="t us"><span class="wide">MIT, free</span><span class="narrow">MIT</span></td><td class="t"><span class="wide">BSD-3, on PDFsharp 6.2.4 (MIT); with PDFsharp 6.5 or later it becomes AGPL or paid</span><span class="narrow">BSD, MIT</span></td><td class="t"><span class="wide">Commercial, per developer</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial; free community licence for small companies</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial from $499; free edition up to 5 pages</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">AGPL-3.0, or a paid commercial licence</span><span class="narrow">AGPL or paid</span></td><td class="t"><span class="wide">MIT, free</span><span class="narrow">MIT</span></td><td class="t"><span class="wide">LGPL-3.0, free</span><span class="narrow">LGPL</span></td></tr>
             <tr><th scope="row">Still maintained</th><td class="y us"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="n"><b>No</b><span class="wide note-in">archived in January 2023</span></td></tr>
             <tr><th scope="row">Engine</th><td class="t us"><span class="wide">Own, managed C#</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Own, managed (HtmlRenderer)</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Chrome, native</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Chrome (Blink), native</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Chromium (Blink), native</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Own (Aspose.HTML)</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Own, managed C#</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Chromium browser</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Qt WebKit from 2016, native</span><span class="narrow">WebKit</span></td></tr>
             <tr><th scope="row">To deploy</th><td class="t us"><span class="wide">3.1 MB DLL</span><span class="narrow">3 MB</span></td><td class="t"><span class="wide">2.4 MB of DLLs</span><span class="narrow">2 MB</span></td><td class="t"><span class="wide">Native Chrome engine per OS</span><span class="narrow">Native</span></td><td class="t"><span class="wide">Chrome binaries per OS, plus Linux packages</span><span class="narrow">Native</span></td><td class="t"><span class="wide">Bundled Chromium per OS</span><span class="narrow">Native</span></td><td class="t"><span class="wide">NuGet packages</span><span class="narrow">NuGet</span></td><td class="t"><span class="wide">Managed NuGet packages</span><span class="narrow">NuGet</span></td><td class="t"><span class="wide">About 600 MB browser</span><span class="narrow">600 MB</span></td><td class="t"><span class="wide">About 90 MB native binary</span><span class="narrow">90 MB</span></td></tr>
@@ -92,9 +92,9 @@
         <article class="feature"><h3>PdfPecker</h3>
           <p>Invoices, payslips, reports and other templates you control, when you want speed, a small deployment, no browser
             to keep patched and an MIT licence, with PDF/A, PDF/UA, signatures, forms and e-invoices built in.</p></article>
-        <article class="feature"><h3>PDFsharp with HtmlRenderer</h3>
+        <article class="feature"><h3>HtmlRenderer.PdfSharp</h3>
           <p>The closest match: also fully managed, in process and free. Its HTML support stops at HTML 4 and CSS 2, so it suits
-            simple layouts, and PDFsharp gives you a solid API for drawing, merging and signing. PDFsharp 6.5 moved to AGPL or a paid licence.</p></article>
+            simple layouts, and PDFsharp underneath gives you a solid API for drawing, merging and signing. PDFsharp 6.5 moved to AGPL or a paid licence.</p></article>
         <article class="feature"><h3>IronPDF</h3>
           <p>Chrome-exact output with JavaScript, plus a large PDF editing API and paid support, if the licence fits your budget.</p></article>
         <article class="feature"><h3>Syncfusion or SelectPdf</h3>
@@ -121,7 +121,7 @@
       <h2>Sources</h2>
       <ul class="sources">
         <li>PdfPecker: <a href="https://github.com/Moonwalker1307/PdfPecker#readme">README</a>, including its <a href="https://github.com/Moonwalker1307/PdfPecker#limitations">limitations</a></li>
-        <li>PDFsharp with HtmlRenderer: <a href="https://www.nuget.org/packages/HtmlRenderer.PdfSharp">HtmlRenderer.PdfSharp</a>, <a href="https://www.nuget.org/packages/PDFsharp">PDFsharp</a>, <a href="https://docs.pdfsharp.net/General/Overview/Whats-New.html">what's new in 6.x</a>, <a href="https://docs.pdfsharp.net/PDFsharp/Topics/PDF-Features/Signatures.html">signatures</a>, <a href="https://www.pdfsharp.com/">licensing and add-ons</a></li>
+        <li>HtmlRenderer.PdfSharp: <a href="https://www.nuget.org/packages/HtmlRenderer.PdfSharp">NuGet package</a>, and for PDFsharp underneath it: <a href="https://www.nuget.org/packages/PDFsharp">PDFsharp</a>, <a href="https://docs.pdfsharp.net/General/Overview/Whats-New.html">what's new in 6.x</a>, <a href="https://docs.pdfsharp.net/PDFsharp/Topics/PDF-Features/Signatures.html">signatures</a>, <a href="https://www.pdfsharp.com/">licensing and add-ons</a></li>
         <li>IronPDF: <a href="https://ironpdf.com/how-to/pdfua/">PDF/UA</a>, <a href="https://ironpdf.com/product-updates/milestones-pdf-a3-zugferd/">PDF/A-3 and ZUGFeRD</a>, <a href="https://ironpdf.com/examples/form-data/">forms</a>, <a href="https://ironpdf.com/licensing/">licensing</a></li>
         <li>Syncfusion: <a href="https://help.syncfusion.com/document-processing/pdf/conversions/html-to-pdf/net/features">HTML to PDF features</a>, <a href="https://help.syncfusion.com/document-processing/pdf/conversions/html-to-pdf/net/blink">Blink engine</a>, <a href="https://www.syncfusion.com/pdf-framework/net-core/pdf-library">PDF library</a></li>
         <li>SelectPdf: <a href="https://www.nuget.org/packages/Select.Pdf.NetCore.Blink.x64">NuGet package</a>, <a href="https://www.webull.com/news/15701314229044224">Universal edition announcement</a></li>
