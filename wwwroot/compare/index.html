@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compare HTML to PDF converters for .NET · PdfPecker</title>
+<meta name="description" content="PdfPecker, HtmlRenderer.PdfSharp, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
+<link rel="canonical" href="https://pdfpecker.net/compare/">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body class="home">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="PdfPecker home"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
+  <nav aria-label="Main">
+    <a href="/">Home</a>
+    <a href="/html-to-pdf/">HTML to PDF</a>
+    <a href="/markdown/">Markdown</a>
+    <a href="/compare/" aria-current="page">Compare</a>
+    <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
+    <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="section page-head">
+    <div class="wrap">
+      <h1 class="center">HTML to PDF converters for .NET, side by side</h1>
+      <p class="center sub">What PdfPecker and the usual alternatives can do, from their own documentation.
+        Every converter here is a good choice for something, so the notes say where each one shines.</p>
+
+      <p class="rotate-hint">Turn your phone sideways to see the whole table, or swipe it.</p>
+      <div class="table-scroll matrix-scroll">
+        <table class="compare matrix">
+          <thead><tr>
+            <th scope="col"><span class="sr">Feature</span></th>
+            <th scope="col" class="us">Pdf<wbr>Pecker</th>
+            <th scope="col"><span class="wide">HtmlRenderer.<wbr>PdfSharp</span><span class="narrow">Html<wbr>Renderer</span><span class="wide sub-head">on PDFsharp</span></th>
+            <th scope="col">Iron<wbr>PDF</th>
+            <th scope="col">Sync<wbr>fusion</th>
+            <th scope="col">Select<wbr>Pdf</th>
+            <th scope="col">Aspose<span class="wide sub-head">Aspose.HTML and Aspose.PDF</span></th>
+            <th scope="col">iText<span class="wide"> pdfHTML</span></th>
+            <th scope="col"><span class="wide">Chromium</span><span class="narrow">Chrome</span><span class="wide sub-head">PuppeteerSharp or Playwright</span></th>
+            <th scope="col"><span class="wide">wkhtmltopdf</span><span class="narrow">wkhtml<wbr>topdf</span></th>
+          </tr></thead>
+          <tbody>
+            <tr class="group"><th scope="rowgroup" colspan="10"><span>The basics</span></th></tr>
+            <tr><th scope="row">Licence</th><td class="t us"><span class="wide">MIT, free</span><span class="narrow">MIT</span></td><td class="t"><span class="wide">BSD-3, on PDFsharp 6.2.4 (MIT); with PDFsharp 6.5 or later it becomes AGPL or paid</span><span class="narrow">BSD, MIT</span></td><td class="t"><span class="wide">Commercial, per developer</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial; free community licence for small companies</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial from $499; free edition up to 5 pages</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">Commercial</span><span class="narrow">Paid</span></td><td class="t"><span class="wide">AGPL-3.0, or a paid commercial licence</span><span class="narrow">AGPL or paid</span></td><td class="t"><span class="wide">MIT, free</span><span class="narrow">MIT</span></td><td class="t"><span class="wide">LGPL-3.0, free</span><span class="narrow">LGPL</span></td></tr>
+            <tr><th scope="row">Still maintained</th><td class="y us"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="n"><b>No</b><span class="wide note-in">archived in January 2023</span></td></tr>
+            <tr><th scope="row">Engine</th><td class="t us"><span class="wide">Own, managed C#</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Own, managed (HtmlRenderer)</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Chrome, native</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Chrome (Blink), native</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Chromium (Blink), native</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Own (Aspose.HTML)</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Own, managed C#</span><span class="narrow">Own</span></td><td class="t"><span class="wide">Chromium browser</span><span class="narrow">Chrome</span></td><td class="t"><span class="wide">Qt WebKit from 2016, native</span><span class="narrow">WebKit</span></td></tr>
+            <tr><th scope="row">To deploy</th><td class="t us"><span class="wide">3.1 MB DLL</span><span class="narrow">3 MB</span></td><td class="t"><span class="wide">2.4 MB of DLLs</span><span class="narrow">2 MB</span></td><td class="t"><span class="wide">Native Chrome engine per OS</span><span class="narrow">Native</span></td><td class="t"><span class="wide">Chrome binaries per OS, plus Linux packages</span><span class="narrow">Native</span></td><td class="t"><span class="wide">Bundled Chromium per OS</span><span class="narrow">Native</span></td><td class="t"><span class="wide">NuGet packages</span><span class="narrow">NuGet</span></td><td class="t"><span class="wide">Managed NuGet packages</span><span class="narrow">NuGet</span></td><td class="t"><span class="wide">About 600 MB browser</span><span class="narrow">600 MB</span></td><td class="t"><span class="wide">About 90 MB native binary</span><span class="narrow">90 MB</span></td></tr>
+            <tr><th scope="row">No browser or extra process</th><td class="y us"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">engine runs in your process</span></td><td class="n"><b>No</b><span class="wide note-in">starts Chrome to convert</span></td><td class="n"><b>No</b><span class="wide note-in">runs Chromium</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="n"><b>No</b><span class="wide note-in">a browser per server</span></td><td class="p"><b>Partly</b><span class="wide note-in">a process per PDF, or a native DLL</span></td></tr>
+            <tr><th scope="row">Runs JavaScript</th><td class="n us"><b>No</b><span class="wide note-in">by design</span></td><td class="n"><b>No</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">can be turned off</span></td><td class="y"><b>Yes</b><span class="wide note-in">can be turned off</span></td><td class="y"><b>Yes</b><span class="wide note-in">can be sandboxed</span></td><td class="n"><b>No</b></td><td class="y"><b>Yes</b></td><td class="p"><b>Partly</b><span class="wide note-in">an old WebKit engine</span></td></tr>
+            <tr><th scope="row">Flexbox and grid</th><td class="y us"><b>Yes</b><span class="wide note-in">plus var(), calc() and transforms</span></td><td class="n"><b>No</b><span class="wide note-in">HTML 4 and CSS 2 only</span></td><td class="y"><b>Yes</b><span class="wide note-in">everything Chrome does</span></td><td class="y"><b>Yes</b><span class="wide note-in">everything Chrome does</span></td><td class="y"><b>Yes</b><span class="wide note-in">everything Chrome does</span></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="p"><b>Partly</b><span class="wide note-in">flexbox and grid, both incomplete</span></td><td class="y"><b>Yes</b><span class="wide note-in">the reference for CSS</span></td><td class="n"><b>No</b><span class="wide note-in">CSS 2.1 and some CSS 3</span></td></tr>
+            <tr><th scope="row">Right-to-left and complex scripts</th><td class="n us"><b>No</b><span class="wide note-in">not yet</span></td><td class="n"><b>No</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="p"><b>Partly</b><span class="wide note-in">needs the paid pdfCalligraph add-on</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td></tr>
+            <tr class="group"><th scope="rowgroup" colspan="10"><span>PDF features</span></th></tr>
+            <tr><th scope="row">PDF/A archiving</th><td class="y us"><b>Yes</b><span class="wide note-in">PDF/A-2b and 3b</span></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">PDF/A-1 to 4</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="y"><b>Yes</b></td><td class="n"><b>No</b></td><td class="n"><b>No</b></td></tr>
+            <tr><th scope="row">PDF/UA accessibility</th><td class="y us"><b>Yes</b><span class="wide note-in">PDF/UA-1, tagged from your HTML</span></td><td class="p"><b>Partly</b><span class="wide note-in">PDFsharp can tag, but not from your HTML</span></td><td class="y"><b>Yes</b><span class="wide note-in">PDF/UA-1 and 2</span></td><td class="y"><b>Yes</b><span class="wide note-in">PDF/UA-1 and 2</span></td><td class="y"><b>Yes</b><span class="wide note-in">PDF/UA-2 in the Universal edition</span></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="y"><b>Yes</b><span class="wide note-in">PDF/UA-1 and 2</span></td><td class="p"><b>Partly</b><span class="wide note-in">tagged PDF, no PDF/UA (experimental)</span></td><td class="n"><b>No</b></td></tr>
+            <tr><th scope="row">Digital signatures</th><td class="y us"><b>Yes</b><span class="wide note-in">PAdES, visible boxes, timestamps</span></td><td class="y"><b>Yes</b><span class="wide note-in">with PDFsharp 6.2 or later</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="p"><b>Partly</b><span class="wide note-in">signing in the Windows edition; Universal validates only</span></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="y"><b>Yes</b><span class="wide note-in">with iText Core</span></td><td class="n"><b>No</b></td><td class="n"><b>No</b></td></tr>
+            <tr><th scope="row">Passwords and encryption</th><td class="y us"><b>Yes</b><span class="wide note-in">AES-256 and permissions</span></td><td class="y"><b>Yes</b><span class="wide note-in">up to AES-256</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">up to AES-256</span></td><td class="y"><b>Yes</b><span class="wide note-in">up to AES-256</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">with iText Core</span></td><td class="n"><b>No</b></td><td class="n"><b>No</b></td></tr>
+            <tr><th scope="row">Fillable forms from HTML</th><td class="y us"><b>Yes</b><span class="wide note-in">inputs, check boxes, radios, selects</span></td><td class="n"><b>No</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">EnableForm</span></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="p"><b>Partly</b><span class="wide note-in">opt-in, limited</span></td><td class="n"><b>No</b><span class="wide note-in">fields print as static</span></td><td class="p"><b>Partly</b><span class="wide note-in">with --enable-forms</span></td></tr>
+            <tr><th scope="row">Bookmarks</th><td class="y us"><b>Yes</b><span class="wide note-in">from your headings</span></td><td class="y"><b>Yes</b><span class="wide note-in">through the PDFsharp API</span></td><td class="y"><b>Yes</b><span class="wide note-in">through its API</span></td><td class="y"><b>Yes</b><span class="wide note-in">from your headings</span></td><td class="y"><b>Yes</b><span class="wide note-in">from HTML elements</span></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="y"><b>Yes</b><span class="wide note-in">from your headings</span></td><td class="p"><b>Partly</b><span class="wide note-in">experimental outline option</span></td><td class="y"><b>Yes</b><span class="wide note-in">from your headings</span></td></tr>
+            <tr><th scope="row">Watermarks</th><td class="y us"><b>Yes</b><span class="wide note-in">text or image</span></td><td class="y"><b>Yes</b><span class="wide note-in">drawn with PDFsharp</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="y"><b>Yes</b><span class="wide note-in">with iText Core</span></td><td class="n"><b>No</b><span class="wide note-in">draw them in your HTML</span></td><td class="n"><b>No</b><span class="wide note-in">draw them in your HTML</span></td></tr>
+            <tr><th scope="row">E-invoices</th><td class="y us"><b>Yes</b><span class="wide note-in">Factur-X, ZUGFeRD, PDF in UBL</span></td><td class="p"><b>Partly</b><span class="wide note-in">paid Factur-X add-on</span></td><td class="y"><b>Yes</b><span class="wide note-in">ZUGFeRD XML in PDF/A-3</span></td><td class="y"><b>Yes</b><span class="wide note-in">ZUGFeRD</span></td><td class="y"><b>Yes</b><span class="wide note-in">ZUGFeRD and Factur-X, paid edition</span></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="p"><b>Partly</b><span class="wide note-in">PDF/A-3 attachments, by hand</span></td><td class="n"><b>No</b></td><td class="n"><b>No</b></td></tr>
+            <tr><th scope="row">Merge PDFs</th><td class="y us"><b>Yes</b><span class="wide note-in">streamed, one file at a time</span></td><td class="y"><b>Yes</b><span class="wide note-in">with PDFsharp</span></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="y"><b>Yes</b><span class="wide note-in">with iText Core</span></td><td class="n"><b>No</b></td><td class="n"><b>No</b></td></tr>
+            <tr><th scope="row">PDF to image</th><td class="y us"><b>Yes</b><span class="wide note-in">own renderer to PNG</span></td><td class="n"><b>No</b></td><td class="y"><b>Yes</b></td><td class="y"><b>Yes</b></td><td class="u"><b title="Not stated in its documentation">?</b><span class="wide note-in">not stated in its docs</span></td><td class="y"><b>Yes</b><span class="wide note-in">with Aspose.PDF</span></td><td class="n"><b>No</b></td><td class="n"><b>No</b><span class="wide note-in">screenshots of HTML only</span></td><td class="n"><b>No</b><span class="wide note-in">wkhtmltoimage does HTML only</span></td></tr>
+            <tr class="group"><th scope="rowgroup" colspan="10"><span>Speed on the same 4-core VM</span></th></tr>
+            <tr><th scope="row">Invoice, 1 page</th><td class="t us">0.86 ms</td><td class="t">5.0 ms</td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">128 to 142 ms</span><span class="narrow">128 ms</span></td><td class="t">289 ms</td></tr>
+            <tr><th scope="row">Report, 30 pages</th><td class="t us">39 ms</td><td class="t">473 ms</td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">522 to 539 ms</span><span class="narrow">522 ms</span></td><td class="t">693 ms</td></tr>
+            <tr><th scope="row">Peak memory</th><td class="t us">83 MB</td><td class="t">255 MB</td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">not measured</span><span class="narrow">–</span></td><td class="t"><span class="wide">849 to 986 MB</span><span class="narrow">849 MB</span></td><td class="t">164 MB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Speed figures are medians after warm-up on one 4-core Linux VM with .NET 10, where the Chromium column shows
+        PuppeteerSharp and Playwright. The commercial converters and iText were not part of that run.
+        A question mark means the converter's documentation doesn't say either way.
+        <a href="https://github.com/Moonwalker1307/PdfPecker#how-it-compares">How it was measured</a>.
+        Checked against each project's public documentation in October 2026; if something has changed,
+        <a href="https://github.com/Moonwalker1307/PdfPecker.Web/issues">let us know</a>.</p>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="wrap">
+      <h2 class="center">Which one fits</h2>
+      <p class="center sub">PdfPecker is a document engine, not a browser. Pick something else when you need what only a browser does.</p>
+      <div class="features picks">
+        <article class="feature"><h3>PdfPecker</h3>
+          <p>Invoices, payslips, reports and other templates you control, when you want speed, a small deployment, no browser
+            to keep patched and an MIT licence, with PDF/A, PDF/UA, signatures, forms and e-invoices built in.</p></article>
+        <article class="feature"><h3>HtmlRenderer.PdfSharp</h3>
+          <p>The closest match: also fully managed, in process and free. Its HTML support stops at HTML 4 and CSS 2, so it suits
+            simple layouts, and PDFsharp underneath gives you a solid API for drawing, merging and signing. PDFsharp 6.5 moved to AGPL or a paid licence.</p></article>
+        <article class="feature"><h3>IronPDF</h3>
+          <p>Chrome-exact output with JavaScript, plus a large PDF editing API and paid support, if the licence fits your budget.</p></article>
+        <article class="feature"><h3>Syncfusion or SelectPdf</h3>
+          <p>Commercial PDF suites that drive Chrome for you, with JavaScript and a wide PDF API. Syncfusion is free for small
+            companies under its community licence, and SelectPdf has a free edition for documents of up to 5 pages.</p></article>
+        <article class="feature"><h3>Aspose</h3>
+          <p>A large commercial family of document APIs. Aspose.HTML renders the HTML with its own engine, and Aspose.PDF adds
+            PDF/A, PDF/UA, signatures and the rest.</p></article>
+        <article class="feature"><h3>iText pdfHTML</h3>
+          <p>A long-established PDF toolkit with deep standards support, under AGPL or a commercial licence. Complex scripts need its pdfCalligraph add-on.</p></article>
+        <article class="feature"><h3>PuppeteerSharp or Playwright</h3>
+          <p>Free and exactly what Chrome prints, including JavaScript-heavy pages and live websites, at the cost of running a browser.</p></article>
+        <article class="feature"><h3>wkhtmltopdf</h3>
+          <p>Archived since 2023 on a WebKit from 2016, so best kept for existing systems that already depend on it.</p></article>
+        <article class="feature"><h3>Not HTML at all</h3>
+          <p>QuestPDF builds documents from C# code instead of HTML. It's a fine choice when you would rather write layout in
+            code than keep HTML templates.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap narrow-wrap">
+      <h2>Sources</h2>
+      <ul class="sources">
+        <li>PdfPecker: <a href="https://github.com/Moonwalker1307/PdfPecker#readme">README</a>, including its <a href="https://github.com/Moonwalker1307/PdfPecker#limitations">limitations</a></li>
+        <li>HtmlRenderer.PdfSharp: <a href="https://www.nuget.org/packages/HtmlRenderer.PdfSharp">NuGet package</a>, and for PDFsharp underneath it: <a href="https://www.nuget.org/packages/PDFsharp">PDFsharp</a>, <a href="https://docs.pdfsharp.net/General/Overview/Whats-New.html">what's new in 6.x</a>, <a href="https://docs.pdfsharp.net/PDFsharp/Topics/PDF-Features/Signatures.html">signatures</a>, <a href="https://www.pdfsharp.com/">licensing and add-ons</a></li>
+        <li>IronPDF: <a href="https://ironpdf.com/how-to/pdfua/">PDF/UA</a>, <a href="https://ironpdf.com/product-updates/milestones-pdf-a3-zugferd/">PDF/A-3 and ZUGFeRD</a>, <a href="https://ironpdf.com/examples/form-data/">forms</a>, <a href="https://ironpdf.com/licensing/">licensing</a></li>
+        <li>Syncfusion: <a href="https://help.syncfusion.com/document-processing/pdf/conversions/html-to-pdf/net/features">HTML to PDF features</a>, <a href="https://help.syncfusion.com/document-processing/pdf/conversions/html-to-pdf/net/blink">Blink engine</a>, <a href="https://www.syncfusion.com/pdf-framework/net-core/pdf-library">PDF library</a></li>
+        <li>SelectPdf: <a href="https://www.nuget.org/packages/Select.Pdf.NetCore.Blink.x64">NuGet package</a>, <a href="https://www.webull.com/news/15701314229044224">Universal edition announcement</a></li>
+        <li>Aspose: <a href="https://docs.aspose.com/html/net/convert-html-to-pdf/">Aspose.HTML to PDF</a>, <a href="https://docs.aspose.com/html/net/sandboxing/">sandboxing</a>, <a href="https://tutorials.aspose.com/pdf/net/pdfa-compliance/">Aspose.PDF PDF/A and PDF/UA</a></li>
+        <li>iText pdfHTML: <a href="https://kb.itextpdf.com/itext/flexbox-suport-in-pdfhtml">flexbox</a>, <a href="https://kb.itextpdf.com/itext/implementing-grid-layout-support-in-itext">grid</a>, <a href="https://kb.itextpdf.com/itext/can-i-convert-an-html-form-to-a-pdf">forms</a>, <a href="https://kb.itextpdf.com/itext/new-high-level-html-to-pdf-ua-api">PDF/UA</a></li>
+        <li>Chromium: <a href="https://pptr.dev/api/puppeteer.pdfoptions">PDF options</a> (tagged and outline are marked experimental)</li>
+        <li>wkhtmltopdf: <a href="https://github.com/wkhtmltopdf/wkhtmltopdf">repository</a>, archived on 2 January 2023</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>PdfPecker is open source under the MIT license; its bundled fonts keep their own open licenses.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
+      <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
+      <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
