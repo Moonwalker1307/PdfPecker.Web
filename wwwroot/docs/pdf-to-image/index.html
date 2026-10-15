@@ -100,6 +100,16 @@
     </nav>
   </aside>
   <main id="main" class="docs-body">
+    <div class="docs-tools">
+      <form class="docs-search" role="search">
+        <label class="sr" for="docs-q">Search the docs</label>
+        <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false"
+          aria-controls="docs-results" aria-expanded="false" aria-autocomplete="list">
+        <kbd aria-hidden="true">/</kbd>
+        <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
+      </form>
+      <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+    </div>
     <article class="prose">
 <h1 id="pdf-to-image">PDF to image</h1>
 <p><code>PdfToImage</code> and <code>PdfRenderer</code> render PDF pages to PNG, JPEG or WebP (or raw RGBA pixels). This works for any PDF,
@@ -179,5 +189,6 @@ refinement and halftone regions, with <code>JBIG2Globals</code>), CCITT fax, ste
     </nav>
   </div>
 </footer>
+<script src="/docs-search.js"></script>
 </body>
 </html>

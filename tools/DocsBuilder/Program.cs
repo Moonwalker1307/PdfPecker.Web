@@ -52,18 +52,27 @@ var unused = Directory.GetFiles(source, "*.md").Select(Path.GetFileNameWithoutEx
 if (unused.Length > 0) { Console.Error.WriteLine($"Not in the page list: {string.Join(", ", unused)}"); return 1; }
 
 if (Directory.Exists(output)) Directory.Delete(output, recursive: true);
+var rendered = new List<(Page Page, string Body)>();
 for (int i = 0; i < pages.Length; i++)
 {
     var page = pages[i];
     var markdown = File.ReadAllText(Path.Combine(source, page.File + ".md")).ReplaceLineEndings("\n");
     var title = Regex.Match(markdown, @"^# (.+)$", RegexOptions.Multiline).Groups[1].Value;
     var body = Polish(MarkdownToHtml.Convert(markdown));
+    rendered.Add((page, body));
     var html = Render(page, title, body, i > 0 ? pages[i - 1] : null, i < pages.Length - 1 ? pages[i + 1] : null);
     var dir = page.Slug.Length == 0 ? output : Path.Combine(output, page.Slug);
     Directory.CreateDirectory(dir);
     File.WriteAllText(Path.Combine(dir, "index.html"), html, new UTF8Encoding(false));
 }
-Console.WriteLine($"Wrote {pages.Length} pages to {output}");
+File.WriteAllText(Path.Combine(output, "search.json"), DocsSearch.BuildIndex(rendered, Href), new UTF8Encoding(false));
+Console.WriteLine($"Wrote {pages.Length} pages and the search index to {output}");
+
+// The PDF is not checked in: every PDF gets a random file ID, so it would never match a committed copy. The Deploy
+// workflow runs this program before uploading wwwroot, and it is ignored by git.
+var pdf = DocsPdf.Build(rendered, Path.Combine(root, "wwwroot"));
+File.WriteAllBytes(Path.Combine(output, DocsPdf.FileName), pdf);
+Console.WriteLine($"Wrote {DocsPdf.FileName} ({pdf.Length / 1024} KB)");
 return 0;
 
 // Wide tables scroll inside their own box on phones, and C# examples get the same colours as the home page.
@@ -108,6 +117,16 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
         {Toc(page, "    ")}
           </aside>
           <main id="main" class="docs-body">
+            <div class="docs-tools">
+              <form class="docs-search" role="search">
+                <label class="sr" for="docs-q">Search the docs</label>
+                <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false"
+                  aria-controls="docs-results" aria-expanded="false" aria-autocomplete="list">
+                <kbd aria-hidden="true">/</kbd>
+                <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
+              </form>
+              <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download>Download PDF</a>
+            </div>
             <article class="prose">
 
         """);
@@ -126,6 +145,7 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
           </div>
 
           {Footer}
+          <script src="/docs-search.js"></script>
           </body>
           </html>
 

@@ -100,6 +100,16 @@
     </nav>
   </aside>
   <main id="main" class="docs-body">
+    <div class="docs-tools">
+      <form class="docs-search" role="search">
+        <label class="sr" for="docs-q">Search the docs</label>
+        <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false"
+          aria-controls="docs-results" aria-expanded="false" aria-autocomplete="list">
+        <kbd aria-hidden="true">/</kbd>
+        <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
+      </form>
+      <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+    </div>
     <article class="prose">
 <h1 id="performance">Performance</h1>
 <p>PdfPecker lays out documents in your own process, without a browser, so a typical one-page document takes about a
@@ -332,5 +342,6 @@ and 40 to 85 ms as WebP at the default quality, depending on content.</p>
     </nav>
   </div>
 </footer>
+<script src="/docs-search.js"></script>
 </body>
 </html>
