@@ -6,6 +6,8 @@ of every change is in the [PdfPecker repository](https://github.com/Moonwalker13
 
 ## 1.9.0
 
+Released 16 October 2026.
+
 - [Chinese, Japanese and Korean line breaking](/docs/languages/#chinese-japanese-and-korean-line-breaking) with
   kinsoku rules, CSS `line-break` and `word-break: keep-all`.
 - [External signers](/docs/signatures/#external-signers-hsms-smart-cards-and-key-vaults): sign with a key in an HSM,
