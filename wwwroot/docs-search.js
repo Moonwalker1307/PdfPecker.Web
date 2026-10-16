@@ -10,7 +10,7 @@
 
   function load() {
     if (!loading) {
-      loading = fetch('/docs/search.json')
+      loading = fetch(form.getAttribute('data-index') || '/docs/search.json')
         .then(function (r) { return r.json(); })
         .then(function (entries) {
           index = entries.map(function (e) {
@@ -142,17 +142,15 @@
   });
 })();
 
-// The version picker next to Download PDF: the download link follows the version chosen.
+// The version picker: choosing a version opens the same page in that version's manual, or its first page when that
+// manual has no such page. The Download PDF link on each page already points at that page's manual.
 (function () {
   var select = document.getElementById('docs-version');
-  var link = document.querySelector('.docs-pdf');
-  if (!select || !link) return;
-  function update() {
+  if (!select) return;
+  select.addEventListener('change', function () {
     var option = select.options[select.selectedIndex];
-    link.href = option.value;
-    // Saved with the version in its name, such as pdfpecker-docs-v1.7.0.pdf.
-    link.setAttribute('download', option.getAttribute('data-file') || option.value.split('/').pop());
-  }
-  select.addEventListener('change', update);
-  update();
+    var slug = select.getAttribute('data-slug') || '';
+    var pages = (option.getAttribute('data-pages') || '').split(' ');
+    location.href = option.value + (slug && pages.indexOf(slug) >= 0 ? slug + '/' : '');
+  });
 })();
