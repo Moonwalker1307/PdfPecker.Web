@@ -80,6 +80,7 @@ Section[] sections =
     ]),
     new("Reference",
     [
+        new("changelog", "changelog", "Changelog", "What changed in each PdfPecker release, from 1.0.0 to the latest."),
         new("limitations", "limitations", "Limitations", "What PdfPecker does not support yet, and what it leaves out by design."),
         new("performance", "performance", "Performance", "PdfPecker's speed and memory compared with Chromium, wkhtmltopdf, iText and other .NET converters."),
         new("how-it-works", "how-it-works", "How it works", "PdfPecker's pipeline from HTML parsing through CSS and layout to the PDF writer and renderer."),
@@ -209,7 +210,8 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
                 <select id="docs-version" class="docs-version">
         {VersionOptions("          ")}
                 </select>
-                <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download>Download PDF</a>
+                <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download="{DocsVersions.DownloadName(version)}">Download PDF</a>
+                <a class="docs-changelog" href="/docs/changelog/">Changelog</a>
               </div>
             </div>
             <article class="prose">
@@ -241,8 +243,8 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
 // One option per manual: this version's, then the archived ones, newest first. docs-search.js points the download
 // link at the chosen one.
 string VersionOptions(string indent) => string.Join("\n",
-    new[] { $"{indent}<option value=\"/docs/{DocsPdf.FileName}\">{version} (latest)</option>" }
-        .Concat(older.Select(v => $"{indent}<option value=\"/docs/{DocsVersions.Folder}/{DocsVersions.FileName(v)}\">{v}</option>")));
+    new[] { $"{indent}<option value=\"/docs/{DocsPdf.FileName}\" data-file=\"{DocsVersions.DownloadName(version)}\">{version} (latest)</option>" }
+        .Concat(older.Select(v => $"{indent}<option value=\"/docs/{DocsVersions.Folder}/{DocsVersions.FileName(v)}\" data-file=\"{DocsVersions.DownloadName(v)}\">{v}</option>")));
 
 string Toc(Page current, string indent)
 {

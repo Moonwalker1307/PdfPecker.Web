@@ -10,6 +10,10 @@ static partial class DocsVersions
 
     public static string FileName(string version) => $"pdfpecker-docs-{version}.pdf";
 
+    // The name the browser saves a manual under, with its version, so downloads of different versions don't overwrite
+    // each other or get mixed up. The latest manual is served as pdfpecker-docs.pdf but saved under this name too.
+    public static string DownloadName(string version) => $"pdfpecker-docs-v{version}.pdf";
+
     public static List<string> Archived(string folder) =>
         !Directory.Exists(folder) ? [] :
         Directory.GetFiles(folder, "pdfpecker-docs-*.pdf")
