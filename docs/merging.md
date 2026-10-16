@@ -76,7 +76,7 @@ updates, scanners (JPEG, CCITT G4, CMYK, OCR text layers) and damaged files (wro
 truncated files, junk before the header); every merged page rendered pixel-identical to its original in Poppler.
 Merging four small documents takes about 1 ms, and 1,000 one-page Chrome payslips about 1 s.
 
-## Extracting, reordering and splitting pages
+## Extracting, reordering and splitting pages {new 1.7.0}
 
 `PdfPages` works on the pages of any existing PDF. Pages are numbered from 1, and ranges are written like `"1-3,5,8-"`
 (pages 1 to 3, 5, and 8 to the end): `"3,1,2"` reorders, `"1,1"` repeats, `"5-3"` runs backwards and `"last"` is the

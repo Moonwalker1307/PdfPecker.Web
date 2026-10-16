@@ -1,4 +1,4 @@
-# Attachments
+# Attachments {new 1.7.0}
 
 Any file can travel inside the PDF, listed in the viewer's attachments panel: the source spreadsheet of a report, the
 data behind a chart, a signed contract.
