@@ -484,6 +484,10 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .docs-results span { display: block; font-size: 13px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
 .docs-results mark { background: none; color: var(--accent); font-weight: 700; }
 .docs-results .empty-result { padding: 10px 12px; color: var(--muted); font-size: 14px; }
+.docs-download { display: flex; flex: none; gap: 8px; }
+.docs-version { font: inherit; font-size: 15px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel); color: var(--text); }
+.docs-version:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
 .docs-pdf { flex: none; padding: 10px 14px; border-radius: 10px; font-weight: 600; }
 .docs-pdf::before { content: "\2193"; color: var(--accent); font-weight: 800; }
 
@@ -507,6 +511,17 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .prose thead th { background: var(--alt); font-size: 13px; color: var(--muted); }
 .prose tbody tr:last-child td { border-bottom: 0; }
 .prose td:first-child { white-space: nowrap; }
+/* What is new or changed since the previous PdfPecker version (marked in docs/*.md, see tools/DocsBuilder). */
+.change { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px;
+  font: 700 11px/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); vertical-align: middle; white-space: nowrap; }
+.change.new { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+.docs-toc .change { margin-left: 4px; padding: 0 6px; font-size: 10px; }
+.prose .changes { margin: 0 0 24px; padding: 12px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft);
+  border-radius: 0 10px 10px 0; font-size: 15px; }
+.prose .changes p { margin: 0; }
+.prose .changes ul { margin: 8px 0 0; padding-left: 20px; }
+.prose .changes li + li { margin-top: 2px; }
+.prose .changes .change { margin-left: 4px; padding: 0 6px; font-size: 10px; }
 .prose blockquote { margin: 0 0 16px; padding: 4px 18px; border-left: 4px solid var(--accent); color: var(--muted); }
 
 .docs-pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 800px; margin-top: 56px; }
@@ -536,7 +551,8 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 @media (max-width: 520px) {
   .docs-tools { flex-wrap: wrap; }
   .docs-search kbd { display: none; }
-  .docs-pdf { width: 100%; }
+  .docs-download { width: 100%; }
+  .docs-pdf { flex: 1; }
   .docs-pager { grid-template-columns: 1fr; }
   .docs-pager .next { grid-column: 1; }
 }

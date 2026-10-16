@@ -24,7 +24,7 @@ File.WriteAllBytes("page3.jpg", image.ToJpeg(quality: 85));
 File.WriteAllBytes("page3.webp", image.ToWebP());
 ```
 
-## Output formats
+## Output formats {new 1.7.0}
 
 Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`Save()` use it too):
 

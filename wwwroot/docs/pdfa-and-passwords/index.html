@@ -39,22 +39,22 @@
         <li><a href="/docs/paged-media/">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts</a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left and hyphenation <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>PDF features</p>
       <ul>
-        <li><a href="/docs/pdfa-and-passwords/" aria-current="page">PDF/A, passwords and watermarks</a></li>
-        <li><a href="/docs/accessibility/">Accessibility</a></li>
+        <li><a href="/docs/pdfa-and-passwords/" aria-current="page">PDF/A, passwords and watermarks <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/accessibility/">Accessibility <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/">E-invoices</a></li>
-        <li><a href="/docs/attachments/">Attachments</a></li>
+        <li><a href="/docs/e-invoices/">E-invoices <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/attachments/">Attachments <span class="change new" title="New in 1.7.0">New</span></a></li>
       </ul>
       <p>Existing PDFs</p>
       <ul>
-        <li><a href="/docs/merging/">Merging and splitting</a></li>
-        <li><a href="/docs/stamping/">Stamping</a></li>
-        <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/merging/">Merging and splitting <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/stamping/">Stamping <span class="change new" title="New in 1.7.0">New</span></a></li>
+        <li><a href="/docs/pdf-to-image/">PDF to image <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>Reference</p>
       <ul>
@@ -74,22 +74,22 @@
         <li><a href="/docs/paged-media/">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts</a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left and hyphenation <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>PDF features</p>
       <ul>
-        <li><a href="/docs/pdfa-and-passwords/" aria-current="page">PDF/A, passwords and watermarks</a></li>
-        <li><a href="/docs/accessibility/">Accessibility</a></li>
+        <li><a href="/docs/pdfa-and-passwords/" aria-current="page">PDF/A, passwords and watermarks <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/accessibility/">Accessibility <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/">E-invoices</a></li>
-        <li><a href="/docs/attachments/">Attachments</a></li>
+        <li><a href="/docs/e-invoices/">E-invoices <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/attachments/">Attachments <span class="change new" title="New in 1.7.0">New</span></a></li>
       </ul>
       <p>Existing PDFs</p>
       <ul>
-        <li><a href="/docs/merging/">Merging and splitting</a></li>
-        <li><a href="/docs/stamping/">Stamping</a></li>
-        <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/merging/">Merging and splitting <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/stamping/">Stamping <span class="change new" title="New in 1.7.0">New</span></a></li>
+        <li><a href="/docs/pdf-to-image/">PDF to image <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>Reference</p>
       <ul>
@@ -108,10 +108,25 @@
         <kbd aria-hidden="true">/</kbd>
         <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
       </form>
-      <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+      <div class="docs-download">
+        <label class="sr" for="docs-version">PdfPecker version of the PDF</label>
+        <select id="docs-version" class="docs-version">
+          <option value="/docs/pdfpecker-docs.pdf">1.7.0 (latest)</option>
+          <option value="/docs/versions/pdfpecker-docs-1.6.0.pdf">1.6.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.5.1.pdf">1.5.1</option>
+          <option value="/docs/versions/pdfpecker-docs-1.4.0.pdf">1.4.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.3.0.pdf">1.3.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.2.0.pdf">1.2.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.1.1.pdf">1.1.1</option>
+          <option value="/docs/versions/pdfpecker-docs-1.1.0.pdf">1.1.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.0.0.pdf">1.0.0</option>
+        </select>
+        <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+      </div>
     </div>
     <article class="prose">
 <h1 id="pdfa-passwords-and-watermarks">PDF/A, passwords and watermarks</h1>
+<p class="changes"><b>Changed in 1.7.0:</b> <a href="#pdfa">PDF/A</a>, <a href="#passwords-on-existing-pdfs">Passwords on existing PDFs</a>.</p>
 <h2 id="watermarks-and-passwords">Watermarks and passwords</h2>
 <pre class="cs"><code><span class="k">var</span> options = <span class="k">new</span> <span class="t">PdfOptions</span>
 {
@@ -128,7 +143,7 @@
     },
 };
 </code></pre>
-<h2 id="pdfa">PDF/A</h2>
+<h2 id="pdfa">PDF/A <span class="change">Changed in 1.7.0</span></h2>
 <p>For archiving, set <code>Conformance = PdfConformance.PdfA2b</code> (or another level below): the PDF gets XMP metadata, an sRGB
 output intent and a file ID, and CMYK JPEGs are converted to RGB. All fonts are embedded: text without a registered font
 uses the bundled Liberation fonts (see <a href="/docs/fonts/">Fonts</a>). PDF/A does not allow encryption, so combining <code>Conformance</code> with
@@ -177,7 +192,7 @@ properties in its XMP metadata, since PDF 2.0 deprecates the information diction
 PDF/UA, passes veraPDF 1.28 (flavours 2b, 2u, 3b, 3u, 4 and 4f) on documents with text, tables, lists, images, links,
 form fields, SVG and Markdown. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.</p>
-<h2 id="passwords-on-existing-pdfs">Passwords on existing PDFs</h2>
+<h2 id="passwords-on-existing-pdfs">Passwords on existing PDFs <span class="change new">New in 1.7.0</span></h2>
 <p>To add, change or remove the password of a PDF you already have (from any producer, not only PdfPecker), use
 <code>PdfProtector</code>:</p>
 <pre class="cs"><code><span class="c">// Encrypt any PDF with AES-256</span>

@@ -9,10 +9,12 @@ static partial class DocsPdf
 {
     public const string FileName = "pdfpecker-docs.pdf";
 
-    public static byte[] Build(IReadOnlyList<(Page Page, string Body)> pages, string wwwroot)
+    // An old library README (the manual before 1.7.0) as one chapter, with the same cover, contents and styles.
+    public static byte[] BuildReadme(string body, string versionText, string wwwroot) =>
+        Build([(new Page("readme", "README", $"PdfPecker {versionText}", ""), body)], wwwroot, versionText);
+
+    public static byte[] Build(IReadOnlyList<(Page Page, string Body)> pages, string wwwroot, string versionText)
     {
-        var version = typeof(HtmlToPdf).Assembly.GetName().Version;
-        var versionText = version is null ? "" : $"{version.Major}.{version.Minor}.{version.Build}";
 
         var toc = new StringBuilder();
         var chapters = new StringBuilder();
@@ -33,9 +35,10 @@ static partial class DocsPdf
             html = html.Replace("<div class=\"table-scroll\">", "<div>");
             chapters.Append($"<section class=\"chapter\" id=\"{prefix}\">\n").Append(html).Append("</section>\n");
 
-            toc.Append($"<li class=\"toc-page\"><a href=\"#{prefix}\">{WebUtility.HtmlEncode(page.Title)}</a></li>\n");
+            var pageTag = html.Contains("<p class=\"changes\"><b>New in") ? " <span class=\"change new\">New</span>" : "";
+            toc.Append($"<li class=\"toc-page\"><a href=\"#{prefix}\">{WebUtility.HtmlEncode(page.Title)}</a>{pageTag}</li>\n");
             foreach (Match h in H2Pattern().Matches(html))
-                toc.Append($"<li class=\"toc-section\"><a href=\"#{h.Groups[1].Value}\">{h.Groups[2].Value}</a></li>\n");
+                toc.Append($"<li class=\"toc-section\"><a href=\"#{h.Groups[1].Value}\">{ChangePattern().Replace(h.Groups[2].Value, "")}</a>{ChangeTag(h.Groups[2].Value)}</li>\n");
         }
 
         var document = $$"""
@@ -79,6 +82,17 @@ static partial class DocsPdf
     }
 
     static string Prefix(string slug) => slug.Length == 0 ? "start" : slug.Replace('/', '-');
+
+    // In the contents, a changed section's badge goes after the page number rather than inside the link, which ends in
+    // the leader and the number.
+    static string ChangeTag(string heading)
+    {
+        var m = ChangePattern().Match(heading);
+        return m.Success ? m.Value : "";
+    }
+
+    [GeneratedRegex(""" ?<span class="change[^"]*">[^<]*</span>""")]
+    private static partial Regex ChangePattern();
 
     [GeneratedRegex(""" id="([^"]+)"(?=>)""")]
     private static partial Regex IdPattern();
@@ -134,6 +148,13 @@ static partial class DocsPdf
         thead th { background: #f1f1f5; }
         thead { display: table-header-group; }
         tr { break-inside: avoid; }
+        .change { font: bold 7pt Helvetica, sans-serif; color: #fff; background: #5b5d6b; border-radius: 2pt;
+          padding: 0.5pt 3pt; vertical-align: middle; white-space: nowrap; }
+        .change.new { background: #e0252b; }
+        .toc .change { margin-left: 2mm; }
+        .changes { border-left: 3pt solid #e0252b; background: #fdf1f1; padding: 2mm 4mm; margin: 0 0 4mm; }
+        .changes p { margin: 0 0 1.5mm; }
+        .changes ul { margin: 0; padding-left: 5mm; }
         blockquote { margin: 0 0 3mm; padding-left: 4mm; border-left: 3pt solid #e0252b; color: #5b5d6b; }
         """;
 }

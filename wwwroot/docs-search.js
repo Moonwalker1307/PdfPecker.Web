@@ -141,3 +141,17 @@
     if (!form.contains(ev.target)) close();
   });
 })();
+
+// The version picker next to Download PDF: the download link follows the version chosen.
+(function () {
+  var select = document.getElementById('docs-version');
+  var link = document.querySelector('.docs-pdf');
+  if (!select || !link) return;
+  function update() {
+    link.href = select.value;
+    var name = select.value.split('/').pop();
+    link.setAttribute('download', name);
+  }
+  select.addEventListener('change', update);
+  update();
+})();

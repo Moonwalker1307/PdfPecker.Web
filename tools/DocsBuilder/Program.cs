@@ -5,10 +5,49 @@ using PdfPecker;
 
 // Turns docs/*.md into the static pages under wwwroot/docs. Cloudflare serves wwwroot as it is, so the pages are
 // generated ahead of time and checked in rather than rendered by the web app.
-var root = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+//
+//   dotnet run --project tools/DocsBuilder                         builds the pages, the search index and the PDF
+//   dotnet run --project tools/DocsBuilder -- archive              also keeps this version's PDF in wwwroot/docs/versions
+//   dotnet run --project tools/DocsBuilder -- archive-readme 1.2.0 README.md
+//                                                                  keeps an old library README as that version's PDF
+var root = Directory.GetCurrentDirectory();
 var source = Path.Combine(root, "docs");
 var output = Path.Combine(root, "wwwroot", "docs");
+var archive = Path.Combine(output, DocsVersions.Folder);
 if (!Directory.Exists(source)) { Console.Error.WriteLine($"No docs folder in {root}; run from the repository root."); return 1; }
+
+// The version of the PdfPecker package the site (and this tool) uses is the version the docs describe.
+var assemblyVersion = typeof(HtmlToPdf).Assembly.GetName().Version!;
+var version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
+
+if (args is ["archive-readme", var readmeVersion, var readmePath])
+{
+    // Before the manual moved to pdfpecker.net/docs (PdfPecker 1.7.0) it was the library's README, so the README at a
+    // release tag is that release's manual.
+    var readme = File.ReadAllText(readmePath).ReplaceLineEndings("\n");
+    var pdfBytes = DocsPdf.BuildReadme(Polish(MarkdownToHtml.Convert(DocsVersions.StripImages(readme))), readmeVersion,
+        Path.Combine(root, "wwwroot"));
+    Directory.CreateDirectory(archive);
+    File.WriteAllBytes(Path.Combine(archive, DocsVersions.FileName(readmeVersion)), pdfBytes);
+    Console.WriteLine($"Wrote {DocsVersions.FileName(readmeVersion)} ({pdfBytes.Length / 1024} KB)");
+    return 0;
+}
+if (args.Length > 0 && args is not ["archive"]) { Console.Error.WriteLine($"Unknown arguments: {string.Join(' ', args)}"); return 1; }
+
+// When the site moves to a new PdfPecker version, the manual of the version it leaves must be kept first, because it
+// can no longer be built once the package is newer.
+var archived = DocsVersions.Archived(archive);
+var previous = DocsVersions.ReadLatest(output);
+if (previous != null && previous != version && !archived.Contains(previous))
+{
+    Console.Error.WriteLine($"The docs were last built for PdfPecker {previous}, now {version}. Keep the {previous} manual first: " +
+        $"with the PackageReference still on {previous}, run 'dotnet run --project tools/DocsBuilder -- archive' and commit " +
+        $"wwwroot/docs/{DocsVersions.Folder}/{DocsVersions.FileName(previous)}.");
+    return 1;
+}
+var older = archived.Where(v => Version.Parse(v) < Version.Parse(version)).OrderByDescending(Version.Parse).ToList();
+var newer = archived.Where(v => Version.Parse(v) > Version.Parse(version)).ToList();
+if (newer.Count > 0) { Console.Error.WriteLine($"Archived manuals newer than {version}: {string.Join(", ", newer)}"); return 1; }
 
 // The order of the sidebar and of the previous/next links. Slug "" is the docs home page.
 Section[] sections =
@@ -46,33 +85,62 @@ Section[] sections =
     ]),
 ];
 var pages = sections.SelectMany(s => s.Pages).ToArray();
+var rendered = new List<(Page Page, string Body)>();
 
 var unused = Directory.GetFiles(source, "*.md").Select(Path.GetFileNameWithoutExtension)
     .Except(pages.Select(p => p.File)).ToArray();
 if (unused.Length > 0) { Console.Error.WriteLine($"Not in the page list: {string.Join(", ", unused)}"); return 1; }
 
-if (Directory.Exists(output)) Directory.Delete(output, recursive: true);
-var rendered = new List<(Page Page, string Body)>();
+// Everything in wwwroot/docs is generated except the archived manuals.
+if (Directory.Exists(output))
+{
+    foreach (var dir in Directory.GetDirectories(output).Where(d => Path.GetFileName(d) != DocsVersions.Folder)) Directory.Delete(dir, recursive: true);
+    foreach (var file in Directory.GetFiles(output)) File.Delete(file);
+}
+
+var plain = new List<(Page Page, string Body)>();
+var changes = new List<(Page Page, List<(string Href, string Title, bool New)> Changes)>();
+var titles = new Dictionary<Page, string>();
+foreach (var page in pages)
+{
+    var (markdown, marks) = DocsChanges.Extract(
+        File.ReadAllText(Path.Combine(source, page.File + ".md")).ReplaceLineEndings("\n"), page.File);
+    titles[page] = Regex.Match(markdown, @"^# (.+)$", RegexOptions.Multiline).Groups[1].Value;
+    var body = Polish(MarkdownToHtml.Convert(markdown));
+    plain.Add((page, body));
+    var changed = new List<(string Href, string Title, bool New)>();
+    var marked = DocsChanges.Apply(body, marks, version, Href(page), changed);
+    changes.Add((page, changed));
+    rendered.Add((page, marked));
+}
+// The docs home page lists everything that changed since the previous version.
+rendered[0] = (rendered[0].Page, DocsChanges.InsertAfterTitle(rendered[0].Body, DocsChanges.Summary(version, older.FirstOrDefault(), changes)));
+
 for (int i = 0; i < pages.Length; i++)
 {
     var page = pages[i];
-    var markdown = File.ReadAllText(Path.Combine(source, page.File + ".md")).ReplaceLineEndings("\n");
-    var title = Regex.Match(markdown, @"^# (.+)$", RegexOptions.Multiline).Groups[1].Value;
-    var body = Polish(MarkdownToHtml.Convert(markdown));
-    rendered.Add((page, body));
-    var html = Render(page, title, body, i > 0 ? pages[i - 1] : null, i < pages.Length - 1 ? pages[i + 1] : null);
+    var html = Render(page, titles[page], rendered[i].Body, i > 0 ? pages[i - 1] : null, i < pages.Length - 1 ? pages[i + 1] : null);
     var dir = page.Slug.Length == 0 ? output : Path.Combine(output, page.Slug);
     Directory.CreateDirectory(dir);
     File.WriteAllText(Path.Combine(dir, "index.html"), html, new UTF8Encoding(false));
 }
-File.WriteAllText(Path.Combine(output, "search.json"), DocsSearch.BuildIndex(rendered, Href), new UTF8Encoding(false));
+// The search index is built from the pages without the change marks, so "New in" does not match every search.
+File.WriteAllText(Path.Combine(output, "search.json"), DocsSearch.BuildIndex(plain, Href), new UTF8Encoding(false));
+File.WriteAllText(Path.Combine(output, DocsVersions.ListFile), DocsVersions.List(version, older), new UTF8Encoding(false));
 Console.WriteLine($"Wrote {pages.Length} pages and the search index to {output}");
 
 // The PDF is not checked in: every PDF gets a random file ID, so it would never match a committed copy. The Deploy
-// workflow runs this program before uploading wwwroot, and it is ignored by git.
-var pdf = DocsPdf.Build(rendered, Path.Combine(root, "wwwroot"));
+// workflow runs this program before uploading wwwroot, and it is ignored by git. Archived manuals are the exception:
+// they are made once, when the site leaves their version, and never change after that.
+var pdf = DocsPdf.Build(rendered, Path.Combine(root, "wwwroot"), version);
 File.WriteAllBytes(Path.Combine(output, DocsPdf.FileName), pdf);
 Console.WriteLine($"Wrote {DocsPdf.FileName} ({pdf.Length / 1024} KB)");
+if (args is ["archive"])
+{
+    Directory.CreateDirectory(archive);
+    File.WriteAllBytes(Path.Combine(archive, DocsVersions.FileName(version)), pdf);
+    Console.WriteLine($"Kept it as {DocsVersions.Folder}/{DocsVersions.FileName(version)}");
+}
 return 0;
 
 // Wide tables scroll inside their own box on phones, and C# examples get the same colours as the home page.
@@ -125,7 +193,13 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
                 <kbd aria-hidden="true">/</kbd>
                 <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
               </form>
-              <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download>Download PDF</a>
+              <div class="docs-download">
+                <label class="sr" for="docs-version">PdfPecker version of the PDF</label>
+                <select id="docs-version" class="docs-version">
+        {VersionOptions("          ")}
+                </select>
+                <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download>Download PDF</a>
+              </div>
             </div>
             <article class="prose">
 
@@ -153,6 +227,12 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
     return sb.ToString();
 }
 
+// One option per manual: this version's, then the archived ones, newest first. docs-search.js points the download
+// link at the chosen one.
+string VersionOptions(string indent) => string.Join("\n",
+    new[] { $"{indent}<option value=\"/docs/{DocsPdf.FileName}\">{version} (latest)</option>" }
+        .Concat(older.Select(v => $"{indent}<option value=\"/docs/{DocsVersions.Folder}/{DocsVersions.FileName(v)}\">{v}</option>")));
+
 string Toc(Page current, string indent)
 {
     var sb = new StringBuilder();
@@ -164,12 +244,22 @@ string Toc(Page current, string indent)
         foreach (var p in section.Pages)
         {
             var currentAttr = p == current ? " aria-current=\"page\"" : "";
-            sb.Append(indent).Append($"    <li><a href=\"{Href(p)}\"{currentAttr}>{Encode(p.Title)}</a></li>\n");
+            var tag = PageTag(p);
+            sb.Append(indent).Append($"    <li><a href=\"{Href(p)}\"{currentAttr}>{Encode(p.Title)}{tag}</a></li>\n");
         }
         sb.Append(indent).Append("  </ul>\n");
     }
     sb.Append(indent).Append("</nav>");
     return sb.ToString();
+}
+
+// A small tag in the sidebar on pages that are new or changed in this version.
+string PageTag(Page p)
+{
+    var list = changes.First(c => c.Page == p).Changes;
+    if (list.Count == 0) return "";
+    var isNew = list.Any(c => c.Title.Length == 0);
+    return $" <span class=\"change{(isNew ? " new" : "")}\" title=\"{(isNew ? "New" : "Changed")} in {version}\">{(isNew ? "New" : "Changed")}</span>";
 }
 
 static string Href(Page p) => p.Slug.Length == 0 ? "/docs/" : $"/docs/{p.Slug}/";

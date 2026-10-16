@@ -1,6 +1,6 @@
 # Right-to-left text and hyphenation
 
-## Right-to-left text: Arabic and Hebrew
+## Right-to-left text: Arabic and Hebrew {changed 1.7.0}
 
 Arabic and Hebrew are laid out right to left and shaped like browsers do, with PdfPecker's own implementation of the
 Unicode Bidirectional Algorithm (UAX #9, passing all of Unicode's conformance tests) and of OpenType shaping (GSUB and
@@ -28,7 +28,7 @@ and shaped too, with `direction` deciding which way a text chunk runs from its `
 the original characters in logical order. A font without OpenType Arabic
 features is shaped with the Unicode presentation forms instead.
 
-## Hyphenation
+## Hyphenation {new 1.7.0}
 
 `hyphens: auto` hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest `lang` attribute, else `PdfOptions.Language`. As in Chrome, a word is hyphenated only where it does not fit on

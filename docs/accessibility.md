@@ -26,7 +26,7 @@ passes veraPDF's PDF/UA-1 checks, on its own and together with PDF/A-2b or PDF/A
 title: `Title`, the `<title>` element or else the first heading; without one, conversion throws `ArgumentException`, as
 it does when `Security` leaves out `PdfPermissions.ExtractForAccessibility`.
 
-## PDF/UA-2
+## PDF/UA-2 {new 1.7.0}
 
 `PdfUA2` (ISO 14289-2:2024) is the PDF 2.0 successor: the file is written as PDF 2.0, its tags are in the PDF 2.0
 structure namespace (block quotes, quotes and code, which PDF 2.0 dropped, keep their PDF 1.7 type and are role mapped

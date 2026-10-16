@@ -39,22 +39,22 @@
         <li><a href="/docs/paged-media/">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts</a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left and hyphenation <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>PDF features</p>
       <ul>
-        <li><a href="/docs/pdfa-and-passwords/">PDF/A, passwords and watermarks</a></li>
-        <li><a href="/docs/accessibility/">Accessibility</a></li>
+        <li><a href="/docs/pdfa-and-passwords/">PDF/A, passwords and watermarks <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/accessibility/">Accessibility <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/">E-invoices</a></li>
-        <li><a href="/docs/attachments/">Attachments</a></li>
+        <li><a href="/docs/e-invoices/">E-invoices <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/attachments/">Attachments <span class="change new" title="New in 1.7.0">New</span></a></li>
       </ul>
       <p>Existing PDFs</p>
       <ul>
-        <li><a href="/docs/merging/">Merging and splitting</a></li>
-        <li><a href="/docs/stamping/">Stamping</a></li>
-        <li><a href="/docs/pdf-to-image/" aria-current="page">PDF to image</a></li>
+        <li><a href="/docs/merging/">Merging and splitting <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/stamping/">Stamping <span class="change new" title="New in 1.7.0">New</span></a></li>
+        <li><a href="/docs/pdf-to-image/" aria-current="page">PDF to image <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>Reference</p>
       <ul>
@@ -74,22 +74,22 @@
         <li><a href="/docs/paged-media/">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts</a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left and hyphenation <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>PDF features</p>
       <ul>
-        <li><a href="/docs/pdfa-and-passwords/">PDF/A, passwords and watermarks</a></li>
-        <li><a href="/docs/accessibility/">Accessibility</a></li>
+        <li><a href="/docs/pdfa-and-passwords/">PDF/A, passwords and watermarks <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/accessibility/">Accessibility <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/">E-invoices</a></li>
-        <li><a href="/docs/attachments/">Attachments</a></li>
+        <li><a href="/docs/e-invoices/">E-invoices <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/attachments/">Attachments <span class="change new" title="New in 1.7.0">New</span></a></li>
       </ul>
       <p>Existing PDFs</p>
       <ul>
-        <li><a href="/docs/merging/">Merging and splitting</a></li>
-        <li><a href="/docs/stamping/">Stamping</a></li>
-        <li><a href="/docs/pdf-to-image/" aria-current="page">PDF to image</a></li>
+        <li><a href="/docs/merging/">Merging and splitting <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
+        <li><a href="/docs/stamping/">Stamping <span class="change new" title="New in 1.7.0">New</span></a></li>
+        <li><a href="/docs/pdf-to-image/" aria-current="page">PDF to image <span class="change" title="Changed in 1.7.0">Changed</span></a></li>
       </ul>
       <p>Reference</p>
       <ul>
@@ -108,10 +108,25 @@
         <kbd aria-hidden="true">/</kbd>
         <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
       </form>
-      <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+      <div class="docs-download">
+        <label class="sr" for="docs-version">PdfPecker version of the PDF</label>
+        <select id="docs-version" class="docs-version">
+          <option value="/docs/pdfpecker-docs.pdf">1.7.0 (latest)</option>
+          <option value="/docs/versions/pdfpecker-docs-1.6.0.pdf">1.6.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.5.1.pdf">1.5.1</option>
+          <option value="/docs/versions/pdfpecker-docs-1.4.0.pdf">1.4.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.3.0.pdf">1.3.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.2.0.pdf">1.2.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.1.1.pdf">1.1.1</option>
+          <option value="/docs/versions/pdfpecker-docs-1.1.0.pdf">1.1.0</option>
+          <option value="/docs/versions/pdfpecker-docs-1.0.0.pdf">1.0.0</option>
+        </select>
+        <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download>Download PDF</a>
+      </div>
     </div>
     <article class="prose">
 <h1 id="pdf-to-image">PDF to image</h1>
+<p class="changes"><b>Changed in 1.7.0:</b> <a href="#output-formats">Output formats</a>.</p>
 <p><code>PdfToImage</code> and <code>PdfRenderer</code> render PDF pages to PNG, JPEG or WebP (or raw RGBA pixels). This works for any PDF,
 not only PdfPecker's own output, and also uses no third-party packages: the PDF parser, font engines, JPEG and fax
 decoders, rasterizer and the PNG, JPEG and WebP encoders are all part of the library.</p>
@@ -133,7 +148,7 @@ image.SavePng(<span class="s">&quot;page3.png&quot;</span>);
 <span class="t">File</span>.WriteAllBytes(<span class="s">&quot;page3.jpg&quot;</span>, image.ToJpeg(quality: <span class="n">85</span>));
 <span class="t">File</span>.WriteAllBytes(<span class="s">&quot;page3.webp&quot;</span>, image.ToWebP());
 </code></pre>
-<h2 id="output-formats">Output formats</h2>
+<h2 id="output-formats">Output formats <span class="change new">New in 1.7.0</span></h2>
 <p>Output formats (<code>ImageOptions.Format</code>, default <code>Png</code>; <code>RenderedImage.Encode()</code>/<code>Save()</code> use it too):</p>
 <ul>
 <li><strong>PNG</strong>: lossless, RGB for opaque pages and RGBA otherwise.</li>
