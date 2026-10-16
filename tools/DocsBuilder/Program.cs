@@ -209,7 +209,7 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
                 <select id="docs-version" class="docs-version">
         {VersionOptions("          ")}
                 </select>
-                <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download>Download PDF</a>
+                <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download="{DocsVersions.DownloadName(version)}">Download PDF</a>
               </div>
             </div>
             <article class="prose">
@@ -241,8 +241,8 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
 // One option per manual: this version's, then the archived ones, newest first. docs-search.js points the download
 // link at the chosen one.
 string VersionOptions(string indent) => string.Join("\n",
-    new[] { $"{indent}<option value=\"/docs/{DocsPdf.FileName}\">{version} (latest)</option>" }
-        .Concat(older.Select(v => $"{indent}<option value=\"/docs/{DocsVersions.Folder}/{DocsVersions.FileName(v)}\">{v}</option>")));
+    new[] { $"{indent}<option value=\"/docs/{DocsPdf.FileName}\" data-file=\"{DocsVersions.DownloadName(version)}\">{version} (latest)</option>" }
+        .Concat(older.Select(v => $"{indent}<option value=\"/docs/{DocsVersions.Folder}/{DocsVersions.FileName(v)}\" data-file=\"{DocsVersions.DownloadName(v)}\">{v}</option>")));
 
 string Toc(Page current, string indent)
 {
