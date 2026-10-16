@@ -27,6 +27,41 @@ collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's bu
 weight; a missing bold or italic face is synthesized. A character that the chosen font lacks is drawn with the next
 font in the `font-family` list that has it, then the standard font, then any other registered font.
 
+## Variable fonts
+
+Variable fonts (one file with a weight, width, slant or other axis, with TrueType or CFF2 outlines) work with the
+usual CSS properties. PdfPecker builds a static instance of the font, with its kerning, for each combination a
+document uses and embeds a subset of it, so bold text uses the font's real bold rather than a synthesized one:
+
+```css
+@font-face { font-family: Inter; src: url(fonts/InterVariable.ttf); }    /* covers all of the font's weights */
+h1 { font-family: Inter; font-weight: 750; }
+.narrow { font-stretch: 75%; }                                           /* the wdth axis */
+em { font-style: italic; }                                               /* the ital axis, or slnt */
+.custom { font-variation-settings: "wght" 650, "GRAD" 50; }              /* any axis, overrides the rest */
+```
+
+A variable `@font-face` without `font-weight` covers the font's whole weight range, and so does a variable font
+added through `options.Fonts`. A face declared with a single weight (`font-weight: 400`) stays at that weight, and
+bold is synthesized as for any other font. The optical size axis (`opsz`) follows the font size unless
+`font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
+CFF2.
+
+## OpenType features
+
+`font-variant-numeric` and `font-feature-settings` turn on a font's optional glyphs, as in a browser. Tabular figures
+line up amounts in a column:
+
+```css
+td.amount { font-variant-numeric: tabular-nums; }          /* every digit the same width */
+.oldstyle { font-variant-numeric: oldstyle-nums slashed-zero; }
+.alt { font-feature-settings: "ss01", "salt" 2; }           /* stylistic set 1, the second alternate */
+```
+
+Features that swap one glyph for another (`tnum`, `pnum`, `lnum`, `onum`, `zero`, `ss01` to `ss20`, `salt`, `case`
+and the like) are applied; the font must have them. Features that depend on the surrounding characters, such as
+`diagonal-fractions` and `ordinal` in most fonts, are not. Text copied from the PDF keeps the original characters.
+
 ## Standard fonts
 
 Text without a registered font uses the standard PDF fonts (Helvetica, Times, Courier), which viewers supply
