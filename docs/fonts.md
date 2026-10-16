@@ -29,9 +29,9 @@ font in the `font-family` list that has it, then the standard font, then any oth
 
 ## Variable fonts
 
-TrueType variable fonts (one file with a weight, width, slant or other axis) work with the usual CSS properties.
-PdfPecker builds a static instance of the font for each combination a document uses and embeds a subset of it, so
-bold text uses the font's real bold rather than a synthesized one:
+Variable fonts (one file with a weight, width, slant or other axis, with TrueType or CFF2 outlines) work with the
+usual CSS properties. PdfPecker builds a static instance of the font, with its kerning, for each combination a
+document uses and embeds a subset of it, so bold text uses the font's real bold rather than a synthesized one:
 
 ```css
 @font-face { font-family: Inter; src: url(fonts/InterVariable.ttf); }    /* covers all of the font's weights */
@@ -44,7 +44,8 @@ em { font-style: italic; }                                               /* the 
 A variable `@font-face` without `font-weight` covers the font's whole weight range, and so does a variable font
 added through `options.Fonts`. A face declared with a single weight (`font-weight: 400`) stays at that weight, and
 bold is synthesized as for any other font. The optical size axis (`opsz`) follows the font size unless
-`font-optical-sizing: none` is set.
+`font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
+CFF2.
 
 ## Standard fonts
 

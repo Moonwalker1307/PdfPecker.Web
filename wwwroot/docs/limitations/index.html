@@ -148,8 +148,6 @@ Urdu). Devanagari and other Indic scripts, Thai, Khmer, Myanmar and Syriac are n
 and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (<code>writing-mode</code>).</li>
 <li>In Latin and other simple scripts, shaping is limited to pair kerning and standard ligatures; no contextual
 alternates or other OpenType features (<code>small-caps</code> is synthesized from scaled capitals).</li>
-<li>CFF2 (PostScript-outline) variable fonts use their default instance; TrueType variable fonts are fully supported.
-Kerning in a variable font uses the default instance's values.</li>
 <li>Automatic hyphenation (<code>hyphens: auto</code>) has built-in patterns for English, Danish, German, Dutch and Norwegian only;
 other languages need their patterns in <code>PdfOptions.Hyphenation</code>. <code>hyphenate-limit-chars</code> is not supported.</li>
 <li>SVG <code>&lt;text&gt;</code> uses only the first value of position lists and has no <code>textPath</code>; in a text chunk with right-to-left

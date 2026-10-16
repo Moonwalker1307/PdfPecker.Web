@@ -23,8 +23,6 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (`writing-mode`).
 - In Latin and other simple scripts, shaping is limited to pair kerning and standard ligatures; no contextual
   alternates or other OpenType features (`small-caps` is synthesized from scaled capitals).
-- CFF2 (PostScript-outline) variable fonts use their default instance; TrueType variable fonts are fully supported.
-  Kerning in a variable font uses the default instance's values.
 - Automatic hyphenation (`hyphens: auto`) has built-in patterns for English, Danish, German, Dutch and Norwegian only;
   other languages need their patterns in `PdfOptions.Hyphenation`. `hyphenate-limit-chars` is not supported.
 - SVG `<text>` uses only the first value of position lists and has no `textPath`; in a text chunk with right-to-left
