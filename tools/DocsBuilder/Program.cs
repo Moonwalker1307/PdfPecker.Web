@@ -55,6 +55,7 @@ Section[] sections =
     new("Basics",
     [
         new("", "index", "Getting started", "Install PdfPecker and convert your first HTML to PDF in .NET, with the system requirements."),
+        new("html-to-pdf-csharp", "html-to-pdf-csharp", "HTML to PDF in C#", "How to convert HTML to PDF in C# and ASP.NET Core with PdfPecker: invoices from templates, headers and footers, fonts and images."),
         new("options", "options", "Options", "PdfOptions: page size, margins, headers and footers, document properties, file access and limits."),
         new("html-and-css", "html-and-css", "HTML and CSS", "The HTML elements, CSS selectors and properties, SVG and image formats PdfPecker supports."),
         new("paged-media", "paged-media", "Paged media", "@page rules, margin boxes, named pages, running headers and tables of contents with page numbers."),
@@ -166,6 +167,15 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
         <title>{Encode(title)} · PdfPecker docs</title>
         <meta name="description" content="{Encode(page.Description)}">
         <link rel="canonical" href="{url}">
+        <meta property="og:type" content="article">
+        <meta property="og:site_name" content="PdfPecker">
+        <meta property="og:title" content="{Encode(title)} · PdfPecker docs">
+        <meta property="og:description" content="{Encode(page.Description)}">
+        <meta property="og:url" content="{url}">
+        <meta property="og:image" content="https://pdfpecker.net/og-image.png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta name="twitter:card" content="summary_large_image">
         <meta name="theme-color" content="#0b0b0f">
         <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">

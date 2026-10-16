@@ -3,13 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PdfPecker · Fast HTML to PDF for .NET</title>
-<meta name="description" content="PdfPecker is a fast, dependency-free HTML and Markdown to PDF library for .NET. No browser, no native binaries, no third-party packages.">
+<title>HTML to PDF in C# and .NET without a browser · PdfPecker</title>
+<meta name="description" content="PdfPecker is a fast, free (MIT) C# library that converts HTML and Markdown to PDF in .NET 8, 9 and 10. No browser, no native binaries, no third-party packages.">
 <link rel="canonical" href="https://pdfpecker.net/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PdfPecker">
+<meta property="og:title" content="HTML to PDF in C# and .NET without a browser · PdfPecker">
+<meta property="og:description" content="PdfPecker is a fast, free (MIT) C# library that converts HTML and Markdown to PDF in .NET 8, 9 and 10. No browser, no native binaries, no third-party packages.">
+<meta property="og:url" content="https://pdfpecker.net/">
+<meta property="og:image" content="https://pdfpecker.net/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0b0b0f">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "PdfPecker",
+      "url": "https://pdfpecker.net/"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "PdfPecker",
+      "description": "Fast, dependency-free HTML and Markdown to PDF library for C# and .NET.",
+      "url": "https://pdfpecker.net/",
+      "codeRepository": "https://github.com/Moonwalker1307/PdfPecker",
+      "programmingLanguage": "C#",
+      "runtimePlatform": ".NET 8, .NET 9, .NET 10",
+      "license": "https://opensource.org/licenses/MIT",
+      "image": "https://pdfpecker.net/og-image.png"
+    }
+  ]
+}
+</script>
 </head>
 <body class="home">
 <a class="skip" href="#main">Skip to content</a>
@@ -30,7 +62,7 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Open source · MIT · .NET 8, 9 and 10</p>
+        <p class="eyebrow">Open source · MIT · C# and .NET 8, 9 and 10</p>
         <h1>HTML to PDF in <em>under a millisecond</em>.</h1>
         <p class="lead">PdfPecker turns HTML and Markdown into PDFs, and PDFs into images, from plain .NET.
           No browser to start, no native binaries to ship, no third-party packages. Just one small DLL.</p>
@@ -69,7 +101,8 @@
       <div>
         <h2>Three lines to your first PDF</h2>
         <p>Every method is static and thread-safe, so you can convert many documents at once. Write the HTML the way you
-          already do, with modern CSS, and get a PDF back as bytes, a stream or a file.</p>
+          already do, with modern CSS, and get a PDF back as bytes, a stream or a file.
+          <a href="/docs/html-to-pdf-csharp/">The C# guide</a> walks through invoices, headers and footers and ASP.NET Core.</p>
         <ul class="checks">
           <li>Runs wherever .NET 8 or later runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
           <li>Pure managed code: a 3.1 MB DLL instead of a 600 MB browser</li>
@@ -308,6 +341,7 @@ PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
     <span>PdfPecker is open source under the MIT license; its bundled fonts keep their own open licenses.</span>
     <nav aria-label="Footer">
       <a href="/docs/">Docs</a>
+      <a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a>
       <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
       <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
       <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
