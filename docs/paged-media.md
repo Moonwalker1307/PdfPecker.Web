@@ -1,10 +1,12 @@
 # Paged media
 
-## Page rules and margin boxes
+## Page rules and margin boxes {changed 1.8.0}
 
 `@page` rules set the page size, margins and background, and their margin boxes (`@top-left`, `@top-center`,
 `@bottom-right` and the other thirteen) print headers and footers with `counter(page)` and `counter(pages)`, chosen
-per page with `:first`, `:left` and `:right`. On top of that:
+per page with `:first`, `:left` and `:right`. Those three can also change the page's size, margins and background:
+`@page :first { margin-top: 70mm }` leaves room for a letterhead on page 1 only, and mirrored `:left` and `:right`
+margins give a bound booklet a wider inner margin. The first page is a right page. On top of that:
 
 - **Named pages**: `page: wide` puts an element on pages styled by `@page wide { ... }`, with their own size,
   orientation, margins, background and margin boxes. Content on another named page starts a new page, so a landscape

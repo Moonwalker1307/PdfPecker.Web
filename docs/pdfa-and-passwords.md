@@ -1,11 +1,11 @@
 # PDF/A, passwords and watermarks
 
-## Watermarks and passwords
+## Watermarks and passwords {changed 1.8.0}
 
 ```csharp
 var options = new PdfOptions
 {
-    // A diagonal stamp on every page. Also: Image (PNG, JPEG, GIF or WebP bytes), FontSize, LetterSpacing, Angle, Opacity, Bold, Behind.
+    // A diagonal stamp on every page. Also: Image (PNG, JPEG, GIF, WebP, BMP, TIFF or SVG bytes; SVG stays vector), FontSize, LetterSpacing, Angle, Opacity, Bold, Behind.
     Watermark = new PdfWatermark { Text = "WATERMARK", Color = "#c00000", Opacity = 0.25f },
 
     // AES-256 encryption (PDF 2.0 / Acrobat X and later). Without an OwnerPassword a random one is used,
