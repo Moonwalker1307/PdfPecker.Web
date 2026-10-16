@@ -9,10 +9,6 @@ static partial class DocsPdf
 {
     public const string FileName = "pdfpecker-docs.pdf";
 
-    // An old library README (the manual before 1.7.0) as one chapter, with the same cover, contents and styles.
-    public static byte[] BuildReadme(string body, string versionText, string wwwroot) =>
-        Build([(new Page("readme", "README", $"PdfPecker {versionText}", ""), body)], wwwroot, versionText);
-
     public static byte[] Build(IReadOnlyList<(Page Page, string Body)> pages, string wwwroot, string versionText)
     {
 
