@@ -148,9 +148,10 @@
   var link = document.querySelector('.docs-pdf');
   if (!select || !link) return;
   function update() {
-    link.href = select.value;
-    var name = select.value.split('/').pop();
-    link.setAttribute('download', name);
+    var option = select.options[select.selectedIndex];
+    link.href = option.value;
+    // Saved with the version in its name, such as pdfpecker-docs-v1.7.0.pdf.
+    link.setAttribute('download', option.getAttribute('data-file') || option.value.split('/').pop());
   }
   select.addEventListener('change', update);
   update();
