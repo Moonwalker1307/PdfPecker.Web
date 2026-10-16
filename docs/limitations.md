@@ -13,7 +13,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts
+## Text and fonts {changed 1.8.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages); other characters are replaced with `?`. The bundled Liberation
@@ -21,33 +21,30 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - Complex-script shaping covers Arabic and Hebrew (and other scripts written with Arabic letters, such as Persian and
   Urdu). Devanagari and other Indic scripts, Thai, Khmer, Myanmar and Syriac are not shaped, so their vowel signs
   and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (`writing-mode`).
-- In Latin and other simple scripts, shaping is limited to pair kerning and standard ligatures; no contextual
-  alternates or other OpenType features (`small-caps` is synthesized from scaled capitals).
+- In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
+  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)); contextual alternates and other
+  features that depend on neighbouring characters are not applied, and `small-caps` is synthesized from scaled
+  capitals.
 - Automatic hyphenation (`hyphens: auto`) has built-in patterns for English, Danish, German, Dutch and Norwegian only;
   other languages need their patterns in `PdfOptions.Hyphenation`. `hyphenate-limit-chars` is not supported.
 - SVG `<text>` uses only the first value of position lists and has no `textPath`; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS
+## CSS {changed 1.8.0}
 
-- A table column width that mixes a percentage with other units (`calc(50% - 10px)`) is sized as `auto`.
-- `@import` is ignored (use `<link rel="stylesheet">`), and rules inside `@container` blocks are skipped. `@page`
-  rules for `:first`, `:left` and `:right` pages can style margin boxes but not change the page size or margins.
-  A named page's `:first` is the document's first page, as in Chrome, not the first page of the named run.
-- Selectors: no `::first-letter`/`::first-line`. A rule with an unsupported selector is skipped. `:hover`, `:focus`
-  and similar interaction states never match. Selectors inside `:is()`, `:where()` and `:not()` may have at most eight
-  compound parts (one when nested in another of them).
-- Properties not supported: `filter`, `mix-blend-mode`, `clip-path` on HTML elements (only in SVG), `border-image`,
-  `list-style-image` and inset `box-shadow`. No relative colours (`rgb(from …)`).
+- Rules inside `@container` blocks are skipped. A named page's `:first` is the document's first page, as in Chrome,
+  not the first page of the named run. When `@page :first`, `:left` or `:right` margins give pages different content
+  widths, the content is laid out at the narrowest width on every page; the first page is always a right page, also
+  in right-to-left documents.
+- Selectors: a rule with an unsupported selector is skipped. Selectors inside `:is()`, `:where()` and `:not()` may
+  have at most eight compound parts (one when nested in another of them).
+- `filter: blur()` turns the box into an image at 144 dpi, so text in it is no longer selectable. The colour filters
+  keep everything as vectors, and `drop-shadow()` only adds the shadow as an image.
 - `text-shadow` blur is approximated with faint copies of the text rather than a true Gaussian blur, and decorations
-  (underlines) get no shadow. `text-overflow` only supports `ellipsis` at the end of the line (`clip` and custom
-  strings do nothing). `aspect-ratio` does not take part in min-/max-content sizing (shrink-to-fit widths) and is
-  ignored on tables. `object-fit` applies to raster images; an SVG file in `<img>` keeps its own
+  (underlines) get no shadow. `text-overflow` applies only at the end of the line. `aspect-ratio` does not take part
+  in min-/max-content sizing (shrink-to-fit widths) and is ignored on tables. `object-fit` applies to raster images; an SVG file in `<img>` keeps its own
   `preserveAspectRatio` fit.
-- Borders: `groove`, `ridge`, `inset` and `outset` draw as solid.
-- `position: sticky` is drawn as `relative`; `background-attachment: fixed` scrolls with the box.
-- Lists: `list-style-type` covers disc, circle, square, decimal, decimal-leading-zero, alpha, roman and strings only
-  (no Greek, CJK or `@counter-style`).
+- `background-attachment: fixed` scrolls with the box.
 
 ## Backgrounds and transparency
 
@@ -62,13 +59,11 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - Multi-column: children are kept whole and balanced between columns; a single block is never split across columns.
 - Overflow: a positioned child with a `z-index` inside a clipping box stays stacked within that box.
 
-## Images and SVG
+## Images and SVG {changed 1.8.0}
 
-- Images: no AVIF, BMP or TIFF. Animated GIF and WebP files show only their first frame.
-- SVG (inline and files): no embedded `<image>`. Filters have no `feTurbulence`, `feImage`, `feTile`,
-  `feConvolveMatrix`, `feDisplacementMap` or lighting (these pass their input through unchanged) and ignore primitive
-  subregions; filtered content becomes an image (text in it is no longer selectable). Watermark images must be raster
-  images (PNG, JPEG, GIF or WebP).
+- No AVIF images: decoding them needs an AV1 video decoder, which is not planned. Convert them to WebP, PNG or JPEG.
+- SVG filters are applied in pixels at 144 dpi, so filtered shapes become an image (text keeps an invisible,
+  selectable copy).
 
 ## Markdown and the PDF renderer
 
