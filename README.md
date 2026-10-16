@@ -20,16 +20,17 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
   `wwwroot/docs/pdfpecker-docs.pdf`, made by PdfPecker with a table of contents. The PDF is not committed, because
   every PDF gets a random file ID; the Deploy workflow builds it before uploading the site. The docs describe the
   PdfPecker version the site uses, so update them together with its `PackageReference`.
-  - Older manuals: a version picker next to Download PDF offers the manual of every earlier release, kept as PDFs in
-    `wwwroot/docs/versions` (checked in, since they never change; 1.0.0 to 1.6.0 are the library README of that
-    release, which was the manual then). Before bumping the `PackageReference`, run
-    `dotnet run --project tools/DocsBuilder -- archive` and commit the PDF it keeps; the builder refuses to build for
-    the new version until the old manual is there. An old README is added with
-    `dotnet run --project tools/DocsBuilder -- archive-readme 1.6.0 path/to/README.md`.
+  - Older manuals: the version picker opens the manual of any release. The latest is at `/docs/`, earlier ones at
+    `/docs/v1.7.0/` and so on, built with the same templates from the Markdown kept in `docs/archive/<version>`
+    (`docs/*.md` and a `pages.json` with that version's sidebar; 1.0.0 to 1.6.0 hold the library README of that
+    release, which was the manual then, and are one page). Their PDFs are checked in under `wwwroot/docs/versions`,
+    since they never change. Before bumping the `PackageReference`, run `dotnet run --project tools/DocsBuilder -- archive`
+    and commit what it keeps; the builder refuses to build for the new version until the old manual is there. Old
+    manuals are marked `noindex` and left out of the sitemap, so search engines send people to the latest.
   - What changed: end a heading in `docs/*.md` with `{new 1.8.0}` or `{changed 1.8.0}` (on the `#` title for a whole
     page). Marks for the version the site uses get a badge, a tag in the sidebar, a line under the page title and a
     place in the list on the docs home page, in the PDF too; older marks are hidden, so only what changed since the
-    previous release is highlighted.
+    previous release is highlighted. Each archived manual shows the marks of its own version.
 
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 
