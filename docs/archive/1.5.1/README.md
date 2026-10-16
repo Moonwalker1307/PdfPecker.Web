@@ -78,7 +78,7 @@ dotnet run --project bench/PdfPecker.Comparison -c Release
 The comparison project is not part of `PdfPecker.sln`, so its third-party packages never reach the library or its
 tests. Your numbers will differ with hardware and documents.
 
-## System requirements
+## System requirements {changed 1.5.1}
 
 **Required:** the .NET 8, .NET 9 or .NET 10 runtime (or later). Nothing else: the library is pure managed code with no
 native binaries, browser or third-party packages, so it runs wherever .NET runs (Windows, Linux, macOS; x64 and ARM64).

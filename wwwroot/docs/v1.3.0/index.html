@@ -48,11 +48,11 @@
         <li><a href="#install">Install</a></li>
         <li><a href="#how-it-compares">How it compares</a></li>
         <li><a href="#system-requirements">System requirements</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#merging-pdfs">Merging PDFs</a></li>
+        <li><a href="#usage">Usage <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
+        <li><a href="#merging-pdfs">Merging PDFs <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
-        <li><a href="#what-is-supported">What is supported</a></li>
-        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#what-is-supported">What is supported <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
+        <li><a href="#limitations">Limitations <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
         <li><a href="#performance">Performance</a></li>
         <li><a href="#building">Building</a></li>
         <li><a href="#how-it-works">How it works</a></li>
@@ -66,11 +66,11 @@
         <li><a href="#install">Install</a></li>
         <li><a href="#how-it-compares">How it compares</a></li>
         <li><a href="#system-requirements">System requirements</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#merging-pdfs">Merging PDFs</a></li>
+        <li><a href="#usage">Usage <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
+        <li><a href="#merging-pdfs">Merging PDFs <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
-        <li><a href="#what-is-supported">What is supported</a></li>
-        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#what-is-supported">What is supported <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
+        <li><a href="#limitations">Limitations <span class="change" title="Changed in 1.3.0">Changed</span></a></li>
         <li><a href="#performance">Performance</a></li>
         <li><a href="#building">Building</a></li>
         <li><a href="#how-it-works">How it works</a></li>
@@ -107,6 +107,16 @@
     <p class="docs-old">This is the manual for PdfPecker 1.3.0. <a href="/docs/">Read it for the latest version, 1.8.0</a>.</p>
     <article class="prose">
 <h1 id="pdfpecker">PdfPecker</h1>
+<div class="changes changes-list">
+<p><b>New and changed in PdfPecker 1.3.0</b> (since 1.2.0):</p>
+<ul>
+<li><a href="/docs/v1.3.0/#accessibility-tagged-pdf-and-pdfua">Accessibility: tagged PDF and PDF/UA</a> <span class="change new">New</span></li>
+<li><a href="/docs/v1.3.0/#merging-pdfs-as-they-arrive">Merging PDFs as they arrive</a> <span class="change new">New</span></li>
+<li><a href="/docs/v1.3.0/#what-is-supported">What is supported</a> <span class="change">Changed</span></li>
+<li><a href="/docs/v1.3.0/#limitations">Limitations</a> <span class="change">Changed</span></li>
+</ul>
+<p class="changes-more"><a href="/docs/changelog/">Every release in the changelog</a></p>
+</div>
 <p>Fast HTML and Markdown to PDF conversion, and PDF to PNG rendering, for .NET, with no dependencies.</p>
 <p>PdfPecker has its own HTML parser, Markdown parser, CSS engine, layout engine and PDF writer, and its own PDF renderer.
 It does not start a browser, ship native binaries or pull in third-party packages; the NuGet package depends only on
@@ -406,7 +416,7 @@ and a file ID, and CMYK JPEGs are converted to RGB. All fonts are embedded: text
 bundled Liberation fonts (see <a href="#fonts">Fonts</a>). PDF/A does not allow encryption, so combining <code>Conformance</code> with
 <code>Security</code> throws an <code>ArgumentException</code>. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.</p>
-<h3 id="accessibility-tagged-pdf-and-pdfua">Accessibility: tagged PDF and PDF/UA</h3>
+<h3 id="accessibility-tagged-pdf-and-pdfua">Accessibility: tagged PDF and PDF/UA <span class="change new">New in 1.3.0</span></h3>
 <pre class="cs"><code><span class="k">var</span> options = <span class="k">new</span> <span class="t">PdfOptions</span>
 {
     Accessibility = <span class="t">PdfAccessibility</span>.PdfUA1,   <span class="c">// or Tagged: the same structure without the PDF/UA claim</span>
@@ -513,7 +523,7 @@ as ASP.NET Core requires for request and response bodies. Input streams are read
 not disposed; the sequence is enumerated lazily, so an iterator can open each one only when its turn comes. <code>MergeFiles</code>
 writes to a temporary file and moves it into place, so the output can be one of the inputs and a failed merge leaves
 no partial file behind.</p>
-<h3 id="merging-pdfs-as-they-arrive">Merging PDFs as they arrive</h3>
+<h3 id="merging-pdfs-as-they-arrive">Merging PDFs as they arrive <span class="change new">New in 1.3.0</span></h3>
 <p>For PDFs that arrive one at a time from elsewhere, such as downloads read a few at a time, use <code>StreamingPdfMerger</code>. It
 writes each PDF's pages when it is added and then lets the PDF go, so memory stays at about one input, and between
 inputs you decide what comes next: skip a missing document, or check that anything was added before answering. The
@@ -583,7 +593,7 @@ baseline and progressive JPEG, JPEG 2000 (<code>JPXDecode</code>, including embe
 refinement and halftone regions, with <code>JBIG2Globals</code>), CCITT fax, stencil masks, colour-key masks and soft masks.</li>
 </ul>
 <p>For what the renderer does not support yet, see <a href="#limitations">Limitations</a>.</p>
-<h2 id="what-is-supported">What is supported</h2>
+<h2 id="what-is-supported">What is supported <span class="change">Changed in 1.3.0</span></h2>
 <p><strong>HTML</strong>: the common document elements: headings, paragraphs, <code>div</code>/<code>section</code>-style blocks, <code>span</code>, <code>a</code> (external links
 and <code>#id</code> links inside the document), <code>b</code>/<code>strong</code>, <code>i</code>/<code>em</code>, <code>u</code>, <code>s</code>, <code>sub</code>, <code>sup</code>, <code>small</code>, <code>big</code>, <code>mark</code>, <code>code</code>,
 <code>pre</code>, <code>blockquote</code>, <code>hr</code>, <code>br</code>, <code>ul</code>/<code>ol</code>/<code>li</code> (nested, with <code>start</code> and <code>value</code>), <code>dl</code>, <code>table</code> (with <code>thead</code>,
@@ -718,7 +728,7 @@ searched and copied. Without them, the PDF standard fonts are used: <code>font-f
 Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consolas, ...), each in regular, bold,
 italic and bold italic. With <code>EmbedStandardFonts</code> or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.</p>
-<h2 id="limitations">Limitations</h2>
+<h2 id="limitations">Limitations <span class="change">Changed in 1.3.0</span></h2>
 <p>PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything
 not listed in <a href="#what-is-supported">What is supported</a> should be assumed missing.</p>

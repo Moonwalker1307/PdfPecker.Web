@@ -33,7 +33,7 @@ dotnet add <your project> package PdfPecker
 
 The package targets `net8.0`, `net9.0` and `net10.0`, so it works on .NET 8 and later.
 
-## How it compares
+## How it compares {changed 1.6.0}
 
 The same three documents converted to A4 PDF by PdfPecker and six .NET alternatives, on one 4-core cloud VM
 (Intel Xeon @ 2.8 GHz, 16 GB, Linux, .NET 10.0.12). Times are medians after a 3-second warm-up; "first PDF" includes
@@ -195,7 +195,7 @@ A CSS `@page { size: A4 landscape; margin: 15mm }` rule overrides the page size 
 `IgnoreCssPageRules` is set. PdfPecker never makes network requests on its own: `http(s)` images and stylesheets are only
 loaded through `ResourceResolver`.
 
-### Fonts
+### Fonts {changed 1.6.0}
 
 Register TrueType or OpenType fonts and use them by name in CSS. Only the glyphs a document uses are embedded, and
 text can use any Unicode character the fonts have (Greek, Cyrillic, Central European, CJK, ...):
@@ -245,7 +245,7 @@ once for each such character before anything is written, so a test can make sure
 options.MissingCharacter = ch => throw new InvalidOperationException($"No font has U+{char.ConvertToUtf32(ch, 0):X4}");
 ```
 
-### Right-to-left text: Arabic and Hebrew
+### Right-to-left text: Arabic and Hebrew {new 1.6.0}
 
 Arabic and Hebrew are laid out right to left and shaped like browsers do, with PdfPecker's own implementation of the
 Unicode Bidirectional Algorithm (UAX #9, passing all of Unicode's conformance tests) and of OpenType shaping (GSUB and
@@ -365,7 +365,7 @@ including its indentation, encoding and declaration, is kept as it was. The refe
 requires, `PDF` by default. The output passes the UBL schemas, the Peppol BIS 3.0 and EN 16931 schematrons, and the
 OIOUBL 2.1 schematron. PdfPecker does not build or validate the rest of the invoice.
 
-### Digital signatures
+### Digital signatures {changed 1.6.0}
 
 Sign the PDF with a certificate (a `.pfx` file or one from the certificate store). Adobe Reader then shows who signed
 it and whether the file was changed afterwards.
@@ -447,7 +447,7 @@ fields as PDF/A-2b and 3b), `Accessibility` (each widget sits in a `Form` elemen
 or name, and veraPDF passes PDF/UA-1), `Signature` (the signature field joins the form) and `PdfMerger` (repeated names are
 renamed).
 
-## Merging PDFs
+## Merging PDFs {changed 1.6.0}
 
 `PdfMerger` combines PDFs into one, any PDFs, not only those PdfPecker made:
 
@@ -564,7 +564,7 @@ What the renderer supports:
 
 For what the renderer does not support yet, see [Limitations](#limitations).
 
-## What is supported
+## What is supported {changed 1.6.0}
 
 **HTML**: the common document elements: headings, paragraphs, `div`/`section`-style blocks, `span`, `a` (external links
 and `#id` links inside the document), `b`/`strong`, `i`/`em`, `u`, `s`, `sub`, `sup`, `small`, `big`, `mark`, `code`,
@@ -640,7 +640,7 @@ Inside it, `{page}` and `{total-pages}` (or `{pages}`) are replaced with the pag
 <footer data-sticky-pdf-footer height="12mm">Page {page} of {total-pages}</footer>
 ```
 
-### Paged media
+### Paged media {new 1.6.0}
 
 `@page` rules set the page size, margins and background, and their margin boxes (`@top-left`, `@top-center`,
 `@bottom-right` and the other thirteen) print headers and footers with `counter(page)` and `counter(pages)`, chosen
@@ -695,7 +695,7 @@ Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consola
 italic and bold italic. With `EmbedStandardFonts` or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.
 
-## Limitations
+## Limitations {changed 1.6.0}
 
 PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything

@@ -269,7 +269,7 @@ otherwise; set `Relationship` to change it. PdfPecker checks that the XML is a w
 not allowed in Factur-X) but does not validate its content or build it from invoice data: make sure the visible pages
 show the same invoice. The output passes the Mustang validator (PDF/A-3b via veraPDF, and the XML's schematron).
 
-### PDF attachments in UBL e-invoices (Peppol, OIOUBL)
+### PDF attachments in UBL e-invoices (Peppol, OIOUBL) {new 1.2.0}
 
 Peppol BIS Billing 3.0, OIOUBL, EHF, XRechnung UBL and other UBL e-invoices are XML only: the XML is the invoice, and
 the PDF travels inside it as an attachment. `UblInvoice.AttachPdf` adds one to the invoice or credit note your

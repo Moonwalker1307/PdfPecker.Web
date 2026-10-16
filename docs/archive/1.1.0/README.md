@@ -143,7 +143,7 @@ ids (`HeadingIds = false`), shows raw HTML as text (`AllowRawHtml = false`), rep
 see `MarkdownToHtml.DefaultStyleSheet`) or sets the title (default: the first heading). `MarkdownToPdf` takes
 `PdfOptions` and `MarkdownOptions` side by side.
 
-### Options
+### Options {changed 1.1.0}
 
 ```csharp
 var options = new PdfOptions
@@ -245,7 +245,7 @@ bundled Liberation fonts (see [Fonts](#fonts)). PDF/A does not allow encryption,
 `Security` throws an `ArgumentException`. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.
 
-### E-invoices (Factur-X / ZUGFeRD)
+### E-invoices (Factur-X / ZUGFeRD) {new 1.1.0}
 
 Pass the invoice's CII XML (from your invoicing system) and PdfPecker attaches it to the PDF, making a Factur-X /
 ZUGFeRD e-invoice: the pages are the human-readable invoice and the XML is what accounting software reads.
@@ -302,7 +302,7 @@ Custom properties are written to the document information dictionary, where Acro
 Properties > Custom and `pdfinfo -custom` lists them. For PDF/A they are also written to the XMP metadata (Acrobat's
 `pdfx` namespace, with the extension schema PDF/A requires), alongside Keywords, Creator and Producer.
 
-## Merging PDFs
+## Merging PDFs {changed 1.1.0}
 
 `PdfMerger` combines PDFs into one, any PDFs, not only those PdfPecker made:
 
@@ -395,7 +395,7 @@ The website at [pdfpecker.net](https://pdfpecker.net), which converts HTML and M
 converter as an HTTP API, lives in its own repository,
 [PdfPecker.Web](https://github.com/Moonwalker1307/PdfPecker.Web), and is built on the published NuGet package.
 
-## What is supported
+## What is supported {changed 1.1.0}
 
 **HTML**: the common document elements: headings, paragraphs, `div`/`section`-style blocks, `span`, `a` (external links
 and `#id` links inside the document), `b`/`strong`, `i`/`em`, `u`, `s`, `sub`, `sup`, `small`, `big`, `mark`, `code`,
@@ -482,7 +482,7 @@ Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consola
 italic and bold italic. With `EmbedStandardFonts` or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.
 
-## Limitations
+## Limitations {changed 1.1.0}
 
 PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything

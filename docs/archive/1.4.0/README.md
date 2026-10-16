@@ -145,7 +145,7 @@ ids (`HeadingIds = false`), shows raw HTML as text (`AllowRawHtml = false`), rep
 see `MarkdownToHtml.DefaultStyleSheet`) or sets the title (default: the first heading). `MarkdownToPdf` takes
 `PdfOptions` and `MarkdownOptions` side by side.
 
-### Options
+### Options {changed 1.4.0}
 
 ```csharp
 var options = new PdfOptions
@@ -352,7 +352,7 @@ Custom properties are written to the document information dictionary, where Acro
 Properties > Custom and `pdfinfo -custom` lists them. For PDF/A they are also written to the XMP metadata (Acrobat's
 `pdfx` namespace, with the extension schema PDF/A requires), alongside Keywords, Creator and Producer.
 
-### Fillable forms
+### Fillable forms {new 1.4.0}
 
 Form controls become fillable PDF form fields (AcroForm), drawn as Chrome prints them and filled with their current
 values. Adobe Reader, Preview, Chrome, Firefox and other viewers let the reader fill them in and save the result.
@@ -598,7 +598,7 @@ Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consola
 italic and bold italic. With `EmbedStandardFonts` or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.
 
-## Limitations
+## Limitations {changed 1.4.0}
 
 PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything

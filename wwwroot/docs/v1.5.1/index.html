@@ -47,7 +47,7 @@
       <ul>
         <li><a href="#install">Install</a></li>
         <li><a href="#how-it-compares">How it compares</a></li>
-        <li><a href="#system-requirements">System requirements</a></li>
+        <li><a href="#system-requirements">System requirements <span class="change" title="Changed in 1.5.1">Changed</span></a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#merging-pdfs">Merging PDFs</a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
@@ -65,7 +65,7 @@
       <ul>
         <li><a href="#install">Install</a></li>
         <li><a href="#how-it-compares">How it compares</a></li>
-        <li><a href="#system-requirements">System requirements</a></li>
+        <li><a href="#system-requirements">System requirements <span class="change" title="Changed in 1.5.1">Changed</span></a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#merging-pdfs">Merging PDFs</a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
@@ -107,6 +107,13 @@
     <p class="docs-old">This is the manual for PdfPecker 1.5.1. <a href="/docs/">Read it for the latest version, 1.8.0</a>.</p>
     <article class="prose">
 <h1 id="pdfpecker">PdfPecker</h1>
+<div class="changes changes-list">
+<p><b>New and changed in PdfPecker 1.5.1</b> (since 1.4.0):</p>
+<ul>
+<li><a href="/docs/v1.5.1/#system-requirements">System requirements</a> <span class="change">Changed</span></li>
+</ul>
+<p class="changes-more"><a href="/docs/changelog/">Every release in the changelog</a></p>
+</div>
 <p>Fast HTML and Markdown to PDF conversion, and PDF to PNG rendering, for .NET, with no dependencies.</p>
 <p>PdfPecker has its own HTML parser, Markdown parser, CSS engine, layout engine and PDF writer, and its own PDF renderer.
 It does not start a browser, ship native binaries or pull in third-party packages; the NuGet package depends only on
@@ -227,7 +234,7 @@ by less than 0.25 mm.</p>
 </code></pre>
 <p>The comparison project is not part of <code>PdfPecker.sln</code>, so its third-party packages never reach the library or its
 tests. Your numbers will differ with hardware and documents.</p>
-<h2 id="system-requirements">System requirements</h2>
+<h2 id="system-requirements">System requirements <span class="change">Changed in 1.5.1</span></h2>
 <p><strong>Required:</strong> the .NET 8, .NET 9 or .NET 10 runtime (or later). Nothing else: the library is pure managed code with no
 native binaries, browser or third-party packages, so it runs wherever .NET runs (Windows, Linux, macOS; x64 and ARM64).
 The rendered pages are the same on every version; only the compressed bytes can differ, because each .NET version ships

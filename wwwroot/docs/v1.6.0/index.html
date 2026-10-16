@@ -46,13 +46,13 @@
       <p>PdfPecker 1.6.0</p>
       <ul>
         <li><a href="#install">Install</a></li>
-        <li><a href="#how-it-compares">How it compares</a></li>
+        <li><a href="#how-it-compares">How it compares <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
         <li><a href="#system-requirements">System requirements</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#merging-pdfs">Merging PDFs</a></li>
+        <li><a href="#usage">Usage <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
+        <li><a href="#merging-pdfs">Merging PDFs <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
-        <li><a href="#what-is-supported">What is supported</a></li>
-        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#what-is-supported">What is supported <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
+        <li><a href="#limitations">Limitations <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
         <li><a href="#performance">Performance</a></li>
         <li><a href="#building">Building</a></li>
         <li><a href="#how-it-works">How it works</a></li>
@@ -64,13 +64,13 @@
       <p>PdfPecker 1.6.0</p>
       <ul>
         <li><a href="#install">Install</a></li>
-        <li><a href="#how-it-compares">How it compares</a></li>
+        <li><a href="#how-it-compares">How it compares <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
         <li><a href="#system-requirements">System requirements</a></li>
-        <li><a href="#usage">Usage</a></li>
-        <li><a href="#merging-pdfs">Merging PDFs</a></li>
+        <li><a href="#usage">Usage <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
+        <li><a href="#merging-pdfs">Merging PDFs <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
-        <li><a href="#what-is-supported">What is supported</a></li>
-        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#what-is-supported">What is supported <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
+        <li><a href="#limitations">Limitations <span class="change" title="Changed in 1.6.0">Changed</span></a></li>
         <li><a href="#performance">Performance</a></li>
         <li><a href="#building">Building</a></li>
         <li><a href="#how-it-works">How it works</a></li>
@@ -107,6 +107,20 @@
     <p class="docs-old">This is the manual for PdfPecker 1.6.0. <a href="/docs/">Read it for the latest version, 1.8.0</a>.</p>
     <article class="prose">
 <h1 id="pdfpecker">PdfPecker</h1>
+<div class="changes changes-list">
+<p><b>New and changed in PdfPecker 1.6.0</b> (since 1.5.1):</p>
+<ul>
+<li><a href="/docs/v1.6.0/#how-it-compares">How it compares</a> <span class="change">Changed</span></li>
+<li><a href="/docs/v1.6.0/#fonts">Fonts</a> <span class="change">Changed</span></li>
+<li><a href="/docs/v1.6.0/#right-to-left-text-arabic-and-hebrew">Right-to-left text: Arabic and Hebrew</a> <span class="change new">New</span></li>
+<li><a href="/docs/v1.6.0/#digital-signatures">Digital signatures</a> <span class="change">Changed</span></li>
+<li><a href="/docs/v1.6.0/#merging-pdfs">Merging PDFs</a> <span class="change">Changed</span></li>
+<li><a href="/docs/v1.6.0/#what-is-supported">What is supported</a> <span class="change">Changed</span></li>
+<li><a href="/docs/v1.6.0/#paged-media">Paged media</a> <span class="change new">New</span></li>
+<li><a href="/docs/v1.6.0/#limitations">Limitations</a> <span class="change">Changed</span></li>
+</ul>
+<p class="changes-more"><a href="/docs/changelog/">Every release in the changelog</a></p>
+</div>
 <p>Fast HTML and Markdown to PDF conversion, and PDF to PNG rendering, for .NET, with no dependencies.</p>
 <p>PdfPecker has its own HTML parser, Markdown parser, CSS engine, layout engine and PDF writer, and its own PDF renderer.
 It does not start a browser, ship native binaries or pull in third-party packages; the NuGet package depends only on
@@ -125,7 +139,7 @@ dotnet nuget add source &quot;$(pwd)/nupkg&quot; --name pdfpecker-local
 dotnet add &lt;your project&gt; package PdfPecker
 </code></pre>
 <p>The package targets <code>net8.0</code>, <code>net9.0</code> and <code>net10.0</code>, so it works on .NET 8 and later.</p>
-<h2 id="how-it-compares">How it compares</h2>
+<h2 id="how-it-compares">How it compares <span class="change">Changed in 1.6.0</span></h2>
 <p>The same three documents converted to A4 PDF by PdfPecker and six .NET alternatives, on one 4-core cloud VM
 (Intel Xeon @ 2.8 GHz, 16 GB, Linux, .NET 10.0.12). Times are medians after a 3-second warm-up; &quot;first PDF&quot; includes
 starting the browser where there is one. Parallel runs one conversion per core at once on the 5-page document. Peak
@@ -389,7 +403,7 @@ cancelling stops the conversion where it is.</p>
 <p>A CSS <code>@page { size: A4 landscape; margin: 15mm }</code> rule overrides the page size and margins unless
 <code>IgnoreCssPageRules</code> is set. PdfPecker never makes network requests on its own: <code>http(s)</code> images and stylesheets are only
 loaded through <code>ResourceResolver</code>.</p>
-<h3 id="fonts">Fonts</h3>
+<h3 id="fonts">Fonts <span class="change">Changed in 1.6.0</span></h3>
 <p>Register TrueType or OpenType fonts and use them by name in CSS. Only the glyphs a document uses are embedded, and
 text can use any Unicode character the fonts have (Greek, Cyrillic, Central European, CJK, ...):</p>
 <pre class="cs"><code><span class="k">var</span> options = <span class="k">new</span> PdfOptions();
@@ -424,7 +438,7 @@ options.UseSystemFonts = <span class="k">true</span>;   <span class="c">// looks
 once for each such character before anything is written, so a test can make sure a template's fonts cover its data:</p>
 <pre class="cs"><code>options.MissingCharacter = ch =&gt; <span class="k">throw</span> <span class="k">new</span> InvalidOperationException(<span class="s">$&quot;No font has U+{char.ConvertToUtf32(ch, 0):X4}&quot;</span>);
 </code></pre>
-<h3 id="right-to-left-text-arabic-and-hebrew">Right-to-left text: Arabic and Hebrew</h3>
+<h3 id="right-to-left-text-arabic-and-hebrew">Right-to-left text: Arabic and Hebrew <span class="change new">New in 1.6.0</span></h3>
 <p>Arabic and Hebrew are laid out right to left and shaped like browsers do, with PdfPecker's own implementation of the
 Unicode Bidirectional Algorithm (UAX #9, passing all of Unicode's conformance tests) and of OpenType shaping (GSUB and
 GPOS, following HarfBuzz). Arabic letters join, lam-alef and other ligatures form, and harakat and Hebrew points are
@@ -519,7 +533,7 @@ including its indentation, encoding and declaration, is kept as it was. The refe
 <code>id</code> and <code>description</code> to set them. For OIOUBL 2.1 (UBL 2.0) the description is written as the <code>DocumentType</code> OIOUBL
 requires, <code>PDF</code> by default. The output passes the UBL schemas, the Peppol BIS 3.0 and EN 16931 schematrons, and the
 OIOUBL 2.1 schematron. PdfPecker does not build or validate the rest of the invoice.</p>
-<h3 id="digital-signatures">Digital signatures</h3>
+<h3 id="digital-signatures">Digital signatures <span class="change">Changed in 1.6.0</span></h3>
 <p>Sign the PDF with a certificate (a <code>.pfx</code> file or one from the certificate store). Adobe Reader then shows who signed
 it and whether the file was changed afterwards.</p>
 <pre class="cs"><code><span class="k">var</span> cert = <span class="t">X509CertificateLoader</span>.LoadPkcs12FromFile(<span class="s">&quot;signer.pfx&quot;</span>, <span class="s">&quot;pfx-password&quot;</span>);
@@ -617,7 +631,7 @@ and colour. Forms work with <code>Security</code> (the values are encrypted with
 fields as PDF/A-2b and 3b), <code>Accessibility</code> (each widget sits in a <code>Form</code> element described by its label, title
 or name, and veraPDF passes PDF/UA-1), <code>Signature</code> (the signature field joins the form) and <code>PdfMerger</code> (repeated names are
 renamed).</p>
-<h2 id="merging-pdfs">Merging PDFs</h2>
+<h2 id="merging-pdfs">Merging PDFs <span class="change">Changed in 1.6.0</span></h2>
 <p><code>PdfMerger</code> combines PDFs into one, any PDFs, not only those PdfPecker made:</p>
 <pre class="cs"><code><span class="k">byte</span>[] merged = <span class="t">PdfMerger</span>.Merge(invoicePdf, termsPdf, attachmentPdf);
 
@@ -715,7 +729,7 @@ baseline and progressive JPEG, JPEG 2000 (<code>JPXDecode</code>, including embe
 refinement and halftone regions, with <code>JBIG2Globals</code>), CCITT fax, stencil masks, colour-key masks and soft masks.</li>
 </ul>
 <p>For what the renderer does not support yet, see <a href="#limitations">Limitations</a>.</p>
-<h2 id="what-is-supported">What is supported</h2>
+<h2 id="what-is-supported">What is supported <span class="change">Changed in 1.6.0</span></h2>
 <p><strong>HTML</strong>: the common document elements: headings, paragraphs, <code>div</code>/<code>section</code>-style blocks, <code>span</code>, <code>a</code> (external links
 and <code>#id</code> links inside the document), <code>b</code>/<code>strong</code>, <code>i</code>/<code>em</code>, <code>u</code>, <code>s</code>, <code>sub</code>, <code>sup</code>, <code>small</code>, <code>big</code>, <code>mark</code>, <code>code</code>,
 <code>pre</code>, <code>blockquote</code>, <code>hr</code>, <code>br</code>, <code>ul</code>/<code>ol</code>/<code>li</code> (nested, with <code>start</code> and <code>value</code>), <code>dl</code>, <code>table</code> (with <code>thead</code>,
@@ -836,7 +850,7 @@ Inside it, <code>{page}</code> and <code>{total-pages}</code> (or <code>{pages}<
 &lt;main&gt;...&lt;/main&gt;
 &lt;footer data-sticky-pdf-footer height=&quot;12mm&quot;&gt;Page {page} of {total-pages}&lt;/footer&gt;
 </code></pre>
-<h3 id="paged-media">Paged media</h3>
+<h3 id="paged-media">Paged media <span class="change new">New in 1.6.0</span></h3>
 <p><code>@page</code> rules set the page size, margins and background, and their margin boxes (<code>@top-left</code>, <code>@top-center</code>,
 <code>@bottom-right</code> and the other thirteen) print headers and footers with <code>counter(page)</code> and <code>counter(pages)</code>, chosen
 per page with <code>:first</code>, <code>:left</code> and <code>:right</code>. On top of that:</p>
@@ -884,7 +898,7 @@ searched and copied. Without them, the PDF standard fonts are used: <code>font-f
 Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consolas, ...), each in regular, bold,
 italic and bold italic. With <code>EmbedStandardFonts</code> or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.</p>
-<h2 id="limitations">Limitations</h2>
+<h2 id="limitations">Limitations <span class="change">Changed in 1.6.0</span></h2>
 <p>PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything
 not listed in <a href="#what-is-supported">What is supported</a> should be assumed missing.</p>

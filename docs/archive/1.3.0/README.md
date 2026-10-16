@@ -247,7 +247,7 @@ bundled Liberation fonts (see [Fonts](#fonts)). PDF/A does not allow encryption,
 `Security` throws an `ArgumentException`. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.
 
-### Accessibility: tagged PDF and PDF/UA
+### Accessibility: tagged PDF and PDF/UA {new 1.3.0}
 
 ```csharp
 var options = new PdfOptions
@@ -381,7 +381,7 @@ not disposed; the sequence is enumerated lazily, so an iterator can open each on
 writes to a temporary file and moves it into place, so the output can be one of the inputs and a failed merge leaves
 no partial file behind.
 
-### Merging PDFs as they arrive
+### Merging PDFs as they arrive {new 1.3.0}
 
 For PDFs that arrive one at a time from elsewhere, such as downloads read a few at a time, use `StreamingPdfMerger`. It
 writes each PDF's pages when it is added and then lets the PDF go, so memory stays at about one input, and between
@@ -464,7 +464,7 @@ What the renderer supports:
 
 For what the renderer does not support yet, see [Limitations](#limitations).
 
-## What is supported
+## What is supported {changed 1.3.0}
 
 **HTML**: the common document elements: headings, paragraphs, `div`/`section`-style blocks, `span`, `a` (external links
 and `#id` links inside the document), `b`/`strong`, `i`/`em`, `u`, `s`, `sub`, `sup`, `small`, `big`, `mark`, `code`,
@@ -557,7 +557,7 @@ Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consola
 italic and bold italic. With `EmbedStandardFonts` or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.
 
-## Limitations
+## Limitations {changed 1.3.0}
 
 PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything

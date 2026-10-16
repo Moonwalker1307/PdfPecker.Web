@@ -21,6 +21,7 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
     readonly Dictionary<Page, string> titles = [];
     readonly Dictionary<Page, List<(string Href, string Title, bool New)>> changes = [];
     readonly Dictionary<Page, List<(string Id, string Title)>> sectionsOf = [];
+    readonly Dictionary<string, bool> sectionTags = [];
 
     string OutputDir => manual.Latest ? docsOutput : Path.Combine(docsOutput, "v" + manual.Version);
 
@@ -43,12 +44,26 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
             plain.Add((page, body));
             sectionsOf[page] = H2Pattern().Matches(body).Select(m => (m.Groups[1].Value, PlainHtml(m.Groups[2].Value))).ToList();
             var changed = new List<(string Href, string Title, bool New)>();
-            rendered.Add((page, DocsChanges.Apply(body, marks, manual.Version, manual.Href(page), changed)));
+            rendered.Add((page, DocsChanges.Apply(body, marks, manual.Version, manual.Href(page), changed, note: !manual.SinglePage)));
             changes[page] = changed;
+            if (manual.SinglePage)
+            {
+                var h2s = H2Pattern().Matches(body);
+                foreach (var c in changed)
+                {
+                    var id = c.Href[(c.Href.IndexOf('#') + 1)..];
+                    var at = body.IndexOf($"id=\"{id}\"", StringComparison.Ordinal);
+                    var h2 = h2s.LastOrDefault(m => m.Index <= at);
+                    if (h2 == null) continue;
+                    var h2Id = h2.Groups[1].Value;
+                    sectionTags[h2Id] = (h2Id == id && c.New) || (sectionTags.TryGetValue(h2Id, out var n) && n);
+                }
+            }
         }
-        // The manual's home page lists everything that changed since the version before it.
+        // The manual's home page lists everything that changed since the version before it. On a one-page manual that
+        // list is the only note, since a line under the title as well would repeat it.
         rendered[0] = (rendered[0].Page, DocsChanges.InsertAfterTitle(rendered[0].Body,
-            DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])))));
+            DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage)));
 
         for (int i = 0; i < pages.Length; i++)
         {
@@ -190,7 +205,7 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
             sb.Append(indent).Append($"  <p>PdfPecker {manual.Version}</p>\n");
             sb.Append(indent).Append("  <ul>\n");
             foreach (var (id, title) in sectionsOf[current])
-                sb.Append(indent).Append($"    <li><a href=\"#{id}\">{Encode(title)}</a></li>\n");
+                sb.Append(indent).Append($"    <li><a href=\"#{id}\">{Encode(title)}{SectionTag(id)}</a></li>\n");
             sb.Append(indent).Append("  </ul>\n");
         }
         else
@@ -219,6 +234,12 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
         var isNew = list.Any(c => c.Title.Length == 0);
         return $" <span class=\"change{(isNew ? " new" : "")}\" title=\"{(isNew ? "New" : "Changed")} in {manual.Version}\">{(isNew ? "New" : "Changed")}</span>";
     }
+
+    // The same tag on a section of a one-page manual. Its sidebar lists only the "## " headings, so a new "### "
+    // section shows as a change to the "## " section around it.
+    string SectionTag(string id) => sectionTags.TryGetValue(id, out var isNew)
+        ? $" <span class=\"change{(isNew ? " new" : "")}\" title=\"{(isNew ? "New" : "Changed")} in {manual.Version}\">{(isNew ? "New" : "Changed")}</span>"
+        : "";
 
     static string Encode(string s) => WebUtility.HtmlEncode(s);
 

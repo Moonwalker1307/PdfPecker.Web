@@ -48,7 +48,7 @@
         <li><a href="#install">Install</a></li>
         <li><a href="#how-it-compares">How it compares</a></li>
         <li><a href="#system-requirements">System requirements</a></li>
-        <li><a href="#usage">Usage</a></li>
+        <li><a href="#usage">Usage <span class="change" title="Changed in 1.2.0">Changed</span></a></li>
         <li><a href="#merging-pdfs">Merging PDFs</a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
         <li><a href="#what-is-supported">What is supported</a></li>
@@ -66,7 +66,7 @@
         <li><a href="#install">Install</a></li>
         <li><a href="#how-it-compares">How it compares</a></li>
         <li><a href="#system-requirements">System requirements</a></li>
-        <li><a href="#usage">Usage</a></li>
+        <li><a href="#usage">Usage <span class="change" title="Changed in 1.2.0">Changed</span></a></li>
         <li><a href="#merging-pdfs">Merging PDFs</a></li>
         <li><a href="#pdf-to-image">PDF to image</a></li>
         <li><a href="#what-is-supported">What is supported</a></li>
@@ -107,6 +107,13 @@
     <p class="docs-old">This is the manual for PdfPecker 1.2.0. <a href="/docs/">Read it for the latest version, 1.8.0</a>.</p>
     <article class="prose">
 <h1 id="pdfpecker">PdfPecker</h1>
+<div class="changes changes-list">
+<p><b>New and changed in PdfPecker 1.2.0</b> (since 1.1.1):</p>
+<ul>
+<li><a href="/docs/v1.2.0/#pdf-attachments-in-ubl-e-invoices-peppol-oioubl">PDF attachments in UBL e-invoices (Peppol, OIOUBL)</a> <span class="change new">New</span></li>
+</ul>
+<p class="changes-more"><a href="/docs/changelog/">Every release in the changelog</a></p>
+</div>
 <p>Fast HTML and Markdown to PDF conversion, and PDF to PNG rendering, for .NET, with no dependencies.</p>
 <p>PdfPecker has its own HTML parser, Markdown parser, CSS engine, layout engine and PDF writer, and its own PDF renderer.
 It does not start a browser, ship native binaries or pull in third-party packages; the NuGet package depends only on
@@ -423,7 +430,7 @@ argument to set it yourself. The relationship to the pages defaults to <code>Dat
 otherwise; set <code>Relationship</code> to change it. PdfPecker checks that the XML is a well-formed Cross Industry Invoice (UBL is
 not allowed in Factur-X) but does not validate its content or build it from invoice data: make sure the visible pages
 show the same invoice. The output passes the Mustang validator (PDF/A-3b via veraPDF, and the XML's schematron).</p>
-<h3 id="pdf-attachments-in-ubl-e-invoices-peppol-oioubl">PDF attachments in UBL e-invoices (Peppol, OIOUBL)</h3>
+<h3 id="pdf-attachments-in-ubl-e-invoices-peppol-oioubl">PDF attachments in UBL e-invoices (Peppol, OIOUBL) <span class="change new">New in 1.2.0</span></h3>
 <p>Peppol BIS Billing 3.0, OIOUBL, EHF, XRechnung UBL and other UBL e-invoices are XML only: the XML is the invoice, and
 the PDF travels inside it as an attachment. <code>UblInvoice.AttachPdf</code> adds one to the invoice or credit note your
 invoicing system made:</p>
