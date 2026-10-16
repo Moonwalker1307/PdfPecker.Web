@@ -44,6 +44,7 @@
       <option value="readme">README</option>
       <option value="recipe">Recipe</option>
       <option value="blank">Blank</option>
+      <option value="mine" hidden>Your document</option>
     </select>
   </label>
   <label>Output
@@ -61,10 +62,27 @@
       <option value="300">300 DPI</option>
     </select>
   </label>
+  <div class="seg" role="group" aria-label="View">
+    <button type="button" data-view="editor" aria-pressed="false" title="Only the editor">Editor</button>
+    <button type="button" data-view="split" aria-pressed="true" title="Editor and preview side by side">Split</button>
+    <button type="button" data-view="preview" aria-pressed="false" title="Only the preview">Preview</button>
+  </div>
   <span class="spacer"></span>
   <label class="button" for="file">Open file</label>
   <input type="file" id="file" accept=".md,.markdown,text/markdown" hidden>
+  <details class="menu">
+    <summary class="button">Export</summary>
+    <div class="menu-list" id="exportMenu">
+      <button type="button" data-export="md">Download Markdown (.md)</button>
+      <button type="button" data-export="html">Download HTML</button>
+      <button type="button" data-export="copyMd">Copy Markdown</button>
+      <button type="button" data-export="copyHtml">Copy HTML code</button>
+      <button type="button" data-export="copyRich">Copy formatted text <small>for Word, Google Docs or email</small></button>
+      <button type="button" data-export="share">Copy share link <small>the document travels in the link, nothing is stored</small></button>
+    </div>
+  </details>
   <button type="button" id="settingsToggle" aria-expanded="false" aria-controls="settings">PDF settings <span class="badge" id="changedCount" hidden></span></button>
+  <label class="live" title="Convert as you type"><input type="checkbox" id="live" checked> Live</label>
   <button class="primary" id="convert" title="Ctrl+Enter">Convert</button>
 </div>
 
@@ -75,7 +93,12 @@
         <button type="button" data-editor="visual" aria-pressed="true">Visual</button>
         <button type="button" data-editor="markdown" aria-pressed="false">Markdown</button>
       </div>
+      <details class="menu outline" id="outline">
+        <summary class="button small">Outline</summary>
+        <div class="menu-list" id="outlineList" aria-label="Headings"></div>
+      </details>
       <span class="spacer"></span>
+      <span class="word-count" id="stats" aria-live="off"></span>
       <span class="hint" id="editorHint">Type <kbd>#</kbd>, <kbd>-</kbd> or <kbd>&gt;</kbd> and a space to format</span>
       <span class="hint" id="sourceHint" hidden>Drop an .md file here, or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span>
     </div>
@@ -94,6 +117,7 @@
       <button type="button" data-cmd="strike" aria-label="Strikethrough" title="Strikethrough (Ctrl+Shift+X)"><s>S</s></button>
       <button type="button" data-cmd="code" aria-label="Inline code" title="Inline code (Ctrl+E)"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5.5 4 1.5 8l4 4M10.5 4l4 4-4 4"/></svg></button>
       <button type="button" data-cmd="link" aria-label="Link" title="Link (Ctrl+K)"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M6.5 9.5a3 3 0 0 0 4.2 0l2.3-2.3a3 3 0 0 0-4.2-4.2L7.6 4.2M9.5 6.5a3 3 0 0 0-4.2 0L3 8.8A3 3 0 0 0 7.2 13l1.2-1.2"/></svg></button>
+      <button type="button" data-cmd="image" aria-label="Insert image" title="Image (or paste or drop one)"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M1.5 2.5h13v11h-13zM1.5 11l3.5-3.5 3 3 2-2 4.5 4M10.5 6h.01"/></svg></button>
       <span class="sep" aria-hidden="true"></span>
       <button type="button" data-cmd="ul" aria-label="Bulleted list" title="Bulleted list"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M6 4h8M6 8h8M6 12h8M2.5 4h.01M2.5 8h.01M2.5 12h.01"/></svg></button>
       <button type="button" data-cmd="ol" aria-label="Numbered list" title="Numbered list"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M7 4h7M7 8h7M7 12h7M2 3l1-.5V6M2 9.5c.4-.6 1.8-.6 1.8.3 0 .7-1.8 1.4-1.8 2.2h2"/></svg></button>
@@ -101,6 +125,8 @@
       <button type="button" data-cmd="quote" aria-label="Quote" title="Quote"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2.5 3v10M6 5h7.5M6 8h7.5M6 11h5"/></svg></button>
       <button type="button" data-cmd="table" aria-label="Insert table" title="Insert table"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M1.5 2.5h13v11h-13zM1.5 6.5h13M1.5 10h13M6 6.5v7M10.5 6.5v7"/></svg></button>
       <button type="button" data-cmd="hr" aria-label="Horizontal rule" title="Horizontal rule"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M1.5 8h13"/></svg></button>
+      <span class="spacer"></span>
+      <button type="button" id="helpButton" aria-label="Markdown help and shortcuts" title="Markdown help and shortcuts (Ctrl+/)">?</button>
     </div>
     <div class="visual" id="visual" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Document (visual editor)" spellcheck="true"></div>
     <textarea id="source" spellcheck="false" aria-label="Markdown to convert" hidden></textarea>
@@ -232,7 +258,53 @@
   </aside>
 </main>
 
+<dialog class="md-help" id="help" aria-labelledby="helpTitle">
+  <div class="help-head">
+    <h2 id="helpTitle">Markdown help</h2>
+    <button type="button" class="small icon-only" id="closeHelp" aria-label="Close">✕</button>
+  </div>
+  <div class="help-body">
+    <section>
+      <h3>Writing</h3>
+      <table>
+        <tr><td><code># Heading</code></td><td>Heading (<code>##</code> to <code>######</code> for smaller ones)</td></tr>
+        <tr><td><code>**bold**</code> <code>*italic*</code></td><td>Bold and italic</td></tr>
+        <tr><td><code>~~struck~~</code></td><td>Strikethrough</td></tr>
+        <tr><td><code>`code`</code></td><td>Inline code; three backticks on their own line start a code block</td></tr>
+        <tr><td><code>[text](https://…)</code></td><td>Link; paste a URL over selected text to make one</td></tr>
+        <tr><td><code>![alt](image.png)</code></td><td>Image; paste or drop an image to embed it</td></tr>
+        <tr><td><code>- item</code> <code>1. item</code></td><td>Lists; Enter continues them, Tab nests an item</td></tr>
+        <tr><td><code>- [ ] task</code></td><td>Task list item; <code>- [x]</code> is done</td></tr>
+        <tr><td><code>&gt; quote</code></td><td>Quote</td></tr>
+        <tr><td><code>| a | b |</code></td><td>Table, with <code>| --- | --- |</code> under the header row</td></tr>
+        <tr><td><code>---</code></td><td>Horizontal rule</td></tr>
+        <tr><td><code>&lt;div&gt;…&lt;/div&gt;</code></td><td>HTML works too; style it with Extra CSS in the PDF settings</td></tr>
+      </table>
+    </section>
+    <section>
+      <h3>Keyboard shortcuts</h3>
+      <table>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td>Bold</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>I</kbd></td><td>Italic</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd></td><td>Strikethrough</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>E</kbd></td><td>Inline code</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td>Link</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Undo</td></tr>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Nest or un-nest a list item; next table cell</td></tr>
+        <tr><td><kbd>Esc</kbd> then <kbd>Tab</kbd></td><td>Leave the editor</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>Convert</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>/</kbd></td><td>This help</td></tr>
+      </table>
+      <p class="help-note">On a Mac, use <kbd>⌘</kbd> for <kbd>Ctrl</kbd>. In the visual editor, typing <kbd>#</kbd>, <kbd>-</kbd>, <kbd>1.</kbd>,
+        <kbd>[ ]</kbd>, <kbd>&gt;</kbd> or <kbd>```</kbd> and a space at the start of a line formats it.</p>
+      <p class="help-note">Your document is saved in this browser as you type and comes back when you return. It is only sent
+        to the server to convert it, and never stored there.</p>
+    </section>
+  </div>
+</dialog>
+
 <script src="/examples.js"></script>
+<script src="/md-tools.js"></script>
 <script src="/converter.js"></script>
 <script src="/md-editor.js"></script>
 </body>

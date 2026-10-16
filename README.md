@@ -10,7 +10,11 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
 - `/html-to-pdf/`: paste or open an `.html` file (or drag one onto the page), set any `PdfOptions` setting in the
   settings panel (and copy them as C#), and preview or download the PDF or PNG images of its pages.
 - `/markdown/`: the same for Markdown, which can also be converted to HTML. It has a visual (WYSIWYG) editor and a
-  Markdown editor with a shared formatting toolbar (`md-editor.js`); visual edits are written back as Markdown.
+  Markdown editor with a shared formatting toolbar (`md-editor.js`); visual edits are written back as Markdown. Lists
+  continue on Enter, pasted rich text keeps its formatting, and pasted or dropped images are embedded as data URLs
+  (reference links at the end of the document). `md-tools.js` adds what other online Markdown editors have: autosave
+  in the browser, live preview, Editor/Split/Preview views, an outline, a word count, an Export menu (Markdown, HTML,
+  formatted text) and share links that carry the whole document after the `#`, so nothing is stored on the server.
 
 - `/compare/`: PdfPecker side by side with other HTML to PDF converters for .NET.
 - `/docs/`: the PdfPecker manual, one page per topic. The pages in `wwwroot/docs` are generated from the Markdown in
