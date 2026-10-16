@@ -27,6 +27,25 @@ collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's bu
 weight; a missing bold or italic face is synthesized. A character that the chosen font lacks is drawn with the next
 font in the `font-family` list that has it, then the standard font, then any other registered font.
 
+## Variable fonts
+
+TrueType variable fonts (one file with a weight, width, slant or other axis) work with the usual CSS properties.
+PdfPecker builds a static instance of the font for each combination a document uses and embeds a subset of it, so
+bold text uses the font's real bold rather than a synthesized one:
+
+```css
+@font-face { font-family: Inter; src: url(fonts/InterVariable.ttf); }    /* covers all of the font's weights */
+h1 { font-family: Inter; font-weight: 750; }
+.narrow { font-stretch: 75%; }                                           /* the wdth axis */
+em { font-style: italic; }                                               /* the ital axis, or slnt */
+.custom { font-variation-settings: "wght" 650, "GRAD" 50; }              /* any axis, overrides the rest */
+```
+
+A variable `@font-face` without `font-weight` covers the font's whole weight range, and so does a variable font
+added through `options.Fonts`. A face declared with a single weight (`font-weight: 400`) stays at that weight, and
+bold is synthesized as for any other font. The optical size axis (`opsz`) follows the font size unless
+`font-optical-sizing: none` is set.
+
 ## Standard fonts
 
 Text without a registered font uses the standard PDF fonts (Helvetica, Times, Courier), which viewers supply

@@ -145,6 +145,20 @@ refers to registered fonts):</p>
 collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's built-in Brotli). Fonts are matched like browsers do: by family, then style, then the nearest
 weight; a missing bold or italic face is synthesized. A character that the chosen font lacks is drawn with the next
 font in the <code>font-family</code> list that has it, then the standard font, then any other registered font.</p>
+<h2 id="variable-fonts">Variable fonts</h2>
+<p>TrueType variable fonts (one file with a weight, width, slant or other axis) work with the usual CSS properties.
+PdfPecker builds a static instance of the font for each combination a document uses and embeds a subset of it, so
+bold text uses the font's real bold rather than a synthesized one:</p>
+<pre><code class="language-css">@font-face { font-family: Inter; src: url(fonts/InterVariable.ttf); }    /* covers all of the font's weights */
+h1 { font-family: Inter; font-weight: 750; }
+.narrow { font-stretch: 75%; }                                           /* the wdth axis */
+em { font-style: italic; }                                               /* the ital axis, or slnt */
+.custom { font-variation-settings: &quot;wght&quot; 650, &quot;GRAD&quot; 50; }              /* any axis, overrides the rest */
+</code></pre>
+<p>A variable <code>@font-face</code> without <code>font-weight</code> covers the font's whole weight range, and so does a variable font
+added through <code>options.Fonts</code>. A face declared with a single weight (<code>font-weight: 400</code>) stays at that weight, and
+bold is synthesized as for any other font. The optical size axis (<code>opsz</code>) follows the font size unless
+<code>font-optical-sizing: none</code> is set.</p>
 <h2 id="standard-fonts">Standard fonts</h2>
 <p>Text without a registered font uses the standard PDF fonts (Helvetica, Times, Courier), which viewers supply
 themselves, so files stay small but are limited to Western European characters. Set <code>EmbedStandardFonts = true</code> to
