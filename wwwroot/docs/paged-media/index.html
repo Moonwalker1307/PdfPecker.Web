@@ -48,7 +48,7 @@
         <li><a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a></li>
         <li><a href="/docs/options/">Options</a></li>
         <li><a href="/docs/html-and-css/">HTML and CSS <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/paged-media/" aria-current="page">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
+        <li><a href="/docs/paged-media/" aria-current="page">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
@@ -86,7 +86,7 @@
         <li><a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a></li>
         <li><a href="/docs/options/">Options</a></li>
         <li><a href="/docs/html-and-css/">HTML and CSS <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/paged-media/" aria-current="page">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
+        <li><a href="/docs/paged-media/" aria-current="page">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
@@ -145,13 +145,14 @@
     </div>
     <article class="prose">
 <h1 id="paged-media">Paged media</h1>
-<p class="changes"><b>Changed in 1.8.0:</b> <a href="#page-rules-and-margin-boxes">Page rules and margin boxes</a>.</p>
-<h2 id="page-rules-and-margin-boxes">Page rules and margin boxes <span class="change">Changed in 1.8.0</span></h2>
+<h2 id="page-rules-and-margin-boxes">Page rules and margin boxes</h2>
 <p><code>@page</code> rules set the page size, margins and background, and their margin boxes (<code>@top-left</code>, <code>@top-center</code>,
 <code>@bottom-right</code> and the other thirteen) print headers and footers with <code>counter(page)</code> and <code>counter(pages)</code>, chosen
 per page with <code>:first</code>, <code>:left</code> and <code>:right</code>. Those three can also change the page's size, margins and background:
 <code>@page :first { margin-top: 70mm }</code> leaves room for a letterhead on page 1 only, and mirrored <code>:left</code> and <code>:right</code>
-margins give a bound booklet a wider inner margin. The first page is a right page. On top of that:</p>
+margins give a bound booklet a wider inner margin, and each page is laid out at its own content width. The first page
+is a right page; in a right-to-left document (<code>dir=&quot;rtl&quot;</code> on <code>&lt;html&gt;</code>) it is a left page, and PDF viewers are told the
+pages run right to left. On top of that:</p>
 <ul>
 <li><strong>Named pages</strong>: <code>page: wide</code> puts an element on pages styled by <code>@page wide { ... }</code>, with their own size,
 orientation, margins, background and margin boxes. Content on another named page starts a new page, so a landscape
@@ -174,6 +175,21 @@ h2 { string-set: chapter content(); break-before: page }
 nav a::after { content: leader(dotted) target-counter(attr(href), page) }
 </code></pre>
 <p>Chrome supports named pages and margin boxes, but not running strings, <code>target-counter()</code> or <code>leader()</code>.</p>
+<h2 id="footnotes">Footnotes</h2>
+<p><code>float: footnote</code> moves an element to the footnote area at the bottom of the page its call is on, as in CSS Generated
+Content for Paged Media. The <code>footnote</code> counter numbers them; <code>::footnote-call</code> styles the number in the text (a
+superscript by default) and <code>::footnote-marker</code> the number before the note. <code>@page { counter-reset: footnote }</code>
+restarts the numbering on every page, and <code>@footnote</code> inside <code>@page</code> styles the area with margins, padding, borders, a
+background and <code>max-height</code>. <code>footnote-display: inline</code> runs short notes together on one line, and
+<code>footnote-policy: line</code> moves the line with the call to the next page when its note does not fit. A long note
+continues on the next page. Each call links to its note, and tagged PDFs mark the notes as <code>Note</code> (PDF/UA-1) or
+<code>FENote</code> (PDF/UA-2).</p>
+<pre><code class="language-css">.note { float: footnote; font-size: 8pt }
+.note::footnote-call { content: &quot;[&quot; counter(footnote) &quot;]&quot;; vertical-align: baseline }
+@page { @footnote { border-top: 0.5pt solid #999; padding-top: 4pt; margin-top: 8pt } }
+</code></pre>
+<pre><code class="language-html">&lt;p&gt;Paid on the last banking day&lt;span class=&quot;note&quot;&gt;Or the day before a holiday.&lt;/span&gt;.&lt;/p&gt;
+</code></pre>
 <h2 id="running-header-and-footer-from-html">Running header and footer from HTML</h2>
 <p>An element with the <code>data-sticky-pdf-header</code> or <code>data-sticky-pdf-footer</code> attribute is
 taken out of the flow and drawn at the top or bottom of every page, and the page content flows in the space between.

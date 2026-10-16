@@ -14,6 +14,12 @@ of every change is in the [PdfPecker repository](https://github.com/Moonwalker13
   [long-term validation](/docs/signatures/#long-term-validation) (PAdES B-LT and B-LTA).
 - [Text extraction](/docs/text-extraction/) from any PDF, with the position of every line and word.
 - [Fill and flatten the forms](/docs/forms/#filling-and-flattening-existing-pdfs) of existing PDFs.
+- [Container queries](/docs/html-and-css/#container-queries) and the `cq` units.
+- [Footnotes](/docs/paged-media/#footnotes) with `float: footnote`, numbered calls and a styled footnote area.
+- Each page laid out at its own width when `:first`, `:left` or `:right` change it, and right-to-left page order.
+- Blurred text shadows with a true Gaussian blur, shadows on underlines, and selectable text under `filter: blur()`.
+- `aspect-ratio` in shrink-to-fit widths, with `min-`/`max-height` and on tables; `object-fit` for SVG images; and
+  complex selectors inside `:is()`, `:where()`, `:not()` and `:has()`.
 
 ## 1.8.0
 

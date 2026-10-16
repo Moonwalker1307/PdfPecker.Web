@@ -48,7 +48,7 @@
         <li><a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a></li>
         <li><a href="/docs/options/">Options</a></li>
         <li><a href="/docs/html-and-css/" aria-current="page">HTML and CSS <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
+        <li><a href="/docs/paged-media/">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
@@ -86,7 +86,7 @@
         <li><a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a></li>
         <li><a href="/docs/options/">Options</a></li>
         <li><a href="/docs/html-and-css/" aria-current="page">HTML and CSS <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
+        <li><a href="/docs/paged-media/">Paged media</a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
@@ -145,7 +145,7 @@
     </div>
     <article class="prose">
 <h1 id="html-and-css-support">HTML and CSS support</h1>
-<p class="changes"><b>Changed in 1.8.0:</b> <a href="#css">CSS</a>, <a href="#units-and-colours">Units and colours</a>, <a href="#svg">SVG</a>, <a href="#images">Images</a>.</p>
+<p class="changes"><b>Changed in 1.8.0:</b> <a href="#svg">SVG</a>, <a href="#images">Images</a>.</p>
 <p>PdfPecker lays out HTML and CSS the way Chrome prints it. Anything not listed here should be assumed missing; the
 known gaps are listed under <a href="/docs/limitations/">Limitations</a>.</p>
 <h2 id="html">HTML</h2>
@@ -157,17 +157,18 @@ and <code>#id</code> links inside the document), <code>b</code>/<code>strong</co
 (<code>ltr</code>, <code>rtl</code> and <code>auto</code>), <code>&lt;bdi&gt;</code> and <code>&lt;bdo&gt;</code> set the text direction. The parser is forgiving
 about unclosed and misnested tags, the way browsers are.</p>
 <p>Markdown is converted to this HTML first; see <a href="/docs/markdown/">Markdown</a>.</p>
-<h2 id="css">CSS <span class="change">Changed in 1.8.0</span></h2>
+<h2 id="css">CSS</h2>
 <p><code>&lt;style&gt;</code> blocks, <code>&lt;link rel=&quot;stylesheet&quot;&gt;</code>, <code>@import</code> (with <code>layer()</code>, <code>supports()</code> and media queries; a relative URL
 is relative to the importing stylesheet), inline <code>style</code> attributes, <code>@media</code> (media queries level 4:
 <code>print</code>, <code>width</code>/<code>height</code> and <code>orientation</code> of the page area, ranges such as <code>(400px &lt;= width &lt;= 800px)</code>, <code>and</code>, <code>or</code>,
 <code>not</code>), <code>@supports</code> (property tests, <code>selector()</code>, <code>and</code>/<code>or</code>/<code>not</code>), <code>@layer</code> cascade layers, CSS nesting (<code>&amp;</code>),
-<code>@property</code> (initial values and inheritance of registered custom properties) and <code>@page</code> (see
-<a href="/docs/paged-media/">Paged media</a>). Selectors: type, <code>.class</code>, <code>#id</code>, <code>*</code>, attribute selectors (<code>[a]</code>, <code>=</code>, <code>~=</code>, <code>|=</code>,
+<code>@property</code> (initial values and inheritance of registered custom properties), <code>@container</code> (see
+<a href="#container-queries">Container queries</a>) and <code>@page</code> (see <a href="/docs/paged-media/">Paged media</a>). Selectors: type, <code>.class</code>, <code>#id</code>, <code>*</code>, attribute selectors (<code>[a]</code>, <code>=</code>, <code>~=</code>, <code>|=</code>,
 <code>^=</code>, <code>$=</code>, <code>*=</code>, with <code>i</code>/<code>s</code> flags), descendant, <code>&gt;</code>, <code>+</code>, <code>~</code>, <code>:first-child</code>, <code>:last-child</code>, <code>:only-child</code>,
 <code>:nth-child()</code> and <code>:nth-last-child()</code> (incl. <code>of S</code>), <code>:first-of-type</code>, <code>:last-of-type</code>, <code>:only-of-type</code>,
-<code>:nth-of-type()</code>, <code>:nth-last-of-type()</code>, <code>:not()</code>, <code>:is()</code>, <code>:where()</code> and <code>:has()</code> (all with selector lists; <code>:is()</code>
-and <code>:where()</code> skip entries they do not understand), <code>:root</code>, <code>:link</code>, <code>:empty</code>, <code>:lang()</code>, form states (<code>:checked</code>,
+<code>:nth-of-type()</code>, <code>:nth-last-of-type()</code>, <code>:not()</code>, <code>:is()</code>, <code>:where()</code> and <code>:has()</code> (all with lists of complex
+selectors, such as <code>:is(nav &gt; a, .menu li)</code>, nested to any sensible depth; <code>:is()</code> and <code>:where()</code> skip entries they do
+not understand), <code>:root</code>, <code>:link</code>, <code>:empty</code>, <code>:lang()</code>, form states (<code>:checked</code>,
 <code>:disabled</code>, <code>:enabled</code>, <code>:required</code>, <code>:optional</code>, <code>:read-only</code>, <code>:placeholder-shown</code> and the like), <code>::before</code>,
 <code>::after</code>, <code>::marker</code>, <code>::first-letter</code> (drop caps, floated or not) and <code>::first-line</code>, with specificity and <code>!important</code>
 handled as in browsers. As when Chrome prints, interaction states such as <code>:hover</code> and <code>:focus</code> never match.</p>
@@ -182,11 +183,11 @@ handled as in browsers. As when Chrome prints, interaction states such as <code>
 <tbody>
 <tr>
 <td>Box model</td>
-<td><code>display</code> (block, inline, inline-block, flex, inline-flex, grid, inline-grid, list-item, table parts, none), <code>margin</code>, <code>padding</code> (also the logical <code>margin-inline</code>/<code>-block</code> and <code>padding-inline</code>/<code>-block</code> properties and their <code>-start</code>/<code>-end</code> longhands), <code>border</code> (solid, dashed, dotted, double, groove, ridge, inset, outset), <code>border-image</code> (images, SVG files and gradients, with <code>-slice</code> incl. <code>fill</code>, <code>-width</code>, <code>-outset</code> and <code>-repeat</code>: stretch, repeat, round, space), <code>border-radius</code> (incl. elliptical <code>/</code> radii and percentages; rounds backgrounds, borders, shadows and images), <code>box-shadow</code> (outer and <code>inset</code> shadows; a blur is drawn as fading bands), <code>overflow</code> (<code>hidden</code>, <code>clip</code>, <code>auto</code> and <code>scroll</code> clip to the padding box, following its rounded corners, also in table cells; <code>overflow-x</code>/<code>overflow-y</code>), <code>outline</code> and <code>outline-offset</code> (all border styles; follows rounded corners), <code>width</code>, <code>height</code>, <code>min-</code>/<code>max-width</code>, <code>min-height</code>, <code>box-sizing</code>, <code>aspect-ratio</code> (incl. <code>auto &lt;ratio&gt;</code>), <code>object-fit</code> and <code>object-position</code> on images, <code>clip-path</code> (<code>inset()</code>, <code>circle()</code>, <code>ellipse()</code>, <code>polygon()</code>, <code>path()</code>, reference boxes, and <code>url(#id)</code> of a <code>clipPath</code> in inline SVG)</td>
+<td><code>display</code> (block, inline, inline-block, flex, inline-flex, grid, inline-grid, list-item, table parts, none), <code>margin</code>, <code>padding</code> (also the logical <code>margin-inline</code>/<code>-block</code> and <code>padding-inline</code>/<code>-block</code> properties and their <code>-start</code>/<code>-end</code> longhands), <code>border</code> (solid, dashed, dotted, double, groove, ridge, inset, outset), <code>border-image</code> (images, SVG files and gradients, with <code>-slice</code> incl. <code>fill</code>, <code>-width</code>, <code>-outset</code> and <code>-repeat</code>: stretch, repeat, round, space), <code>border-radius</code> (incl. elliptical <code>/</code> radii and percentages; rounds backgrounds, borders, shadows and images), <code>box-shadow</code> (outer and <code>inset</code> shadows; a blur is drawn as fading bands), <code>overflow</code> (<code>hidden</code>, <code>clip</code>, <code>auto</code> and <code>scroll</code> clip to the padding box, following its rounded corners, also in table cells; <code>overflow-x</code>/<code>overflow-y</code>), <code>outline</code> and <code>outline-offset</code> (all border styles; follows rounded corners), <code>width</code>, <code>height</code>, <code>min-</code>/<code>max-width</code>, <code>min-height</code>, <code>box-sizing</code>, <code>aspect-ratio</code> (incl. <code>auto &lt;ratio&gt;</code>; also in shrink-to-fit widths, with <code>min-</code>/<code>max-height</code>, and on tables), <code>object-fit</code> and <code>object-position</code> on images (SVG files too), <code>clip-path</code> (<code>inset()</code>, <code>circle()</code>, <code>ellipse()</code>, <code>polygon()</code>, <code>path()</code>, reference boxes, and <code>url(#id)</code> of a <code>clipPath</code> in inline SVG)</td>
 </tr>
 <tr>
 <td>Text</td>
-<td><code>color</code>, <code>font</code>, <code>font-family</code>, <code>font-size</code>, <code>font-weight</code>, <code>font-style</code>, <code>font-stretch</code>, <code>font-variation-settings</code>, <code>font-optical-sizing</code> (see <a href="/docs/fonts/#variable-fonts">Variable fonts</a>), <code>line-height</code>, <code>text-align</code> (incl. justify, <code>start</code> and <code>end</code>), <code>direction</code>, <code>unicode-bidi</code>, <code>text-decoration</code>, <code>text-transform</code>, <code>text-indent</code>, <code>letter-spacing</code>, <code>word-spacing</code>, <code>white-space</code>, <code>overflow-wrap</code>/<code>word-wrap</code>, <code>word-break</code> (<code>break-all</code>, <code>keep-all</code>), <code>line-break</code> (<code>auto</code>, <code>strict</code>, <code>normal</code>, <code>loose</code>, <code>anywhere</code>; see <a href="/docs/languages/#chinese-japanese-and-korean-line-breaking">CJK line breaking</a>), <code>vertical-align</code>, <code>text-shadow</code> (several shadows; a blur is drawn as faint copies of the text), <code>text-overflow</code> (<code>ellipsis</code>, <code>clip</code> or a string such as <code>&quot; [more]&quot;</code>, on a box that clips its overflow), <code>text-decoration-style</code> (<code>solid</code>, <code>double</code>, <code>dotted</code>, <code>dashed</code>, <code>wavy</code>), <code>text-decoration-color</code>, <code>text-decoration-thickness</code>, <code>text-underline-offset</code>, <code>text-align-last</code>, <code>tab-size</code>, <code>font-variant: small-caps</code> (synthesized from capitals when the font has none), <code>font-variant-numeric</code> and <code>font-feature-settings</code> (see <a href="/docs/fonts/#opentype-features">OpenType features</a>), <code>line-clamp</code> and <code>-webkit-line-clamp</code> (with an ellipsis), `hyphens: manual</td>
+<td><code>color</code>, <code>font</code>, <code>font-family</code>, <code>font-size</code>, <code>font-weight</code>, <code>font-style</code>, <code>font-stretch</code>, <code>font-variation-settings</code>, <code>font-optical-sizing</code> (see <a href="/docs/fonts/#variable-fonts">Variable fonts</a>), <code>line-height</code>, <code>text-align</code> (incl. justify, <code>start</code> and <code>end</code>), <code>direction</code>, <code>unicode-bidi</code>, <code>text-decoration</code>, <code>text-transform</code>, <code>text-indent</code>, <code>letter-spacing</code>, <code>word-spacing</code>, <code>white-space</code>, <code>overflow-wrap</code>/<code>word-wrap</code>, <code>word-break</code> (<code>break-all</code>, <code>keep-all</code>), <code>line-break</code> (<code>auto</code>, <code>strict</code>, <code>normal</code>, <code>loose</code>, <code>anywhere</code>; see <a href="/docs/languages/#chinese-japanese-and-korean-line-breaking">CJK line breaking</a>), <code>vertical-align</code>, <code>text-shadow</code> (several shadows, a true Gaussian blur, and underlines and line-throughs get the shadow too), <code>text-overflow</code> (<code>ellipsis</code>, <code>clip</code> or a string such as <code>&quot; [more]&quot;</code>, on a box that clips its overflow), <code>text-decoration-style</code> (<code>solid</code>, <code>double</code>, <code>dotted</code>, <code>dashed</code>, <code>wavy</code>), <code>text-decoration-color</code>, <code>text-decoration-thickness</code>, <code>text-underline-offset</code>, <code>text-align-last</code>, <code>tab-size</code>, <code>font-variant: small-caps</code> (synthesized from capitals when the font has none), <code>font-variant-numeric</code> and <code>font-feature-settings</code> (see <a href="/docs/fonts/#opentype-features">OpenType features</a>), <code>line-clamp</code> and <code>-webkit-line-clamp</code> (with an ellipsis), `hyphens: manual</td>
 </tr>
 <tr>
 <td>Backgrounds</td>
@@ -222,7 +223,7 @@ handled as in browsers. As when Chrome prints, interaction states such as <code>
 </tr>
 <tr>
 <td>Effects</td>
-<td><code>filter</code>: <code>grayscale()</code>, <code>sepia()</code>, <code>saturate()</code>, <code>hue-rotate()</code>, <code>invert()</code>, <code>opacity()</code>, <code>brightness()</code> and <code>contrast()</code> recolour the box's text, borders and backgrounds as vectors (images through their pixels), while <code>blur()</code> and <code>drop-shadow()</code> are applied to the rendered box at 144 dpi; <code>mix-blend-mode</code> (all separable and non-separable modes, as PDF blend modes) and <code>isolation</code></td>
+<td><code>filter</code>: <code>grayscale()</code>, <code>sepia()</code>, <code>saturate()</code>, <code>hue-rotate()</code>, <code>invert()</code>, <code>opacity()</code>, <code>brightness()</code> and <code>contrast()</code> recolour the box's text, borders and backgrounds as vectors (images through their pixels), while <code>blur()</code> and <code>drop-shadow()</code> are applied to the rendered box at 144 dpi, and text under <code>blur()</code> stays selectable and searchable; <code>mix-blend-mode</code> (all separable and non-separable modes, as PDF blend modes) and <code>isolation</code></td>
 </tr>
 <tr>
 <td>Transforms</td>
@@ -246,18 +247,33 @@ handled as in browsers. As when Chrome prints, interaction states such as <code>
 </tr>
 <tr>
 <td>Paging</td>
-<td><code>page-break-before</code>/<code>after</code>/<code>inside</code>, <code>break-before</code>/<code>after</code>/<code>inside</code> (<code>always</code>, <code>page</code>, <code>avoid</code>), <code>orphans</code>, <code>widows</code>, <code>@page</code> size, margins and background, <code>@page :first</code>/<code>:left</code>/<code>:right</code>, the sixteen page-margin boxes (<code>@top-center</code> and the like), named pages (<code>page</code>), <code>string-set</code> (see <a href="/docs/paged-media/">Paged media</a>)</td>
+<td><code>page-break-before</code>/<code>after</code>/<code>inside</code>, <code>break-before</code>/<code>after</code>/<code>inside</code> (<code>always</code>, <code>page</code>, <code>avoid</code>), <code>orphans</code>, <code>widows</code>, <code>@page</code> size, margins and background, <code>@page :first</code>/<code>:left</code>/<code>:right</code>, the sixteen page-margin boxes (<code>@top-center</code> and the like), named pages (<code>page</code>), <code>string-set</code>, footnotes (<code>float: footnote</code>, <code>@footnote</code>) (see <a href="/docs/paged-media/">Paged media</a>)</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="units-and-colours">Units and colours <span class="change">Changed in 1.8.0</span></h2>
+<h2 id="units-and-colours">Units and colours</h2>
 <p>Units: <code>px</code>, <code>pt</code>, <code>em</code>, <code>rem</code>, <code>%</code>, <code>mm</code>, <code>cm</code>, <code>in</code>, <code>pc</code>, <code>ex</code>, <code>ch</code>, <code>vw</code>, <code>vh</code>, <code>vmin</code>, <code>vmax</code> (the viewport is
-the page's content area, minus any running header and footer, in whole pixels as in Chrome). Colours: names, <code>#rgb</code>, <code>#rrggbb</code>,
+the page's content area, minus any running header and footer, in whole pixels as in Chrome), and the container query
+units <code>cqw</code>, <code>cqh</code>, <code>cqi</code>, <code>cqb</code>, <code>cqmin</code> and <code>cqmax</code>. Colours: names, <code>#rgb</code>, <code>#rrggbb</code>,
 <code>#rrggbbaa</code>, <code>rgb()</code>, <code>rgba()</code>, <code>hsl()</code>, <code>hsla()</code> (comma or space syntax), <code>hwb()</code>, <code>lab()</code>, <code>lch()</code>, <code>oklab()</code>,
 <code>oklch()</code>, <code>color()</code> (sRGB, Display P3 and the other predefined spaces, mapped to sRGB), <code>color-mix()</code>,
 <code>light-dark()</code> (the light value), <code>currentColor</code>, and relative colours (<code>rgb(from var(--brand) r g b / 50%)</code>,
 <code>oklch(from teal calc(l + 0.1) c h)</code> and the like, in every colour function, with the channels usable in math
 functions).</p>
+<h2 id="container-queries">Container queries</h2>
+<p><code>container-type</code> (<code>inline-size</code> or <code>size</code>), <code>container-name</code> and the <code>container</code> shorthand make an element a query
+container, and <code>@container</code> rules style its descendants by the container's size: <code>width</code>, <code>height</code>, <code>inline-size</code>,
+<code>block-size</code>, <code>aspect-ratio</code> and <code>orientation</code>, with <code>min-</code>/<code>max-</code> prefixes or range syntax, combined with <code>and</code>, <code>or</code>
+and <code>not</code>. A name picks a container (<code>@container sidebar (width &lt; 300px)</code>), and <code>style(--compact: 1)</code> queries a custom
+property. The <code>cq</code> units are percentages of the nearest container's size. One component can then lay itself out for a
+narrow sidebar and a wide main column without knowing where it is placed.</p>
+<pre><code class="language-css">.card-slot { container: card / inline-size }
+.card { display: grid; gap: 8px }
+@container card (width &gt;= 400px) { .card { grid-template-columns: 120px 1fr } }
+.card h3 { font-size: clamp(14px, 5cqi, 22px) }
+</code></pre>
+<p>A document that uses container queries is laid out again until the container sizes settle, which takes about two to
+four times as long; documents without them are laid out as before.</p>
 <h2 id="pagination">Pagination</h2>
 <p>Lines, images and table rows are never cut in half at a page boundary; table header rows repeat on
 every page a table spans; backgrounds and borders continue across pages. Flex lines and grid rows move to the next
