@@ -51,7 +51,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -66,6 +66,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -88,7 +89,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -103,6 +104,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -143,7 +145,7 @@
     </div>
     <article class="prose">
 <h1 id="limitations">Limitations</h1>
-<p class="changes"><b>Changed in 1.8.0:</b> <a href="#text-and-fonts">Text and fonts</a>, <a href="#css">CSS</a>, <a href="#images-and-svg">Images and SVG</a>.</p>
+<p class="changes"><b>Changed in 1.8.0:</b> <a href="#css">CSS</a>, <a href="#images-and-svg">Images and SVG</a>.</p>
 <p>PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything
 not listed in <a href="/docs/html-and-css/">What is supported</a> should be assumed missing.</p>
@@ -156,7 +158,7 @@ not listed in <a href="/docs/html-and-css/">What is supported</a> should be assu
 image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
 transformed box, a running header or footer, or a <code>position: fixed</code> box is drawn but not fillable.</li>
 </ul>
-<h2 id="text-and-fonts">Text and fonts <span class="change">Changed in 1.8.0</span></h2>
+<h2 id="text-and-fonts">Text and fonts</h2>
 <ul>
 <li>Without registered fonts or <code>EmbedStandardFonts</code>, text uses the standard PDF fonts, so characters are limited to
 the Windows-1252 set (Western European languages); other characters are replaced with <code>?</code>. The bundled Liberation
@@ -164,6 +166,9 @@ fonts add Central European, Greek and Cyrillic, but not CJK or other scripts: re
 <li>Complex-script shaping covers Arabic and Hebrew (and other scripts written with Arabic letters, such as Persian and
 Urdu). Devanagari and other Indic scripts, Thai, Khmer, Myanmar and Syriac are not shaped, so their vowel signs
 and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (<code>writing-mode</code>).</li>
+<li>Chinese, Japanese and Korean text <a href="/docs/languages/#chinese-japanese-and-korean-line-breaking">breaks into lines</a>, but
+<code>text-align: justify</code> stretches only spaces, so CJK lines without spaces are not justified (<code>text-justify</code> is not
+supported), and punctuation is not compressed at the start or end of a line.</li>
 <li>In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
 glyph for another (see <a href="/docs/fonts/#opentype-features">OpenType features</a>); contextual alternates and other
 features that depend on neighbouring characters are not applied, and <code>small-caps</code> is synthesized from scaled
@@ -207,6 +212,19 @@ than truly see-through; SVG gradient stops with transparency are blended onto wh
 <li>No AVIF images: decoding them needs an AV1 video decoder, which is not planned. Convert them to WebP, PNG or JPEG.</li>
 <li>SVG filters are applied in pixels at 144 dpi, so filtered shapes become an image (text keeps an invisible,
 selectable copy).</li>
+</ul>
+<h2 id="reading-and-changing-existing-pdfs">Reading and changing existing PDFs</h2>
+<ul>
+<li><a href="/docs/text-extraction/">Text extraction</a> reads columns that sit side by side across, line by line, rather than one
+column after the other, and it does not use the structure tree of a tagged PDF to find the reading order. Text drawn
+only as outlines or images is not extracted; there is no OCR.</li>
+<li><a href="/docs/forms/#filling-and-flattening-existing-pdfs">Form filling</a> does not shape text, so values in Arabic, Hebrew,
+Devanagari and other scripts that need shaping are stored but not drawn correctly. XFA forms are not filled: their
+XFA data is removed and the AcroForm fields are filled instead. Field JavaScript (calculations, formats) is not run.</li>
+<li><a href="/docs/signatures/#verifying-signatures">Signature verification</a> counts the updates made after a signature but does
+not analyse them against its permissions (no DocMDP or FieldMDP change analysis), so it cannot tell an allowed form
+fill from a changed page. Revocation is checked only when <code>RevocationMode</code> asks the platform to, not from the OCSP
+responses and CRLs stored in the PDF.</li>
 </ul>
 <h2 id="markdown-and-the-pdf-renderer">Markdown and the PDF renderer</h2>
 <ul>

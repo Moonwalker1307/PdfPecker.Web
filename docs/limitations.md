@@ -13,7 +13,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.8.0}
+## Text and fonts {changed 1.9.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages); other characters are replaced with `?`. The bundled Liberation
@@ -21,6 +21,9 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - Complex-script shaping covers Arabic and Hebrew (and other scripts written with Arabic letters, such as Persian and
   Urdu). Devanagari and other Indic scripts, Thai, Khmer, Myanmar and Syriac are not shaped, so their vowel signs
   and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (`writing-mode`).
+- Chinese, Japanese and Korean text [breaks into lines](/docs/languages/#chinese-japanese-and-korean-line-breaking), but
+  `text-align: justify` stretches only spaces, so CJK lines without spaces are not justified (`text-justify` is not
+  supported), and punctuation is not compressed at the start or end of a line.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
   glyph for another (see [OpenType features](/docs/fonts/#opentype-features)); contextual alternates and other
   features that depend on neighbouring characters are not applied, and `small-caps` is synthesized from scaled
@@ -64,6 +67,19 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - No AVIF images: decoding them needs an AV1 video decoder, which is not planned. Convert them to WebP, PNG or JPEG.
 - SVG filters are applied in pixels at 144 dpi, so filtered shapes become an image (text keeps an invisible,
   selectable copy).
+
+## Reading and changing existing PDFs {new 1.9.0}
+
+- [Text extraction](/docs/text-extraction/) reads columns that sit side by side across, line by line, rather than one
+  column after the other, and it does not use the structure tree of a tagged PDF to find the reading order. Text drawn
+  only as outlines or images is not extracted; there is no OCR.
+- [Form filling](/docs/forms/#filling-and-flattening-existing-pdfs) does not shape text, so values in Arabic, Hebrew,
+  Devanagari and other scripts that need shaping are stored but not drawn correctly. XFA forms are not filled: their
+  XFA data is removed and the AcroForm fields are filled instead. Field JavaScript (calculations, formats) is not run.
+- [Signature verification](/docs/signatures/#verifying-signatures) counts the updates made after a signature but does
+  not analyse them against its permissions (no DocMDP or FieldMDP change analysis), so it cannot tell an allowed form
+  fill from a changed page. Revocation is checked only when `RevocationMode` asks the platform to, not from the OCSP
+  responses and CRLs stored in the PDF.
 
 ## Markdown and the PDF renderer
 

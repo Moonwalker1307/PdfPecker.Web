@@ -4,6 +4,17 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.9.0
+
+- [Chinese, Japanese and Korean line breaking](/docs/languages/#chinese-japanese-and-korean-line-breaking) with
+  kinsoku rules, CSS `line-break` and `word-break: keep-all`.
+- [External signers](/docs/signatures/#external-signers-hsms-smart-cards-and-key-vaults): sign with a key in an HSM,
+  smart card or cloud key vault, and `PdfSigner.SignAsync`.
+- [Signature verification](/docs/signatures/#verifying-signatures) and
+  [long-term validation](/docs/signatures/#long-term-validation) (PAdES B-LT and B-LTA).
+- [Text extraction](/docs/text-extraction/) from any PDF, with the position of every line and word.
+- [Fill and flatten the forms](/docs/forms/#filling-and-flattening-existing-pdfs) of existing PDFs.
+
 ## 1.8.0
 
 Released 16 October 2026.

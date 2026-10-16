@@ -51,7 +51,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -66,6 +66,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -88,7 +89,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -103,6 +104,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -146,6 +148,17 @@
 <p>What changed in each PdfPecker release on <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>, newest first. The
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the <a href="https://github.com/Moonwalker1307/PdfPecker">PdfPecker repository</a>.</p>
+<h2 id="190">1.9.0</h2>
+<ul>
+<li><a href="/docs/languages/#chinese-japanese-and-korean-line-breaking">Chinese, Japanese and Korean line breaking</a> with
+kinsoku rules, CSS <code>line-break</code> and <code>word-break: keep-all</code>.</li>
+<li><a href="/docs/signatures/#external-signers-hsms-smart-cards-and-key-vaults">External signers</a>: sign with a key in an HSM,
+smart card or cloud key vault, and <code>PdfSigner.SignAsync</code>.</li>
+<li><a href="/docs/signatures/#verifying-signatures">Signature verification</a> and
+<a href="/docs/signatures/#long-term-validation">long-term validation</a> (PAdES B-LT and B-LTA).</li>
+<li><a href="/docs/text-extraction/">Text extraction</a> from any PDF, with the position of every line and word.</li>
+<li><a href="/docs/forms/#filling-and-flattening-existing-pdfs">Fill and flatten the forms</a> of existing PDFs.</li>
+</ul>
 <h2 id="180">1.8.0</h2>
 <p>Released 16 October 2026.</p>
 <ul>

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fillable forms · PdfPecker docs</title>
-<meta name="description" content="HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields.">
+<meta name="description" content="HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields, and filling and flattening the forms of existing PDFs.">
 <link rel="canonical" href="https://pdfpecker.net/docs/forms/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="PdfPecker">
 <meta property="og:title" content="Fillable forms · PdfPecker docs">
-<meta property="og:description" content="HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields.">
+<meta property="og:description" content="HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields, and filling and flattening the forms of existing PDFs.">
 <meta property="og:url" content="https://pdfpecker.net/docs/forms/">
 <meta property="og:image" content="https://pdfpecker.net/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -51,7 +51,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -66,6 +66,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -88,7 +89,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -103,6 +104,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -144,7 +146,8 @@
     <article class="prose">
 <h1 id="fillable-forms">Fillable forms</h1>
 <p>Form controls become fillable PDF form fields (AcroForm), drawn as Chrome prints them and filled with their current
-values. Adobe Reader, Preview, Chrome, Firefox and other viewers let the reader fill them in and save the result.</p>
+values. Adobe Reader, Preview, Chrome, Firefox and other viewers let the reader fill them in and save the result. The
+fields of an existing PDF can be <a href="#filling-and-flattening-existing-pdfs">read, filled and flattened</a> too.</p>
 <pre class="cs"><code><span class="k">var</span> html = <span class="s">&quot;&quot;&quot;
     &lt;p&gt;Name &lt;input name=&quot;name&quot; value=&quot;Jane Doe&quot; required&gt;&lt;/p&gt;
     &lt;p&gt;&lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;newsletter&quot; checked&gt; Send me the newsletter&lt;/label&gt;&lt;/p&gt;
@@ -206,6 +209,44 @@ and colour. Forms work with <code>Security</code> (the values are encrypted with
 fields as PDF/A-2b and 3b), <code>Accessibility</code> (each widget sits in a <code>Form</code> element described by its label, title
 or name, and veraPDF passes PDF/UA-1), <code>Signature</code> (the signature field joins the form) and <code>PdfMerger</code> (repeated names are
 renamed).</p>
+<h2 id="filling-and-flattening-existing-pdfs">Filling and flattening existing PDFs</h2>
+<p><code>PdfForm</code> reads, fills and flattens the form fields of any PDF, not only those PdfPecker made, such as a government
+form or a contract template from another tool:</p>
+<pre class="cs"><code><span class="c">// The fields, by fully qualified name (&quot;address.city&quot; for a nested one).</span>
+<span class="k">foreach</span> (<span class="t">PdfFormField</span> field <span class="k">in</span> <span class="t">PdfForm</span>.GetFields(pdf))
+    <span class="t">Console</span>.WriteLine(<span class="s">$&quot;{field.Name} ({field.Type}) = {field.Value}, choices: {string.Join(&quot;</span>, <span class="s">&quot;, field.Options)}&quot;</span>);
+
+<span class="k">var</span> values = <span class="k">new</span> <span class="t">Dictionary</span>&lt;<span class="k">string</span>, <span class="k">string</span>&gt;
+{
+    [<span class="s">&quot;name&quot;</span>] = <span class="s">&quot;Jane Doe&quot;</span>,
+    [<span class="s">&quot;address.city&quot;</span>] = <span class="s">&quot;Copenhagen&quot;</span>,
+    [<span class="s">&quot;newsletter&quot;</span>] = <span class="s">&quot;true&quot;</span>,       <span class="c">// a check box: its on state, or true/yes/on/1; Off/false/no/0/&quot;&quot; clears it</span>
+    [<span class="s">&quot;size&quot;</span>] = <span class="s">&quot;M&quot;</span>,                <span class="c">// a radio button group: the state name of one button</span>
+    [<span class="s">&quot;country&quot;</span>] = <span class="s">&quot;dk&quot;</span>,            <span class="c">// a combo box or list box: a choice&#39;s value or its text</span>
+};
+<span class="k">byte</span>[] filled = <span class="t">PdfForm</span>.Fill(pdf, values);
+
+<span class="c">// Fill and flatten in one go, so the values can no longer be changed; or flatten a PDF as it is.</span>
+<span class="k">byte</span>[] final = <span class="t">PdfForm</span>.Fill(pdf, values, <span class="k">new</span> <span class="t">PdfFormFillOptions</span> { Flatten = <span class="k">true</span> });
+<span class="k">byte</span>[] flat = <span class="t">PdfForm</span>.Flatten(filled);
+<span class="t">PdfForm</span>.FillFile(<span class="s">&quot;application.pdf&quot;</span>, <span class="s">&quot;application-filled.pdf&quot;</span>, values);
+</code></pre>
+<p><code>PdfFormField</code> gives each field's <code>Type</code> (<code>Text</code>, <code>CheckBox</code>, <code>RadioButton</code>, <code>ComboBox</code>, <code>ListBox</code>, <code>PushButton</code> or
+<code>Signature</code>), its <code>Value</code> (and <code>Values</code> for a list box with several choices), the <code>Options</code> it accepts, its flags
+(<code>ReadOnly</code>, <code>Required</code>, <code>Multiline</code>, <code>MaxLength</code>, ...), its tooltip and the page it is on. A name that is no field, a
+choice the field does not have, or text longer than <code>MaxLength</code> throws <code>ArgumentException</code>; set <code>IgnoreUnknownFields</code>
+to skip names the PDF does not have. Push buttons and signature fields cannot be filled (sign the latter with
+<a href="/docs/signatures/#signing-into-an-existing-field"><code>PdfSigner</code></a>).</p>
+<p>Every filled field gets a new appearance in the field's own font, size, colour and alignment, with automatic font size,
+multi-line text and comb fields laid out, and the box and background of its old appearance kept, so the values show in
+every viewer and in <a href="/docs/pdf-to-image/"><code>PdfToImage</code></a>. When the field's font cannot show a value, a subset of
+<code>PdfFormFillOptions.Font</code> (by default the bundled Liberation Sans, which covers Latin, Greek and Cyrillic) is embedded
+for it. XFA form data, which would override the filled fields in some viewers, is removed.</p>
+<p>A signed or encrypted PDF is filled with an incremental update: the original bytes stay as they were, so the signatures
+stay valid (when their permissions allow form filling) and the encryption is kept; pass the password in
+<code>PdfFormFillOptions.Password</code>. Other PDFs are written out in full, without the old values in earlier revisions.
+Flattening draws each field into its page and removes it, keeping links, comments and other annotations; it changes the
+pages, so a signed PDF is refused with <code>InvalidOperationException</code>.</p>
       </article>
       <nav class="docs-pager" aria-label="Previous and next">
         <a class="prev" href="/docs/accessibility/"><small>Previous</small>Accessibility</a>

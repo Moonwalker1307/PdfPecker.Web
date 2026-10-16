@@ -51,7 +51,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -66,6 +66,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -88,7 +89,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -103,6 +104,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -147,7 +149,6 @@
 <p><b>New and changed in PdfPecker 1.8.0</b> (since 1.7.0):</p>
 <ul>
 <li><a href="/docs/html-and-css/#css">HTML and CSS: CSS</a> <span class="change">Changed</span></li>
-<li><a href="/docs/html-and-css/#css-properties">HTML and CSS: CSS properties</a> <span class="change">Changed</span></li>
 <li><a href="/docs/html-and-css/#units-and-colours">HTML and CSS: Units and colours</a> <span class="change">Changed</span></li>
 <li><a href="/docs/html-and-css/#svg">HTML and CSS: SVG</a> <span class="change">Changed</span></li>
 <li><a href="/docs/html-and-css/#images">HTML and CSS: Images</a> <span class="change">Changed</span></li>
@@ -155,7 +156,6 @@
 <li><a href="/docs/fonts/#variable-fonts">Fonts: Variable fonts</a> <span class="change new">New</span></li>
 <li><a href="/docs/fonts/#opentype-features">Fonts: OpenType features</a> <span class="change new">New</span></li>
 <li><a href="/docs/pdfa-and-passwords/#watermarks-and-passwords">PDF/A, passwords and watermarks: Watermarks and passwords</a> <span class="change">Changed</span></li>
-<li><a href="/docs/limitations/#text-and-fonts">Limitations: Text and fonts</a> <span class="change">Changed</span></li>
 <li><a href="/docs/limitations/#css">Limitations: CSS</a> <span class="change">Changed</span></li>
 <li><a href="/docs/limitations/#images-and-svg">Limitations: Images and SVG</a> <span class="change">Changed</span></li>
 </ul>
@@ -163,7 +163,7 @@
 </div>
 <p>PdfPecker turns HTML and Markdown into PDF, and PDF pages into PNG, JPEG or WebP images, in .NET. It has its own HTML
 parser, CSS engine, layout engine, PDF writer and PDF renderer, so it never starts a browser, ships no native binaries
-and depends on nothing but the .NET base class library. These pages describe PdfPecker 1.8.</p>
+and depends on nothing but the .NET base class library. These pages describe PdfPecker 1.9.</p>
 <pre class="cs"><code><span class="k">using</span> <span class="t">PdfPecker</span>;
 
 <span class="k">byte</span>[] pdf = <span class="t">HtmlToPdf</span>.Convert(<span class="s">&quot;&lt;h1&gt;Hello&lt;/h1&gt;&lt;p&gt;World&lt;/p&gt;&quot;</span>);

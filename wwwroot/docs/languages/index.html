@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Right-to-left text and hyphenation · PdfPecker docs</title>
-<meta name="description" content="Arabic and Hebrew text with bidi and shaping, and automatic hyphenation.">
+<title>Right-to-left text, CJK and hyphenation · PdfPecker docs</title>
+<meta name="description" content="Arabic and Hebrew text with bidi and shaping, Chinese, Japanese and Korean line breaking, and automatic hyphenation.">
 <link rel="canonical" href="https://pdfpecker.net/docs/languages/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="PdfPecker">
-<meta property="og:title" content="Right-to-left text and hyphenation · PdfPecker docs">
-<meta property="og:description" content="Arabic and Hebrew text with bidi and shaping, and automatic hyphenation.">
+<meta property="og:title" content="Right-to-left text, CJK and hyphenation · PdfPecker docs">
+<meta property="og:description" content="Arabic and Hebrew text with bidi and shaping, Chinese, Japanese and Korean line breaking, and automatic hyphenation.">
 <meta property="og:url" content="https://pdfpecker.net/docs/languages/">
 <meta property="og:image" content="https://pdfpecker.net/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -40,7 +40,7 @@
 
 <div class="wrap docs-layout">
   <details class="docs-menu">
-    <summary>Docs: Right-to-left and hyphenation</summary>
+    <summary>Docs: Right-to-left, CJK and hyphenation</summary>
     <nav class="docs-toc">
       <p>Basics</p>
       <ul>
@@ -51,7 +51,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/" aria-current="page">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/" aria-current="page">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -66,6 +66,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -88,7 +89,7 @@
         <li><a href="/docs/paged-media/">Paged media <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
         <li><a href="/docs/markdown/">Markdown</a></li>
         <li><a href="/docs/fonts/">Fonts <span class="change" title="Changed in 1.8.0">Changed</span></a></li>
-        <li><a href="/docs/languages/" aria-current="page">Right-to-left and hyphenation</a></li>
+        <li><a href="/docs/languages/" aria-current="page">Right-to-left, CJK and hyphenation</a></li>
       </ul>
       <p>PDF features</p>
       <ul>
@@ -103,6 +104,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
       <p>Reference</p>
@@ -142,7 +144,7 @@
       </div>
     </div>
     <article class="prose">
-<h1 id="right-to-left-text-and-hyphenation">Right-to-left text and hyphenation</h1>
+<h1 id="right-to-left-text-cjk-and-hyphenation">Right-to-left text, CJK and hyphenation</h1>
 <h2 id="right-to-left-text-arabic-and-hebrew">Right-to-left text: Arabic and Hebrew</h2>
 <p>Arabic and Hebrew are laid out right to left and shaped like browsers do, with PdfPecker's own implementation of the
 Unicode Bidirectional Algorithm (UAX #9, passing all of Unicode's conformance tests) and of OpenType shaping (GSUB and
@@ -166,6 +168,34 @@ markers run from the right. <code>dir=&quot;auto&quot;</code>, <code>&lt;bdi&gt;
 and shaped too, with <code>direction</code> deciding which way a text chunk runs from its <code>x</code>. Copied or extracted text gives back
 the original characters in logical order. A font without OpenType Arabic
 features is shaped with the Unicode presentation forms instead.</p>
+<h2 id="chinese-japanese-and-korean-line-breaking">Chinese, Japanese and Korean line breaking</h2>
+<p>Chinese and Japanese are written without spaces, so a line may break between almost any two characters. PdfPecker
+finds those breaks with the Unicode Line Breaking Algorithm (UAX #14) and the Japanese kinsoku rules, as browsers do:
+a line never starts with closing punctuation such as <code>。</code>, <code>、</code> or <code>」</code>, or with an iteration mark such as <code>々</code>, and never
+ends with an opening bracket or quotation mark. Nothing is drawn at these breaks, and Latin words, numbers and emoji
+sequences inside the text stay whole. Text in other scripts breaks at spaces and hyphens, as before. The standard and
+bundled fonts have no CJK characters, so register a font that has them:</p>
+<pre class="cs"><code><span class="k">var</span> options = <span class="k">new</span> PdfOptions();
+options.Fonts.AddFile(<span class="s">&quot;fonts/NotoSansJP-Regular.ttf&quot;</span>);
+<span class="k">byte</span>[] pdf = <span class="t">HtmlToPdf</span>.Convert(<span class="s">&quot;&quot;&quot;
+    &lt;html lang=&quot;ja&quot;&gt;&lt;body style=&quot;font-family: &#39;Noto Sans JP&#39;; line-break: strict&quot;&gt;
+      &lt;p&gt;請求書は月末までにお支払いください。ご不明な点がございましたら、お気軽にお問い合わせください。&lt;/p&gt;
+    &lt;/body&gt;&lt;/html&gt;
+    &quot;&quot;&quot;</span>, options);
+</code></pre>
+<p>CSS <code>line-break</code> sets how strict the rules are, as in Chrome:</p>
+<ul>
+<li><code>auto</code> (the default) and <code>strict</code> keep small kana (<code>ゃ</code>, <code>ッ</code>, ...) and the prolonged sound mark <code>ー</code> off the start of
+a line.</li>
+<li><code>normal</code> lets small kana and <code>ー</code> start a line, and allows a break before the hyphens <code>‐</code>, <code>–</code>, <code>〜</code> and <code>゠</code>.</li>
+<li><code>loose</code> also allows a break before an iteration mark or centred punctuation such as <code>・</code> and <code>：</code>, and on both sides of
+an ellipsis.</li>
+<li><code>anywhere</code> breaks between any two characters and ignores the punctuation rules, in every script.</li>
+</ul>
+<p>Korean text breaks between its syllables by default, as in Chrome. <code>word-break: keep-all</code> breaks CJK text only at
+spaces and punctuation instead, which suits Korean, written with spaces between words. <code>word-break: break-all</code> and <code>white-space: nowrap</code> work as for
+any other text. A justified line is stretched only at its spaces, so a Chinese or Japanese line without spaces is not
+justified (see <a href="/docs/limitations/#text-and-fonts">Limitations</a>).</p>
 <h2 id="hyphenation">Hyphenation</h2>
 <p><code>hyphens: auto</code> hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest <code>lang</code> attribute, else <code>PdfOptions.Language</code>. As in Chrome, a word is hyphenated only where it does not fit on
