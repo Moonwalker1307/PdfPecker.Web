@@ -1,4 +1,4 @@
-# Stamping PDFs
+# Stamping PDFs {new 1.7.0}
 
 `PdfStamper` puts a page of one PDF on top of the pages of another, such as a "PAID" or "COPY" stamp, or underneath
 them, such as company letterhead. Any PDF can be stamped, not only those PdfPecker made:

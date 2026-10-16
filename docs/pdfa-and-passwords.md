@@ -19,7 +19,7 @@ var options = new PdfOptions
 };
 ```
 
-## PDF/A
+## PDF/A {changed 1.7.0}
 
 For archiving, set `Conformance = PdfConformance.PdfA2b` (or another level below): the PDF gets XMP metadata, an sRGB
 output intent and a file ID, and CMYK JPEGs are converted to RGB. All fonts are embedded: text without a registered font
@@ -44,7 +44,7 @@ PDF/UA, passes veraPDF 1.28 (flavours 2b, 2u, 3b, 3u, 4 and 4f) on documents wit
 form fields, SVG and Markdown. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.
 
-## Passwords on existing PDFs
+## Passwords on existing PDFs {new 1.7.0}
 
 To add, change or remove the password of a PDF you already have (from any producer, not only PdfPecker), use
 `PdfProtector`:

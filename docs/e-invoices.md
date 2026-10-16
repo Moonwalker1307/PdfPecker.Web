@@ -1,6 +1,6 @@
 # E-invoices
 
-## Factur-X and ZUGFeRD
+## Factur-X and ZUGFeRD {changed 1.7.0}
 
 Pass the invoice's CII XML (from your invoicing system) and PdfPecker attaches it to the PDF, making a Factur-X /
 ZUGFeRD e-invoice: the pages are the human-readable invoice and the XML is what accounting software reads.

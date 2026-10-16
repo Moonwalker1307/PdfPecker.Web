@@ -20,6 +20,16 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
   `wwwroot/docs/pdfpecker-docs.pdf`, made by PdfPecker with a table of contents. The PDF is not committed, because
   every PDF gets a random file ID; the Deploy workflow builds it before uploading the site. The docs describe the
   PdfPecker version the site uses, so update them together with its `PackageReference`.
+  - Older manuals: a version picker next to Download PDF offers the manual of every earlier release, kept as PDFs in
+    `wwwroot/docs/versions` (checked in, since they never change; 1.0.0 to 1.6.0 are the library README of that
+    release, which was the manual then). Before bumping the `PackageReference`, run
+    `dotnet run --project tools/DocsBuilder -- archive` and commit the PDF it keeps; the builder refuses to build for
+    the new version until the old manual is there. An old README is added with
+    `dotnet run --project tools/DocsBuilder -- archive-readme 1.6.0 path/to/README.md`.
+  - What changed: end a heading in `docs/*.md` with `{new 1.8.0}` or `{changed 1.8.0}` (on the `#` title for a whole
+    page). Marks for the version the site uses get a badge, a tag in the sidebar, a line under the page title and a
+    place in the list on the docs home page, in the PDF too; older marks are hidden, so only what changed since the
+    previous release is highlighted.
 
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 
