@@ -1,12 +1,14 @@
 # Paged media
 
-## Page rules and margin boxes {changed 1.8.0}
+## Page rules and margin boxes {changed 1.9.0}
 
 `@page` rules set the page size, margins and background, and their margin boxes (`@top-left`, `@top-center`,
 `@bottom-right` and the other thirteen) print headers and footers with `counter(page)` and `counter(pages)`, chosen
 per page with `:first`, `:left` and `:right`. Those three can also change the page's size, margins and background:
 `@page :first { margin-top: 70mm }` leaves room for a letterhead on page 1 only, and mirrored `:left` and `:right`
-margins give a bound booklet a wider inner margin. The first page is a right page. On top of that:
+margins give a bound booklet a wider inner margin, and each page is laid out at its own content width. The first page
+is a right page; in a right-to-left document (`dir="rtl"` on `<html>`) it is a left page, and PDF viewers are told the
+pages run right to left. On top of that:
 
 - **Named pages**: `page: wide` puts an element on pages styled by `@page wide { ... }`, with their own size,
   orientation, margins, background and margin boxes. Content on another named page starts a new page, so a landscape
@@ -31,6 +33,27 @@ nav a::after { content: leader(dotted) target-counter(attr(href), page) }
 ```
 
 Chrome supports named pages and margin boxes, but not running strings, `target-counter()` or `leader()`.
+
+## Footnotes {new 1.9.0}
+
+`float: footnote` moves an element to the footnote area at the bottom of the page its call is on, as in CSS Generated
+Content for Paged Media. The `footnote` counter numbers them; `::footnote-call` styles the number in the text (a
+superscript by default) and `::footnote-marker` the number before the note. `@page { counter-reset: footnote }`
+restarts the numbering on every page, and `@footnote` inside `@page` styles the area with margins, padding, borders, a
+background and `max-height`. `footnote-display: inline` runs short notes together on one line, and
+`footnote-policy: line` moves the line with the call to the next page when its note does not fit. A long note
+continues on the next page. Each call links to its note, and tagged PDFs mark the notes as `Note` (PDF/UA-1) or
+`FENote` (PDF/UA-2).
+
+```css
+.note { float: footnote; font-size: 8pt }
+.note::footnote-call { content: "[" counter(footnote) "]"; vertical-align: baseline }
+@page { @footnote { border-top: 0.5pt solid #999; padding-top: 4pt; margin-top: 8pt } }
+```
+
+```html
+<p>Paid on the last banking day<span class="note">Or the day before a holiday.</span>.</p>
+```
 
 ## Running header and footer from HTML
 
