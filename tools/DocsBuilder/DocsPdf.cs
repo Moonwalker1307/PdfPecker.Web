@@ -114,7 +114,7 @@ static partial class DocsPdf
           @bottom-right { content: counter(page) " / " counter(pages); font: 8.5pt Helvetica, sans-serif; color: #777 } }
         @page :first { @top-left { content: none } @top-right { content: none } @bottom-right { content: none } }
         body { font: 10.5pt/1.5 Helvetica, Arial, sans-serif; color: #16161d; }
-        a { color: #c41d23; text-decoration: none; }
+        a { color: #0b62d6; text-decoration: none; }
         .cover { text-align: center; padding-top: 55mm; }
         .cover img { display: block; margin: 0 auto 14mm; }
         .cover-title { font-size: 34pt; margin: 0 0 6mm; letter-spacing: -0.5pt; }

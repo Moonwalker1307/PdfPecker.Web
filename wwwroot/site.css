@@ -3,7 +3,7 @@
   --bg: #f6f6f8; --panel: #ffffff; --alt: #eeeef2; --text: #16161d; --muted: #5b5d6b; --border: #dcdce4;
   --accent: #e0252b; --accent-hover: #c41d23; --accent-text: #ffffff; --accent-soft: #fde8e8;
   --code-bg: #fbfbfd; --error: #c53030; --ok: #1f9d55;
-  --new: #1a7f37; --new-soft: #e6f4ea; --changed: #9a6700; --changed-soft: #fff4d6;
+  --link: #0b62d6; --new: #1a7f37; --new-soft: #e6f4ea; --changed: #9a6700; --changed-soft: #fff4d6;
   --ink: #0b0b0f; --ink-2: #16161f; --on-ink: #f4f4f7; --on-ink-muted: #a8a9b8;
   --radius: 14px; --shadow: 0 1px 2px rgba(10, 10, 20, .06), 0 8px 24px rgba(10, 10, 20, .06);
   --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, Menlo, monospace;
@@ -13,7 +13,7 @@
     --bg: #101015; --panel: #17171e; --alt: #13131a; --text: #ececf1; --muted: #9a9cab; --border: #2a2a35;
     --accent: #ff4048; --accent-hover: #ff5d63; --accent-text: #ffffff; --accent-soft: #3a1416;
     --code-bg: #14141b; --error: #fc8181; --ok: #48bb78;
-    --new: #3fb950; --new-soft: #12261a; --changed: #d29922; --changed-soft: #2b220e;
+    --link: #6aa6ff; --new: #3fb950; --new-soft: #12261a; --changed: #d29922; --changed-soft: #2b220e;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
   }
 }
@@ -502,7 +502,8 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .prose h3 { font-size: 18px; margin: 32px 0 8px; scroll-margin-top: 76px; }
 .prose p, .prose ul, .prose ol { margin: 0 0 16px; }
 .prose li + li { margin-top: 6px; }
-.prose a { text-underline-offset: 2px; }
+/* Links in the manual are blue, so they read as links and not as the site's red accent or an error. */
+.prose a { color: var(--link); text-underline-offset: 2px; }
 .prose :not(pre) > code { background: var(--alt); border: 1px solid var(--border); border-radius: 5px; padding: .08em .35em; font-size: .86em; overflow-wrap: anywhere; }
 .prose pre { margin: 0 0 20px; padding: 16px 20px; overflow-x: auto; background: #0f0f15; color: #e6e6ee; border: 1px solid #262630;
   border-radius: 12px; font: 13.5px/1.6 var(--mono); }
