@@ -17,7 +17,8 @@ Markdown is converted to this HTML first; see [Markdown](/docs/markdown/).
 
 ## CSS
 
-`<style>` blocks, `<link rel="stylesheet">`, inline `style` attributes, `@media` (media queries level 4:
+`<style>` blocks, `<link rel="stylesheet">`, `@import` (with `layer()`, `supports()` and media queries; a relative URL
+is relative to the importing stylesheet), inline `style` attributes, `@media` (media queries level 4:
 `print`, `width`/`height` and `orientation` of the page area, ranges such as `(400px <= width <= 800px)`, `and`, `or`,
 `not`), `@supports` (property tests, `selector()`, `and`/`or`/`not`), `@layer` cascade layers, CSS nesting (`&`),
 `@property` (initial values and inheritance of registered custom properties) and `@page` (see

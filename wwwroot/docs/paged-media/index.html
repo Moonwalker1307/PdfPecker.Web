@@ -115,7 +115,9 @@
 <h2 id="page-rules-and-margin-boxes">Page rules and margin boxes</h2>
 <p><code>@page</code> rules set the page size, margins and background, and their margin boxes (<code>@top-left</code>, <code>@top-center</code>,
 <code>@bottom-right</code> and the other thirteen) print headers and footers with <code>counter(page)</code> and <code>counter(pages)</code>, chosen
-per page with <code>:first</code>, <code>:left</code> and <code>:right</code>. On top of that:</p>
+per page with <code>:first</code>, <code>:left</code> and <code>:right</code>. Those three can also change the page's size, margins and background:
+<code>@page :first { margin-top: 70mm }</code> leaves room for a letterhead on page 1 only, and mirrored <code>:left</code> and <code>:right</code>
+margins give a bound booklet a wider inner margin. The first page is a right page. On top of that:</p>
 <ul>
 <li><strong>Named pages</strong>: <code>page: wide</code> puts an element on pages styled by <code>@page wide { ... }</code>, with their own size,
 orientation, margins, background and margin boxes. Content on another named page starts a new page, so a landscape

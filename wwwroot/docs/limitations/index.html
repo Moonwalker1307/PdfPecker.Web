@@ -143,9 +143,10 @@ text, <code>dx</code> on its <code>tspan</code>s is ignored.</li>
 <h2 id="css">CSS</h2>
 <ul>
 <li>A table column width that mixes a percentage with other units (<code>calc(50% - 10px)</code>) is sized as <code>auto</code>.</li>
-<li><code>@import</code> is ignored (use <code>&lt;link rel=&quot;stylesheet&quot;&gt;</code>), and rules inside <code>@container</code> blocks are skipped. <code>@page</code>
-rules for <code>:first</code>, <code>:left</code> and <code>:right</code> pages can style margin boxes but not change the page size or margins.
-A named page's <code>:first</code> is the document's first page, as in Chrome, not the first page of the named run.</li>
+<li>Rules inside <code>@container</code> blocks are skipped. A named page's <code>:first</code> is the document's first page, as in Chrome,
+not the first page of the named run. When <code>@page :first</code>, <code>:left</code> or <code>:right</code> margins give pages different content
+widths, the content is laid out at the narrowest width on every page; the first page is always a right page, also
+in right-to-left documents.</li>
 <li>Selectors: no <code>::first-letter</code>/<code>::first-line</code>. A rule with an unsupported selector is skipped. <code>:hover</code>, <code>:focus</code>
 and similar interaction states never match. Selectors inside <code>:is()</code>, <code>:where()</code> and <code>:not()</code> may have at most eight
 compound parts (one when nested in another of them).</li>

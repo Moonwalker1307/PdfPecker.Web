@@ -124,7 +124,8 @@ and <code>#id</code> links inside the document), <code>b</code>/<code>strong</co
 about unclosed and misnested tags, the way browsers are.</p>
 <p>Markdown is converted to this HTML first; see <a href="/docs/markdown/">Markdown</a>.</p>
 <h2 id="css">CSS</h2>
-<p><code>&lt;style&gt;</code> blocks, <code>&lt;link rel=&quot;stylesheet&quot;&gt;</code>, inline <code>style</code> attributes, <code>@media</code> (media queries level 4:
+<p><code>&lt;style&gt;</code> blocks, <code>&lt;link rel=&quot;stylesheet&quot;&gt;</code>, <code>@import</code> (with <code>layer()</code>, <code>supports()</code> and media queries; a relative URL
+is relative to the importing stylesheet), inline <code>style</code> attributes, <code>@media</code> (media queries level 4:
 <code>print</code>, <code>width</code>/<code>height</code> and <code>orientation</code> of the page area, ranges such as <code>(400px &lt;= width &lt;= 800px)</code>, <code>and</code>, <code>or</code>,
 <code>not</code>), <code>@supports</code> (property tests, <code>selector()</code>, <code>and</code>/<code>or</code>/<code>not</code>), <code>@layer</code> cascade layers, CSS nesting (<code>&amp;</code>),
 <code>@property</code> (initial values and inheritance of registered custom properties) and <code>@page</code> (see

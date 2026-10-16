@@ -32,9 +32,10 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 ## CSS
 
 - A table column width that mixes a percentage with other units (`calc(50% - 10px)`) is sized as `auto`.
-- `@import` is ignored (use `<link rel="stylesheet">`), and rules inside `@container` blocks are skipped. `@page`
-  rules for `:first`, `:left` and `:right` pages can style margin boxes but not change the page size or margins.
-  A named page's `:first` is the document's first page, as in Chrome, not the first page of the named run.
+- Rules inside `@container` blocks are skipped. A named page's `:first` is the document's first page, as in Chrome,
+  not the first page of the named run. When `@page :first`, `:left` or `:right` margins give pages different content
+  widths, the content is laid out at the narrowest width on every page; the first page is always a right page, also
+  in right-to-left documents.
 - Selectors: no `::first-letter`/`::first-line`. A rule with an unsupported selector is skipped. `:hover`, `:focus`
   and similar interaction states never match. Selectors inside `:is()`, `:where()` and `:not()` may have at most eight
   compound parts (one when nested in another of them).
