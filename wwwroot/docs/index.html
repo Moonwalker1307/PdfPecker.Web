@@ -116,7 +116,7 @@
   </aside>
   <main id="main" class="docs-body">
     <div class="docs-tools">
-      <form class="docs-search" role="search">
+      <form class="docs-search" role="search" data-index="/docs/search.json">
         <label class="sr" for="docs-q">Search the docs</label>
         <input id="docs-q" type="search" placeholder="Search the docs" autocomplete="off" spellcheck="false"
           aria-controls="docs-results" aria-expanded="false" aria-autocomplete="list">
@@ -124,18 +124,18 @@
         <ul id="docs-results" class="docs-results" role="listbox" hidden></ul>
       </form>
       <div class="docs-download">
-        <label class="sr" for="docs-version">PdfPecker version of the PDF</label>
-        <select id="docs-version" class="docs-version">
-          <option value="/docs/pdfpecker-docs.pdf" data-file="pdfpecker-docs-v1.8.0.pdf">1.8.0 (latest)</option>
-          <option value="/docs/versions/pdfpecker-docs-1.7.0.pdf" data-file="pdfpecker-docs-v1.7.0.pdf">1.7.0</option>
-          <option value="/docs/versions/pdfpecker-docs-1.6.0.pdf" data-file="pdfpecker-docs-v1.6.0.pdf">1.6.0</option>
-          <option value="/docs/versions/pdfpecker-docs-1.5.1.pdf" data-file="pdfpecker-docs-v1.5.1.pdf">1.5.1</option>
-          <option value="/docs/versions/pdfpecker-docs-1.4.0.pdf" data-file="pdfpecker-docs-v1.4.0.pdf">1.4.0</option>
-          <option value="/docs/versions/pdfpecker-docs-1.3.0.pdf" data-file="pdfpecker-docs-v1.3.0.pdf">1.3.0</option>
-          <option value="/docs/versions/pdfpecker-docs-1.2.0.pdf" data-file="pdfpecker-docs-v1.2.0.pdf">1.2.0</option>
-          <option value="/docs/versions/pdfpecker-docs-1.1.1.pdf" data-file="pdfpecker-docs-v1.1.1.pdf">1.1.1</option>
-          <option value="/docs/versions/pdfpecker-docs-1.1.0.pdf" data-file="pdfpecker-docs-v1.1.0.pdf">1.1.0</option>
-          <option value="/docs/versions/pdfpecker-docs-1.0.0.pdf" data-file="pdfpecker-docs-v1.0.0.pdf">1.0.0</option>
+        <label class="sr" for="docs-version">PdfPecker version</label>
+        <select id="docs-version" class="docs-version" autocomplete="off" data-slug="">
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown fonts languages pdfa-and-passwords accessibility forms signatures e-invoices attachments merging stamping pdf-to-image changelog limitations performance how-it-works" selected>1.8.0 (latest)</option>
+          <option value="/docs/v1.7.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown fonts languages pdfa-and-passwords accessibility forms signatures e-invoices attachments merging stamping pdf-to-image limitations performance how-it-works">1.7.0</option>
+          <option value="/docs/v1.6.0/" data-pages="">1.6.0</option>
+          <option value="/docs/v1.5.1/" data-pages="">1.5.1</option>
+          <option value="/docs/v1.4.0/" data-pages="">1.4.0</option>
+          <option value="/docs/v1.3.0/" data-pages="">1.3.0</option>
+          <option value="/docs/v1.2.0/" data-pages="">1.2.0</option>
+          <option value="/docs/v1.1.1/" data-pages="">1.1.1</option>
+          <option value="/docs/v1.1.0/" data-pages="">1.1.0</option>
+          <option value="/docs/v1.0.0/" data-pages="">1.0.0</option>
         </select>
         <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download="pdfpecker-docs-v1.8.0.pdf">Download PDF</a>
         <a class="docs-changelog" href="/docs/changelog/">Changelog</a>

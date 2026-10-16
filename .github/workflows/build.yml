@@ -94,6 +94,8 @@ jobs:
           curl -fsS http://localhost:8080/docs/pdfpecker-docs.pdf -o /dev/null
           curl -fsS http://localhost:8080/docs/versions.json -o /dev/null
           curl -fsS http://localhost:8080/docs/versions/pdfpecker-docs-1.6.0.pdf -o /dev/null
+          curl -fsS http://localhost:8080/docs/v1.7.0/fonts/ -o /dev/null
+          curl -fsS http://localhost:8080/docs/v1.6.0/ -o /dev/null
           docker rm -f web
 
       - name: Package
