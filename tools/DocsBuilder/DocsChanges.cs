@@ -81,7 +81,7 @@ static partial class DocsChanges
                 sb.Append($"<li><a href=\"{href}\">{WebUtility.HtmlEncode(name)}</a> <span class=\"change{(isNew ? " new" : "")}\">{(isNew ? "New" : "Changed")}</span></li>\n");
             }
         if (sb.Length == 0) return "";
-        return $"<div class=\"changes changes-list\">\n<p><b>New and changed in PdfPecker {version}</b>{(previous == null ? "" : $" (since {previous})")}:</p>\n<ul>\n{sb}</ul>\n</div>";
+        return $"<div class=\"changes changes-list\">\n<p><b>New and changed in PdfPecker {version}</b>{(previous == null ? "" : $" (since {previous})")}:</p>\n<ul>\n{sb}</ul>\n<p class=\"changes-more\"><a href=\"/docs/changelog/\">Every release in the changelog</a></p>\n</div>";
     }
 
     public static string InsertAfterTitle(string html, string block)

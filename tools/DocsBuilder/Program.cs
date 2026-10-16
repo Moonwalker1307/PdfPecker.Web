@@ -80,6 +80,7 @@ Section[] sections =
     ]),
     new("Reference",
     [
+        new("changelog", "changelog", "Changelog", "What changed in each PdfPecker release, from 1.0.0 to the latest."),
         new("limitations", "limitations", "Limitations", "What PdfPecker does not support yet, and what it leaves out by design."),
         new("performance", "performance", "Performance", "PdfPecker's speed and memory compared with Chromium, wkhtmltopdf, iText and other .NET converters."),
         new("how-it-works", "how-it-works", "How it works", "PdfPecker's pipeline from HTML parsing through CSS and layout to the PDF writer and renderer."),
@@ -210,6 +211,7 @@ string Render(Page page, string title, string body, Page? previous, Page? next)
         {VersionOptions("          ")}
                 </select>
                 <a class="button docs-pdf" href="/docs/{DocsPdf.FileName}" download="{DocsVersions.DownloadName(version)}">Download PDF</a>
+                <a class="docs-changelog" href="/docs/changelog/">Changelog</a>
               </div>
             </div>
             <article class="prose">
