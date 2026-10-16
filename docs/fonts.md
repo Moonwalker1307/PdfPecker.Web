@@ -27,7 +27,7 @@ collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's bu
 weight; a missing bold or italic face is synthesized. A character that the chosen font lacks is drawn with the next
 font in the `font-family` list that has it, then the standard font, then any other registered font.
 
-## Variable fonts
+## Variable fonts {new 1.8.0}
 
 Variable fonts (one file with a weight, width, slant or other axis, with TrueType or CFF2 outlines) work with the
 usual CSS properties. PdfPecker builds a static instance of the font, with its kerning, for each combination a
@@ -47,7 +47,7 @@ bold is synthesized as for any other font. The optical size axis (`opsz`) follow
 `font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
 CFF2.
 
-## OpenType features
+## OpenType features {new 1.8.0}
 
 `font-variant-numeric` and `font-feature-settings` turn on a font's optional glyphs, as in a browser. Tabular figures
 line up amounts in a column:
