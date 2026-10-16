@@ -3,6 +3,7 @@
   --bg: #f6f6f8; --panel: #ffffff; --alt: #eeeef2; --text: #16161d; --muted: #5b5d6b; --border: #dcdce4;
   --accent: #e0252b; --accent-hover: #c41d23; --accent-text: #ffffff; --accent-soft: #fde8e8;
   --code-bg: #fbfbfd; --error: #c53030; --ok: #1f9d55;
+  --new: #1a7f37; --new-soft: #e6f4ea; --changed: #9a6700; --changed-soft: #fff4d6;
   --ink: #0b0b0f; --ink-2: #16161f; --on-ink: #f4f4f7; --on-ink-muted: #a8a9b8;
   --radius: 14px; --shadow: 0 1px 2px rgba(10, 10, 20, .06), 0 8px 24px rgba(10, 10, 20, .06);
   --mono: ui-monospace, "Cascadia Code", "SF Mono", Consolas, Menlo, monospace;
@@ -12,6 +13,7 @@
     --bg: #101015; --panel: #17171e; --alt: #13131a; --text: #ececf1; --muted: #9a9cab; --border: #2a2a35;
     --accent: #ff4048; --accent-hover: #ff5d63; --accent-text: #ffffff; --accent-soft: #3a1416;
     --code-bg: #14141b; --error: #fc8181; --ok: #48bb78;
+    --new: #3fb950; --new-soft: #12261a; --changed: #d29922; --changed-soft: #2b220e;
     --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
   }
 }
@@ -511,12 +513,14 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .prose thead th { background: var(--alt); font-size: 13px; color: var(--muted); }
 .prose tbody tr:last-child td { border-bottom: 0; }
 .prose td:first-child { white-space: nowrap; }
-/* What is new or changed since the previous PdfPecker version (marked in docs/*.md, see tools/DocsBuilder). */
-.change { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px;
-  font: 700 11px/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); vertical-align: middle; white-space: nowrap; }
-.change.new { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+/* What is new or changed since the previous PdfPecker version (marked in docs/*.md, see tools/DocsBuilder). Green and
+   amber, as in changelogs and diffs, so the marks don't read as errors the way the site's red would. */
+.change { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1px solid var(--changed); border-radius: 999px;
+  font: 700 11px/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--changed); background: var(--changed-soft);
+  vertical-align: middle; white-space: nowrap; }
+.change.new { color: var(--new); border-color: var(--new); background: var(--new-soft); }
 .docs-toc .change { margin-left: 4px; padding: 0 6px; font-size: 10px; }
-.prose .changes { margin: 0 0 24px; padding: 12px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft);
+.prose .changes { margin: 0 0 24px; padding: 12px 16px; border-left: 4px solid var(--new); background: var(--alt);
   border-radius: 0 10px 10px 0; font-size: 15px; }
 .prose .changes p { margin: 0; }
 .prose .changes ul { margin: 8px 0 0; padding-left: 20px; }

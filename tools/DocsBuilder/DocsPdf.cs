@@ -148,11 +148,11 @@ static partial class DocsPdf
         thead th { background: #f1f1f5; }
         thead { display: table-header-group; }
         tr { break-inside: avoid; }
-        .change { font: bold 7pt Helvetica, sans-serif; color: #fff; background: #5b5d6b; border-radius: 2pt;
+        .change { font: bold 7pt Helvetica, sans-serif; color: #fff; background: #9a6700; border-radius: 2pt;
           padding: 0.5pt 3pt; vertical-align: middle; white-space: nowrap; }
-        .change.new { background: #e0252b; }
+        .change.new { background: #1a7f37; }
         .toc .change { margin-left: 2mm; }
-        .changes { border-left: 3pt solid #e0252b; background: #fdf1f1; padding: 2mm 4mm; margin: 0 0 4mm; }
+        .changes { border-left: 3pt solid #1a7f37; background: #f3f4f6; padding: 2mm 4mm; margin: 0 0 4mm; }
         .changes p { margin: 0 0 1.5mm; }
         .changes ul { margin: 0; padding-left: 5mm; }
         blockquote { margin: 0 0 3mm; padding-left: 4mm; border-left: 3pt solid #e0252b; color: #5b5d6b; }
