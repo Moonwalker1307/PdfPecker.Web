@@ -11,6 +11,7 @@ const isSafari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(
 const pdfAsImages = isIOS || isSafari || navigator.pdfViewerEnabled === false;
 const PDF_PREVIEW_PAGES = 5;
 let urls = [], fileName = "document", lastPdf = null, run = 0;
+let convertedInput = null; // what the last conversion started with, so live preview skips what is already shown
 let wmImage = null, eInvoiceXml = null; // files picked in the settings
 
 function setStatus(text, isError) {
@@ -228,6 +229,7 @@ async function convert() {
     return;
   }
   convertBtn.disabled = true;
+  convertedInput = editor.value;
   setStatus("Converting…");
   const started = performance.now();
   const o = output();
@@ -270,7 +272,9 @@ async function convert() {
         // blob: URL: Safari leaves a sandboxed frame blank when it points at a blob: URL of the page's origin.
         const html = await blob.text();
         if (thisRun !== run) return;
-        $("preview").setAttribute("sandbox", "");
+        // allow-same-origin without allow-scripts lets the page read the frame's scroll position (to keep it when the
+        // preview updates) while scripts and event handlers in the document still never run.
+        $("preview").setAttribute("sandbox", "allow-same-origin");
         $("preview").style.background = "#fff";
         $("htmlSource").textContent = html;
         $("viewSource").hidden = false;
@@ -409,7 +413,9 @@ $("example").addEventListener("change", e => { loadExample(e.target.value); conv
 convertBtn.addEventListener("click", convert);
 editor.addEventListener("keydown", e => {
   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); convert(); }
-  // Tab indents; Escape then Tab leaves the editor, so keyboard users are never trapped.
+  // Tab indents; Escape then Tab leaves the editor, so keyboard users are never trapped. The Markdown page's editor
+  // (md-editor.js) handles Tab itself, to indent list items.
+  if (mode === "markdown") return;
   if (e.key === "Escape") editor.dataset.tabOut = "1";
   else if (e.key === "Tab" && !e.shiftKey && !editor.dataset.tabOut) {
     e.preventDefault();
@@ -433,7 +439,9 @@ $("output").addEventListener("change", () => { updateOutputLabels(); convert(); 
 $("settingsToggle").addEventListener("click", () => toggleSettings($("settings").hidden));
 $("closeSettings").addEventListener("click", () => toggleSettings(false));
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && !$("settings").hidden && document.activeElement !== editor) toggleSettings(false);
+  // Escape in a dialog or an open menu closes that instead.
+  if (e.key === "Escape" && !$("settings").hidden && document.activeElement !== editor
+    && !document.querySelector("dialog[open], details.menu[open]")) toggleSettings(false);
 });
 // Settings convert as soon as they change; text fields when you leave them or press Enter.
 form.addEventListener("input", syncSettingsUi);
@@ -480,5 +488,16 @@ if (open) {
 const wanted = new URLSearchParams(location.search).get("output");
 if (wanted && $("output").querySelector(`option[value="${CSS.escape(wanted)}"]`)) $("output").value = wanted;
 updateOutputLabels();
-loadExample($("example").value);
-convert();
+// The Markdown page can start with a shared or saved document (md-tools.js) instead of the first example.
+(async () => {
+  const doc = typeof initialDocument === "undefined" ? null : await initialDocument;
+  if (doc) {
+    editor.value = doc.text;
+    fileName = doc.name;
+    editor.dispatchEvent(new Event("input"));
+  } else {
+    loadExample($("example").value);
+  }
+  await convert();
+  if (doc?.message && !statusEl.classList.contains("error")) setStatus(`${doc.message} ${statusEl.textContent}`);
+})();

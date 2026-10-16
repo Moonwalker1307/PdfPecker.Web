@@ -171,7 +171,11 @@
             ? `<${href}>` : `[${text}](${destination(href)}${titlePart(n.getAttribute("title"))})`;
           break;
         }
-        case "IMG": out += `![${escapeText(n.getAttribute("alt") ?? "")}](${destination(n.getAttribute("src") ?? "")}${titlePart(n.getAttribute("title"))})`; break;
+        case "IMG": {
+          const src = n.getAttribute("src") ?? "", alt = escapeText(n.getAttribute("alt") ?? "");
+          out += src.startsWith("data:") ? `![${alt}][${imageLabel(src)}]` : `![${alt}](${destination(src)}${titlePart(n.getAttribute("title"))})`;
+          break;
+        }
         case "INPUT": break;
         default:
           // Pasted or browser-made spans can carry bold or italic as a style.
@@ -298,16 +302,28 @@
     return out.join(joiner);
   }
 
+  // Embedded images (data: URLs) are written as reference links, with the data collected at the end of the document.
+  let imageRefs = new Map();
+  function imageLabel(src) {
+    if (!imageRefs.has(src)) imageRefs.set(src, `image-${imageRefs.size + 1}`);
+    return imageRefs.get(src);
+  }
+
   function toMarkdown() {
-    const md = blocks(visual.childNodes).replace(/\n{3,}/g, "\n\n").trim();
+    imageRefs = new Map();
+    let md = blocks(visual.childNodes).replace(/\n{3,}/g, "\n\n").trim();
+    if (imageRefs.size) md += "\n\n" + [...imageRefs].map(([src, label]) => `[${label}]: ${src}`).join("\n");
     return md ? md + "\n" : "";
   }
 
+  // Tells the rest of the page the Markdown changed; visual edits set it directly, without an input event.
   function syncFromVisual() {
     normalize();
     const md = toMarkdown();
+    const changed = md !== source.value;
     source.value = md;
     renderedFor = md;
+    if (changed) source.dispatchEvent(new CustomEvent("markdownchange"));
   }
 
   // ---------- Editing in visual mode ----------
@@ -708,29 +724,45 @@
     source.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
+  // Replaces a range of the Markdown through the browser's own editing, so Ctrl+Z undoes it like typing; setRangeText
+  // (the fallback) would leave it out of the undo history. select picks the new text, otherwise the caret goes after it.
+  function replaceSource(text, s, e, select) {
+    source.focus();
+    source.setSelectionRange(s, e);
+    let done = false;
+    try { done = document.execCommand("insertText", false, text); } catch {}
+    if (!done) source.setRangeText(text, s, e, "end");
+    if (select) source.setSelectionRange(s, s + text.length);
+  }
+
   function wrapSource(before, after, placeholder) {
     const s = source.selectionStart, e = source.selectionEnd;
     const sel = source.value.slice(s, e);
     if (sel.startsWith(before) && sel.endsWith(after) && sel.length >= before.length + after.length) {
-      source.setRangeText(sel.slice(before.length, sel.length - after.length), s, e, "select");
+      replaceSource(sel.slice(before.length, sel.length - after.length), s, e, true);
     } else if (source.value.slice(s - before.length, s) === before && source.value.slice(e, e + after.length) === after) {
-      source.setRangeText(sel, s - before.length, e + after.length, "select");
+      replaceSource(sel, s - before.length, e + after.length, true);
     } else {
       const text = sel || placeholder;
-      source.setRangeText(before + text + after, s, e, "end");
+      replaceSource(before + text + after, s, e);
       source.setSelectionRange(s + before.length, s + before.length + text.length);
     }
     sourceChanged();
   }
 
-  // Applies fn to every line the selection touches; prefixes toggle off when every line already has them.
-  function prefixSource(fn) {
+  // The whole lines the selection touches, as [start, end) offsets.
+  function selectedLines() {
     const v = source.value;
     const s = v.lastIndexOf("\n", source.selectionStart - 1) + 1;
     let e = v.indexOf("\n", source.selectionEnd - (source.selectionEnd > source.selectionStart && v[source.selectionEnd - 1] === "\n" ? 1 : 0));
     if (e < 0) e = v.length;
-    const lines = v.slice(s, e).split("\n");
-    source.setRangeText(fn(lines).join("\n"), s, e, "end");
+    return [s, e];
+  }
+
+  // Applies fn to every line the selection touches; prefixes toggle off when every line already has them.
+  function prefixSource(fn) {
+    const [s, e] = selectedLines();
+    replaceSource(fn(source.value.slice(s, e).split("\n")).join("\n"), s, e);
     sourceChanged();
   }
 
@@ -742,28 +774,222 @@
   function insertSource(text) {
     const s = source.selectionStart, v = source.value;
     const lead = s === 0 || v[s - 1] === "\n" ? (s > 1 && v[s - 2] !== "\n" ? "\n" : "") : "\n\n";
-    source.setRangeText(lead + text + "\n", s, source.selectionEnd, "end");
+    replaceSource(lead + text + "\n", s, source.selectionEnd);
     sourceChanged();
   }
 
   function blockSource(tag) {
     if (tag === "pre") {
       const s = source.selectionStart, e = source.selectionEnd;
-      source.setRangeText("```\n" + (source.value.slice(s, e) || "code") + "\n```", s, e, "end");
+      replaceSource("```\n" + (source.value.slice(s, e) || "code") + "\n```", s, e);
       return sourceChanged();
     }
     const n = tag === "p" ? 0 : +tag[1];
     prefixSource(lines => lines.map(l => (n ? "#".repeat(n) + " " : "") + l.replace(/^#{1,6}\s+/, "")));
   }
 
-  function linkSource() {
-    const url = prompt("Link address", "https://");
+  function linkSource(url) {
+    url ??= prompt("Link address", "https://");
     if (!url || !url.trim()) return;
     const s = source.selectionStart, e = source.selectionEnd;
     const text = source.value.slice(s, e) || "link text";
-    source.setRangeText(`[${text}](${destination(url.trim())})`, s, e, "end");
+    replaceSource(`[${text}](${destination(url.trim())})`, s, e);
     source.setSelectionRange(s + 1, s + 1 + text.length);
     sourceChanged();
+  }
+
+  // Whether an offset is inside a fenced code block, where list and quote markers are just text.
+  function inFence(offset) {
+    let open = null;
+    for (const m of source.value.slice(0, offset).matchAll(/^ {0,3}(`{3,}|~{3,})/gm)) {
+      if (!open) open = m[1];
+      else if (m[1][0] === open[0] && m[1].length >= open.length) open = null;
+    }
+    return !!open;
+  }
+
+  const LIST_ITEM = /^(\s*)(?:([-*+])|(\d{1,9})([.)]))( +)(\[[ xX]\] )?/;
+
+  // Enter in a list item or quote starts the next one; Enter on an empty one ends the list or quote, as in GitHub.
+  function enterSource(e) {
+    const s = source.selectionStart, v = source.value;
+    if (s !== source.selectionEnd || inFence(s)) return;
+    const lineStart = v.lastIndexOf("\n", s - 1) + 1, line = v.slice(lineStart, s);
+    const m = line.match(LIST_ITEM) ?? line.match(/^(\s*)(>+ ?)/);
+    if (!m) return;
+    e.preventDefault();
+    const rest = v.slice(s, (v.indexOf("\n", s) + 1 || v.length + 1) - 1);
+    if (line.length === m[0].length && !rest.trim()) {
+      // The line break goes in again with the change: Chrome puts the caret before a final line break it did not type.
+      if (lineStart > 0) replaceSource("\n", lineStart - 1, s);
+      else replaceSource("", lineStart, s);
+    } else {
+      let next;
+      if (m.length === 3) next = m[0]; // a quote
+      else if (m[2]) next = m[1] + m[2] + m[5] + (m[6] ? "[ ] " : "");
+      else next = m[1] + (+m[3] + 1) + m[4] + m[5] + (m[6] ? "[ ] " : "");
+      replaceSource("\n" + next, s, s);
+    }
+    sourceChanged();
+  }
+
+  // Tab indents a list item under the one above it (or every selected line), Shift+Tab moves it back out.
+  function tabSource(e) {
+    const s = source.selectionStart, end = source.selectionEnd, v = source.value;
+    const [ls, le] = selectedLines();
+    const item = v.slice(ls, le).match(LIST_ITEM);
+    if (s === end && !item && !e.shiftKey) {
+      e.preventDefault();
+      replaceSource("  ", s, end);
+      return sourceChanged();
+    }
+    if (s === end && !item) return;
+    e.preventDefault();
+    // A nested item lines up with the text of the item above it: two spaces under "- ", three under "1. ".
+    const width = item ? (item[2] ?? item[3] + item[4]).length + item[5].length : 2;
+    const pad = " ".repeat(width);
+    const lines = v.slice(ls, le).split("\n");
+    const changed = lines.map(l => e.shiftKey ? l.replace(new RegExp(`^ {1,${width}}`), "") : l ? pad + l : l);
+    // A numbered item nested on its own starts a new list, so it becomes number 1.
+    if (s === end && !e.shiftKey && item[3]) changed[0] = changed[0].replace(/\d+(?=[.)])/, "1");
+    const delta = changed[0].length - lines[0].length;
+    replaceSource(changed.join("\n"), ls, le);
+    if (s === end) source.setSelectionRange(Math.max(ls, s + delta), Math.max(ls, s + delta));
+    else source.setSelectionRange(ls, ls + changed.join("\n").length);
+    sourceChanged();
+  }
+
+  // ---------- Pasting and dropping ----------
+
+  const isUrl = t => /^(https?:\/\/|mailto:)\S+$/i.test(t.trim());
+  let imageCount = 0;
+
+  // An image the editor can embed, scaled down so the document stays small enough to send: photos become JPEG at
+  // most 1600 pixels wide or high; small PNGs, GIFs and WebPs stay as they are.
+  async function imageDataUrl(file) {
+    const read = blob => new Promise((ok, fail) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = fail; r.readAsDataURL(blob); });
+    if (file.size <= 300 * 1024 && /^image\/(png|jpeg|gif|webp)$/.test(file.type)) return read(file);
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bmp.width * k);
+    canvas.height = Math.round(bmp.height * k);
+    const ctx = canvas.getContext("2d");
+    const png = file.type === "image/png" && file.size <= 1024 * 1024;
+    if (!png) { ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+    ctx.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL(png ? "image/png" : "image/jpeg", 0.85);
+  }
+
+  // Images go into the Markdown as reference links with the data at the end of the document, so the text you edit
+  // stays readable.
+  async function insertImages(files, at) {
+    const images = [...files].filter(f => f.type.startsWith("image/"));
+    if (!images.length) return false;
+    setStatus(images.length === 1 ? "Adding the image…" : `Adding ${images.length} images…`);
+    try {
+      for (const f of images) {
+        const url = await imageDataUrl(f);
+        const alt = (f.name || "image").replace(/\.[^.]+$/, "").replace(/[\[\]\\]/g, "") || "image";
+        if (visualOn) {
+          restoreSelection();
+          if (at) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(at); }
+          exec("insertHTML", `<img src="${url}" alt="${escHtml(alt).replace(/"/g, "&quot;")}">`);
+          syncFromVisual();
+        } else {
+          const used = [...source.value.matchAll(/^\[image-(\d+)\]:/gm)].map(m => +m[1]);
+          const n = Math.max(imageCount, ...used) + 1;
+          imageCount = n;
+          const label = `image-${n}`;
+          replaceSource(`![${alt}][${label}]`, source.selectionStart, source.selectionEnd);
+          const caret = source.selectionStart, v = source.value;
+          replaceSource((v.endsWith("\n\n") ? "" : v.endsWith("\n") ? "\n" : "\n\n") + `[${label}]: ${url}\n`, v.length, v.length);
+          source.setSelectionRange(caret, caret);
+          sourceChanged();
+        }
+      }
+      setStatus(images.length === 1 ? "Image added." : `${images.length} images added.`);
+    } catch {
+      setStatus("That image could not be read.", true);
+    }
+    return true;
+  }
+
+  // Pasted rich text (from a web page, Word or Google Docs) keeps what Markdown can say: headings, paragraphs, lists,
+  // quotes, code, links, images, tables, bold, italic and strikethrough. Everything else is unwrapped to its text.
+  function cleanPaste(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const out = document.createDocumentFragment();
+    const SAME = new Set(["H1", "H2", "H3", "H4", "H5", "H6", "P", "UL", "OL", "LI", "BLOCKQUOTE", "TABLE", "THEAD", "TBODY", "TR", "TH", "TD", "BR", "HR"]);
+    const RENAME = { B: "STRONG", STRONG: "STRONG", I: "EM", EM: "EM", S: "DEL", DEL: "DEL", STRIKE: "DEL", CODE: "CODE", KBD: "CODE", TT: "CODE", SAMP: "CODE", DIV: "P" };
+    const walk = (node, into) => {
+      for (const n of node.childNodes) {
+        if (n.nodeType === Node.TEXT_NODE) { into.append(n.data.replace(/\s*\n\s*/g, " ")); continue; }
+        if (n.nodeType !== Node.ELEMENT_NODE || UNSAFE.has(n.tagName)) continue;
+        const style = n.getAttribute("style") ?? "";
+        let tag = SAME.has(n.tagName) ? n.tagName : RENAME[n.tagName];
+        // Google Docs wraps the whole paste in <b style="font-weight:normal">, and marks bold and italic with styles.
+        if (/font-weight:\s*(normal|[1-4]00)/.test(style) && tag === "STRONG") tag = null;
+        if (!tag && /font-weight:\s*(bold|[6-9]00)/.test(style)) tag = "STRONG";
+        else if (!tag && /font-style:\s*italic/.test(style)) tag = "EM";
+        if (n.tagName === "PRE") {
+          const pre = document.createElement("pre"), code = document.createElement("code");
+          code.textContent = n.textContent.replace(/\n$/, "") + "\n";
+          pre.append(code);
+          into.append(pre);
+          continue;
+        }
+        if (n.tagName === "A" || n.tagName === "IMG") {
+          const attr = n.tagName === "A" ? "href" : "src", url = n.getAttribute(attr) ?? "";
+          if (!/^(https?:|mailto:|#|data:image\/)/i.test(url) || (n.tagName === "A" && url.startsWith("data:"))) { if (n.tagName === "A") walk(n, into); continue; }
+          const el = document.createElement(n.tagName);
+          el.setAttribute(attr, url);
+          if (n.tagName === "IMG") el.alt = n.getAttribute("alt") ?? "";
+          if (n.tagName === "A") walk(n, el);
+          into.append(el);
+          continue;
+        }
+        if (!tag) { walk(n, into); continue; }
+        const el = document.createElement(tag);
+        if (/^T[HD]$/.test(tag) && /^(left|center|right)$/.test(n.getAttribute("align") ?? "")) el.setAttribute("align", n.getAttribute("align"));
+        walk(n, el);
+        into.append(el);
+      }
+    };
+    walk(doc.body, out);
+    // A table needs a header row to be a Markdown table: the first row becomes it.
+    for (const t of out.querySelectorAll("table")) {
+      if (t.tHead || !t.rows.length) continue;
+      const head = t.createTHead(), first = t.rows[0];
+      head.append(first);
+      for (const c of [...first.cells]) { const th = document.createElement("th"); th.append(...c.childNodes); c.replaceWith(th); }
+    }
+    const box = document.createElement("div");
+    box.append(out);
+    return box.innerHTML;
+  }
+
+  async function paste(e) {
+    const data = e.clipboardData;
+    if (data.files.length && [...data.files].some(f => f.type.startsWith("image/"))) {
+      e.preventDefault();
+      insertImages(data.files);
+      return;
+    }
+    const text = data.getData("text/plain");
+    const selected = visualOn ? !getSelection().isCollapsed : source.selectionStart !== source.selectionEnd;
+    // A URL pasted over selected text links the text, as GitHub does.
+    if (selected && isUrl(text) && !(visualOn ? closest("pre, code") : inFence(source.selectionStart))) {
+      e.preventDefault();
+      if (visualOn) { exec("createLink", text.trim()); syncFromVisual(); } else linkSource(text);
+      return;
+    }
+    if (!visualOn) return;
+    e.preventDefault();
+    const html = data.getData("text/html");
+    if (html && !closest("pre, code")) exec("insertHTML", cleanPaste(html));
+    else exec("insertText", text);
+    syncFromVisual();
   }
 
   // ---------- The toolbar ----------
@@ -774,6 +1000,7 @@
     strike: () => visualOn ? exec("strikeThrough") : wrapSource("~~", "~~", "struck text"),
     code: () => visualOn ? toggleCode() : wrapSource("`", "`", "code"),
     link: () => visualOn ? link() : linkSource(),
+    image: () => imagePicker.click(),
     ul: () => visualOn ? toggleList("ul") : prefixSource(togglePrefix(/^[-*+] (?!\[[ xX]\] )/, () => "- ")),
     ol: () => visualOn ? toggleList("ol") : prefixSource(togglePrefix(/^\d+[.)] /, i => `${i + 1}. `)),
     task: () => visualOn ? toggleList("task") : prefixSource(togglePrefix(/^[-*+] \[[ xX]\] /, () => "- [ ] ")),
@@ -841,12 +1068,32 @@
     syncFromVisual();
   });
   visual.addEventListener("change", e => { if (e.target.type === "checkbox") syncFromVisual(); });
-  // Paste as plain text: formatting from other pages would not survive the trip to Markdown anyway.
-  visual.addEventListener("paste", e => {
-    e.preventDefault();
-    exec("insertText", e.clipboardData.getData("text/plain"));
-  });
-  visual.addEventListener("drop", e => { if (!e.dataTransfer.files.length) e.preventDefault(); });
+  visual.addEventListener("paste", paste);
+  source.addEventListener("paste", paste);
+  // Images dropped on the editor go in where they land; other files fall through to the page, which opens them.
+  for (const target of [visual, source]) {
+    target.addEventListener("drop", e => {
+      const files = e.dataTransfer.files;
+      if (!files.length) { if (target === visual) e.preventDefault(); return; }
+      if (![...files].some(f => f.type.startsWith("image/"))) return;
+      e.preventDefault();
+      e.stopPropagation();
+      document.body.classList.remove("dragging");
+      let at = null;
+      if (target === visual && document.caretRangeFromPoint) at = document.caretRangeFromPoint(e.clientX, e.clientY);
+      else if (target === visual && document.caretPositionFromPoint) {
+        const p = document.caretPositionFromPoint(e.clientX, e.clientY);
+        if (p) { at = document.createRange(); at.setStart(p.offsetNode, p.offset); }
+      }
+      if (at && !visual.contains(at.startContainer)) at = null;
+      insertImages(files, at);
+    });
+  }
+  const imagePicker = document.createElement("input");
+  imagePicker.type = "file";
+  imagePicker.accept = "image/png,image/jpeg,image/gif,image/webp";
+  imagePicker.multiple = true;
+  imagePicker.addEventListener("change", async () => { await insertImages(imagePicker.files); imagePicker.value = ""; });
   visual.addEventListener("keydown", e => {
     const mod = e.ctrlKey || e.metaKey;
     if (e.key === "Enter" && mod) { e.preventDefault(); convert(); return; }
@@ -859,9 +1106,14 @@
     else if (e.key === "Tab" && !visual.dataset.tabOut) tab(e);
   });
   visual.addEventListener("blur", () => { delete visual.dataset.tabOut; });
+  source.addEventListener("blur", () => { delete source.dataset.tabOut; });
 
   source.addEventListener("keydown", e => {
     const mod = e.ctrlKey || e.metaKey;
+    // Escape then Tab leaves the editor, so keyboard users are never trapped.
+    if (e.key === "Escape") source.dataset.tabOut = "1";
+    else if (e.key === "Tab" && !mod && !e.altKey && !source.dataset.tabOut) tabSource(e);
+    if (e.key === "Enter" && !mod && !e.shiftKey && !e.altKey && !e.isComposing) enterSource(e);
     if (!mod || e.altKey) return;
     const k = e.key.toLowerCase();
     const cmd = k === "b" ? "bold" : k === "i" ? "italic" : k === "k" ? "link" : k === "e" ? "code" : e.shiftKey && k === "x" ? "strike" : null;
