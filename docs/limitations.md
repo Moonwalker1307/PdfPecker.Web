@@ -38,7 +38,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   and similar interaction states never match. Selectors inside `:is()`, `:where()` and `:not()` may have at most eight
   compound parts (one when nested in another of them).
 - Properties not supported: `filter`, `mix-blend-mode`, `clip-path` on HTML elements (only in SVG), `border-image`,
-  `list-style-image`, `font-variant-numeric` and inset `box-shadow`. No relative colours (`rgb(from …)`).
+  `list-style-image` and inset `box-shadow`. No relative colours (`rgb(from …)`).
 - `text-shadow` blur is approximated with faint copies of the text rather than a true Gaussian blur, and decorations
   (underlines) get no shadow. `text-overflow` only supports `ellipsis` at the end of the line (`clip` and custom
   strings do nothing). `aspect-ratio` does not take part in min-/max-content sizing (shrink-to-fit widths) and is

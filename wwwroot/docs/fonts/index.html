@@ -160,6 +160,16 @@ added through <code>options.Fonts</code>. A face declared with a single weight (
 bold is synthesized as for any other font. The optical size axis (<code>opsz</code>) follows the font size unless
 <code>font-optical-sizing: none</code> is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
 CFF2.</p>
+<h2 id="opentype-features">OpenType features</h2>
+<p><code>font-variant-numeric</code> and <code>font-feature-settings</code> turn on a font's optional glyphs, as in a browser. Tabular figures
+line up amounts in a column:</p>
+<pre><code class="language-css">td.amount { font-variant-numeric: tabular-nums; }          /* every digit the same width */
+.oldstyle { font-variant-numeric: oldstyle-nums slashed-zero; }
+.alt { font-feature-settings: &quot;ss01&quot;, &quot;salt&quot; 2; }           /* stylistic set 1, the second alternate */
+</code></pre>
+<p>Features that swap one glyph for another (<code>tnum</code>, <code>pnum</code>, <code>lnum</code>, <code>onum</code>, <code>zero</code>, <code>ss01</code> to <code>ss20</code>, <code>salt</code>, <code>case</code>
+and the like) are applied; the font must have them. Features that depend on the surrounding characters, such as
+<code>diagonal-fractions</code> and <code>ordinal</code> in most fonts, are not. Text copied from the PDF keeps the original characters.</p>
 <h2 id="standard-fonts">Standard fonts</h2>
 <p>Text without a registered font uses the standard PDF fonts (Helvetica, Times, Courier), which viewers supply
 themselves, so files stay small but are limited to Western European characters. Set <code>EmbedStandardFonts = true</code> to

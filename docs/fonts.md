@@ -47,6 +47,21 @@ bold is synthesized as for any other font. The optical size axis (`opsz`) follow
 `font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
 CFF2.
 
+## OpenType features
+
+`font-variant-numeric` and `font-feature-settings` turn on a font's optional glyphs, as in a browser. Tabular figures
+line up amounts in a column:
+
+```css
+td.amount { font-variant-numeric: tabular-nums; }          /* every digit the same width */
+.oldstyle { font-variant-numeric: oldstyle-nums slashed-zero; }
+.alt { font-feature-settings: "ss01", "salt" 2; }           /* stylistic set 1, the second alternate */
+```
+
+Features that swap one glyph for another (`tnum`, `pnum`, `lnum`, `onum`, `zero`, `ss01` to `ss20`, `salt`, `case`
+and the like) are applied; the font must have them. Features that depend on the surrounding characters, such as
+`diagonal-fractions` and `ordinal` in most fonts, are not. Text copied from the PDF keeps the original characters.
+
 ## Standard fonts
 
 Text without a registered font uses the standard PDF fonts (Helvetica, Times, Courier), which viewers supply
