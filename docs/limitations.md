@@ -23,7 +23,6 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (`writing-mode`).
 - In Latin and other simple scripts, shaping is limited to pair kerning and standard ligatures; no contextual
   alternates or other OpenType features (`small-caps` is synthesized from scaled capitals).
-- Variable fonts use their default instance (`font-variation-settings` and `font-stretch` are ignored).
 - Automatic hyphenation (`hyphens: auto`) has built-in patterns for English, Danish, German, Dutch and Norwegian only;
   other languages need their patterns in `PdfOptions.Hyphenation`. `hyphenate-limit-chars` is not supported.
 - SVG `<text>` uses only the first value of position lists and has no `textPath`; in a text chunk with right-to-left
@@ -39,7 +38,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   and similar interaction states never match. Selectors inside `:is()`, `:where()` and `:not()` may have at most eight
   compound parts (one when nested in another of them).
 - Properties not supported: `filter`, `mix-blend-mode`, `clip-path` on HTML elements (only in SVG), `border-image`,
-  `list-style-image`, `font-variant-numeric` and inset `box-shadow`. No relative colours (`rgb(from …)`).
+  `list-style-image` and inset `box-shadow`. No relative colours (`rgb(from …)`).
 - `text-shadow` blur is approximated with faint copies of the text rather than a true Gaussian blur, and decorations
   (underlines) get no shadow. `text-overflow` only supports `ellipsis` at the end of the line (`clip` and custom
   strings do nothing). `aspect-ratio` does not take part in min-/max-content sizing (shrink-to-fit widths) and is
