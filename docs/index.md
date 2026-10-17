@@ -1,6 +1,6 @@
 # Getting started
 
-PdfPecker turns HTML and Markdown into PDF, and PDF pages into PNG, JPEG or WebP images, in .NET. It has its own HTML
+PdfPecker turns HTML and Markdown into PDF, and PDF pages into PNG, JPEG, WebP or TIFF images, in .NET. It has its own HTML
 parser, CSS engine, layout engine, PDF writer and PDF renderer, so it never starts a browser, ships no native binaries
 and depends on nothing but the .NET base class library. These pages describe PdfPecker 1.9.
 

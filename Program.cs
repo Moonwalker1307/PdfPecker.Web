@@ -234,8 +234,10 @@ app.MapPost("/api/convert", async (HttpRequest request, CancellationToken ct) =>
 
 // POST /api/pdf-to-image
 //   multipart/form-data with the PDF in the "file" field, or the raw PDF as the body.
-//   Query (or form) options: page (1-based; omit for all pages), dpi (10-300, default 150), width, height, password.
-// Returns image/png for one page, or application/zip with one PNG per page; X-Page-Count says how many pages the PDF has.
+//   Query (or form) options: page (1-based; omit for all pages), dpi (10-300, default 150), width, height, password,
+//   format (png or tiff, default png) and color (color, grayscale or bw, for TIFF only).
+// Returns image/png for one page, or application/zip with one PNG per page; with format=tiff one TIFF with every page
+// (or the one page asked for). X-Page-Count says how many pages the PDF has.
 app.MapPost("/api/pdf-to-image", async (HttpRequest request, CancellationToken ct) =>
 {
     const long MaxPdfBytes = 25 * 1024 * 1024;
@@ -272,7 +274,14 @@ app.MapPost("/api/pdf-to-image", async (HttpRequest request, CancellationToken c
         Password = string.IsNullOrEmpty(Field("password")) ? null : Field("password"),
         MaxDimension = 6000,
         MaxDegreeOfParallelism = 2,
+        TiffColorMode = (Field("color") ?? "").Trim().ToLowerInvariant() switch
+        {
+            "grayscale" or "greyscale" or "gray" or "grey" => TiffColorMode.Grayscale,
+            "bw" or "blackandwhite" or "black-and-white" => TiffColorMode.BlackAndWhite,
+            _ => TiffColorMode.Color,
+        },
     };
+    bool tiff = string.Equals(Field("format")?.Trim(), "tiff", StringComparison.OrdinalIgnoreCase);
     if (!await TryStartConversion(conversions, queueTimeout, ct))
         return Results.Problem("The server is busy; try again shortly.", statusCode: StatusCodes.Status503ServiceUnavailable);
     using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -289,11 +298,21 @@ app.MapPost("/api/pdf-to-image", async (HttpRequest request, CancellationToken c
             int index = (Int(Field("page")) ?? 1) - 1;
             if (index < 0 || index >= renderer.PageCount)
                 return Results.Problem($"The PDF has {renderer.PageCount} page(s).", statusCode: StatusCodes.Status400BadRequest);
+            if (tiff)
+            {
+                var single = await Task.Run(() => renderer.RenderPage(index, options, timeout.Token).ToTiff(), timeout.Token);
+                return Results.File(single, "image/tiff", $"{name}-{index + 1}.tif");
+            }
             var png = await Task.Run(() => renderer.RenderPageToPng(index, options, timeout.Token), timeout.Token);
             return Results.File(png, "image/png", $"{name}-{index + 1}.png");
         }
         if (renderer.PageCount > MaxPages)
             return Results.Problem($"At most {MaxPages} pages per request; pass ?page=N for single pages.", statusCode: StatusCodes.Status400BadRequest);
+        if (tiff)
+        {
+            var all = await Task.Run(() => renderer.RenderAllToTiff(options, timeout.Token), timeout.Token);
+            return Results.File(all, "image/tiff", name + ".tif");
+        }
         var pngs = await Task.Run(() => renderer.RenderAllToPng(options, timeout.Token), timeout.Token);
         var zip = new MemoryStream();
         using (var archive = new System.IO.Compression.ZipArchive(zip, System.IO.Compression.ZipArchiveMode.Create, leaveOpen: true))

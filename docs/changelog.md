@@ -4,6 +4,24 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.10.0
+
+Released 18 October 2026.
+
+- [PDF to TIFF](/docs/pdf-to-image/#tiff): a whole PDF as one multi-page TIFF, or single pages, in colour, greyscale
+  or black and white with CCITT Group 4, LZW, Deflate or PackBits compression.
+- [Read the invoice back](/docs/e-invoices/#reading-the-invoice-from-a-received-pdf) from a received Factur-X,
+  ZUGFeRD or XRechnung PDF with `PdfEInvoice.Read`.
+- [Trusted timestamps](/docs/signatures/#trusted-timestamps): a timestamp's time is used to check the signer's
+  certificate only when its authority is trusted (`TimestampTrusted`), so an untrusted timestamp no longer makes an
+  expired certificate pass.
+- [`PdfLtvOptions.UrlFilter`](/docs/signatures/#long-term-validation) decides which OCSP and CRL addresses long-term
+  validation may contact, and fetching is bounded in URLs, redirects and time.
+- `::first-line` styles on small capitals and mixed-direction text no longer lose their style or throw, and Arabic
+  text in PDF/A-2u, 3u and PDF/UA maps every glyph back to Unicode.
+- Tighter limits for hostile input found by fuzzing (images, SVG filters, soft masks, fonts, signature stores), more
+  renderer features (soft-mask Matte, CalRGB and CalGray), and symbol packages with SourceLink on NuGet.
+
 ## 1.9.0
 
 Released 16 October 2026.

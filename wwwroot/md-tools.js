@@ -105,8 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let liveTimer = 0;
   function liveConvert() {
     clearTimeout(liveTimer);
-    // PNG output makes a request per page, too many to repeat while you type.
-    if (!live.checked || output() === "png" || panes.dataset.view === "editor") return;
+    // PNG and TIFF output make a request per page, too many to repeat while you type.
+    if (!live.checked || output() === "png" || output() === "tiff" || panes.dataset.view === "editor") return;
     liveTimer = setTimeout(() => { if (source.value !== convertedInput) convert(); }, 900);
   }
 
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const b of viewButtons) b.setAttribute("aria-pressed", b.dataset.view === view);
     if (remember) try { localStorage.setItem("pdfpecker.markdownView", view); } catch {}
     // Coming back to the preview after editing without one: bring it up to date.
-    if (view !== "editor" && remember && live.checked && output() !== "png" && source.value !== convertedInput) convert();
+    if (view !== "editor" && remember && live.checked && output() !== "png" && output() !== "tiff" && source.value !== convertedInput) convert();
   }
   for (const b of viewButtons) b.addEventListener("click", () => setView(b.dataset.view, true));
   // Convert in the editor-only view brings the result into view.
