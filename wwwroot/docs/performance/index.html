@@ -150,10 +150,11 @@
 millisecond. For memory and CPU per document, see <a href="/docs/#system-requirements">System requirements</a>.</p>
 <h2 id="compared-with-other-converters">Compared with other converters</h2>
 <p>The same three documents converted to A4 PDF by PdfPecker and six .NET alternatives, on one 4-core cloud VM
-(Intel Xeon @ 2.8 GHz, 16 GB, Linux, .NET 10.0.12). Times are medians after a 3-second warm-up; &quot;first PDF&quot; includes
-starting the browser where there is one. Parallel runs one conversion per core at once on the 5-page document. Peak
-memory is the proportional set size (PSS) of the whole process tree, so a browser's helper processes are included
-once and shared pages are not double-counted.</p>
+(Intel Xeon @ 2.8 GHz, 33 MB L3, 16 GB, Linux, .NET 10.0.12). Times are medians after a 3-second warm-up, averaged
+over two runs; &quot;first PDF&quot; includes starting the browser where there is one. Parallel runs one conversion per core at
+once on the 5-page document. Peak memory is the proportional set size (PSS) of the whole process tree, so a browser's
+helper processes are included once and shared pages are not double-counted; .NET processes run with a 16 MB GC gen0
+budget, as .NET would otherwise size it from the CPU cache.</p>
 <div class="table-scroll"><table>
 <thead>
 <tr>
@@ -173,98 +174,95 @@ once and shared pages are not double-counted.</p>
 <td><strong>PdfPecker</strong></td>
 <td>own, managed</td>
 <td>4.0 MB DLL</td>
-<td>0.27 s</td>
+<td>0.40 s</td>
 <td><strong>0.86 ms</strong></td>
-<td><strong>2.7 ms</strong></td>
-<td><strong>39 ms</strong></td>
-<td><strong>962 docs/s</strong></td>
-<td><strong>83 MB</strong></td>
+<td><strong>3.5 ms</strong></td>
+<td><strong>45 ms</strong></td>
+<td><strong>818 docs/s</strong></td>
+<td><strong>90 MB</strong></td>
 </tr>
 <tr>
 <td>HtmlRenderer.PdfSharp 1.6.1</td>
 <td>own, managed (CSS 2)</td>
 <td>2.4 MB of DLLs</td>
-<td>0.47 s</td>
-<td>5.0 ms</td>
-<td>16 ms</td>
-<td>473 ms</td>
-<td>88 docs/s</td>
-<td>255 MB</td>
+<td>0.58 s</td>
+<td>6.3 ms</td>
+<td>21 ms</td>
+<td>639 ms</td>
+<td>72 docs/s</td>
+<td>236 MB</td>
 </tr>
 <tr>
-<td>iText pdfHTML 6.3.4 *</td>
+<td>iText pdfHTML 6.3.4</td>
 <td>own, managed</td>
 <td>11 MB of DLLs</td>
-<td>1.68 s</td>
-<td>41 ms</td>
-<td>242 ms</td>
-<td>4.2 s</td>
-<td>8 docs/s</td>
-<td>614 MB</td>
+<td>1.44 s</td>
+<td>34 ms</td>
+<td>209 ms</td>
+<td>3.4 s</td>
+<td>9 docs/s</td>
+<td>624 MB</td>
 </tr>
 <tr>
 <td>wkhtmltopdf 0.12.6</td>
 <td>Qt WebKit, native</td>
 <td>about 90 MB with Qt</td>
-<td>0.31 s</td>
-<td>289 ms</td>
-<td>333 ms</td>
-<td>693 ms</td>
-<td>12 docs/s</td>
+<td>0.36 s</td>
+<td>310 ms</td>
+<td>356 ms</td>
+<td>780 ms</td>
+<td>11 docs/s</td>
 <td>164 MB</td>
 </tr>
 <tr>
 <td>PuppeteerSharp 25.13</td>
 <td>Chromium 141</td>
 <td>about 600 MB browser</td>
-<td>0.91 s</td>
-<td>128 ms</td>
-<td>166 ms</td>
-<td>539 ms</td>
-<td>12 docs/s</td>
-<td>849 MB</td>
+<td>1.43 s</td>
+<td>153 ms</td>
+<td>217 ms</td>
+<td>792 ms</td>
+<td>11 docs/s</td>
+<td>829 MB</td>
 </tr>
 <tr>
 <td>Microsoft.Playwright 1.63</td>
 <td>Chromium 141</td>
 <td>browser + 135 MB driver</td>
-<td>1.08 s</td>
-<td>142 ms</td>
-<td>191 ms</td>
-<td>522 ms</td>
-<td>11 docs/s</td>
-<td>986 MB</td>
+<td>1.36 s</td>
+<td>194 ms</td>
+<td>247 ms</td>
+<td>726 ms</td>
+<td>8 docs/s</td>
+<td>967 MB</td>
 </tr>
 <tr>
-<td>Syncfusion HTML to PDF 35.1.40 *</td>
+<td>Syncfusion HTML to PDF 35.1.40</td>
 <td>Chrome (Blink), bundled</td>
 <td>about 545 MB with Chrome</td>
-<td>2.52 s</td>
-<td>263 ms</td>
-<td>314 ms</td>
-<td>1.7 s</td>
-<td>1 doc/s</td>
-<td>2,195 MB</td>
+<td>2.83 s</td>
+<td>264 ms</td>
+<td>320 ms</td>
+<td>1.1 s</td>
+<td>2 docs/s</td>
+<td>2,193 MB</td>
 </tr>
 </tbody>
 </table></div>
-<p>* Measured later (October 2026) on the same VM type with the same program. In that run the other converters were up to
-70% slower than in the table above and PdfPecker slightly faster, so these two rows are approximate and, if anything,
-a little slower than a like-for-like run would show.</p>
 <p>How to read it:</p>
 <ul>
-<li>PdfPecker is 60 to 150 times faster than the Chromium-based converters on the 1 and 5-page documents and about
-14 times faster on the 30-page report, and uses a tenth of their memory. Per-document overhead (a browser tab, a process
+<li>PdfPecker is 60 to 220 times faster than the Chromium-based converters on the 1 and 5-page documents and about
+17 times faster on the 30-page report, and uses a tenth of their memory. Per-document overhead (a browser tab, a process
 start) dominates for the others on small documents.</li>
 <li>Output is not identical. Chromium is the reference for modern CSS and runs JavaScript, which PdfPecker does not.
 HtmlRenderer supports only HTML 4 and CSS 2 (it drops the invoice's table header colours), and wkhtmltopdf uses
 a 2016 WebKit, shrinks content to fit by default (24 pages for the report instead of 29) and was archived in 2023.</li>
-<li>iText pdfHTML lays out the documents itself, like PdfPecker, but its time grows faster than the page count: 242 ms for
-5 pages and 4.2 s for the 30-page report, which is one long table.</li>
+<li>iText pdfHTML lays out the documents itself, like PdfPecker, but its time grows faster than the page count: 209 ms for
+5 pages and 3.4 s for the 30-page report, which is one long table.</li>
 <li>Syncfusion ran as a trial without a licence key, which adds a line of text to each page. Its <code>AdditionalDelay</code>
 (2 seconds of waiting for scripts by default) was set to 0, as the other Chromium converters don't wait either. With
 its default settings it scales content down, so the report took 13 pages instead of 29.</li>
-<li>PDF sizes for the 1 / 5 / 30-page documents: PdfPecker 12 / 26 / 126 KB, Chromium 72 / 139 / 171 KB,
+<li>PDF sizes for the 1 / 5 / 30-page documents: PdfPecker 12 / 27 / 126 KB, Chromium 72 / 139 / 171 KB,
 wkhtmltopdf 30 / 59 / 191 KB, HtmlRenderer 35 / 65 / 273 KB, iText 26 / 45 / 104 KB, Syncfusion 42 / 89 / 132 KB.</li>
 <li>Each converter was used the way its documentation suggests for many documents: PdfPecker and HtmlRenderer in
 process, wkhtmltopdf as one process per document, and PuppeteerSharp and Playwright with one shared browser and a
