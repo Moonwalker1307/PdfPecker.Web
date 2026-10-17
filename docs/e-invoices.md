@@ -1,6 +1,6 @@
 # E-invoices
 
-## Factur-X and ZUGFeRD {changed 1.7.0}
+## Factur-X and ZUGFeRD
 
 Pass the invoice's CII XML (from your invoicing system) and PdfPecker attaches it to the PDF, making a Factur-X /
 ZUGFeRD e-invoice: the pages are the human-readable invoice and the XML is what accounting software reads.
@@ -24,6 +24,26 @@ otherwise; set `Relationship` to change it. PdfPecker checks that the XML is a w
 not allowed in Factur-X) but does not validate its content or build it from invoice data: make sure the visible pages
 show the same invoice. The output passes the Mustang validator (PDF/A-3b via veraPDF, and the XML's schematron).
 Other files can be attached next to the invoice with `Attachments` (see [Attachments](/docs/attachments/)).
+
+## Reading the invoice from a received PDF {new 1.10.0}
+
+`PdfEInvoice.Read` gets the XML back out of a Factur-X, ZUGFeRD 2.x or XRechnung PDF, from PdfPecker or any other
+producer, so the accounting side can read what the pages show:
+
+```csharp
+PdfEInvoice? invoice = PdfEInvoice.Read(File.ReadAllBytes("received.pdf"));
+if (invoice is not null)
+{
+    File.WriteAllBytes("invoice.xml", invoice.Xml);
+    Console.WriteLine(invoice.Profile);   // e.g. En16931
+}
+```
+
+The invoice is the attachment the XMP metadata names, else one called `factur-x.xml`, `zugferd-invoice.xml` or
+`xrechnung.xml`, else any other attached Cross Industry Invoice. The XML comes back unchanged with its `Profile` (from
+the XML's guideline, else the XMP conformance level) and `Relationship`; PdfPecker does not validate it. The result is
+null when the PDF carries no invoice. ZUGFeRD 1.0 uses an older schema and is not found, but
+[PdfAttachments.List](/docs/attachments/) still returns its file. Pass `password` for an encrypted PDF.
 
 ## PDF attachments in UBL e-invoices (Peppol, OIOUBL)
 

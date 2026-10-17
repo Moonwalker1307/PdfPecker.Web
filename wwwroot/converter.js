@@ -34,10 +34,11 @@ function output() { return $("output").value; }
 
 function updateOutputLabels() {
   const o = output();
-  const name = { pdf: "PDF", html: "HTML", png: "PNG images" }[o];
+  const name = { pdf: "PDF", html: "HTML", png: "PNG images", tiff: "TIFF" }[o];
   $("outputLabel").textContent = name;
   $("empty").textContent = `Your ${name} will appear here.`;
-  $("dpiLabel").hidden = o !== "png";
+  $("dpiLabel").hidden = o !== "png" && o !== "tiff";
+  $("tiffColorLabel").hidden = o !== "tiff";
 }
 
 async function problem(res) {
@@ -252,7 +253,16 @@ async function convert() {
     const dl = $("download");
     dl.hidden = false;
     let summary;
-    if (o === "png") {
+    if (o === "tiff") {
+      // Browsers other than Safari cannot show TIFF, so the preview is PNG and the TIFF is made when downloaded.
+      lastPdf = blob;
+      const pages = await renderImages(blob, thisRun, MAX_IMAGE_PAGES, $("dpi").value, false, "Download the TIFF for all of them.");
+      if (thisRun !== run) return;
+      summary = pages === 1 ? "1 page" : `${pages} pages`;
+      dl.removeAttribute("download");
+      dl.href = "#tiff";
+      dl.textContent = "Download TIFF";
+    } else if (o === "png") {
       lastPdf = blob;
       const pages = await renderImages(blob, thisRun, MAX_IMAGE_PAGES, $("dpi").value, true);
       if (thisRun !== run) return;
@@ -318,7 +328,7 @@ function imageForm(pdf) {
 
 // Renders up to limit pages of the PDF to PNG with the image API, one request per page, and shows them. Returns the
 // PDF's page count. pageLinks adds a download link under each page.
-async function renderImages(pdf, thisRun, limit, dpi, pageLinks) {
+async function renderImages(pdf, thisRun, limit, dpi, pageLinks, moreText = "Download all of them as a ZIP.") {
   const box = $("images");
   const page = async n => {
     const q = new URLSearchParams({ page: n, dpi });
@@ -353,7 +363,7 @@ async function renderImages(pdf, thisRun, limit, dpi, pageLinks) {
   if (first.count > shown) {
     const more = document.createElement("p");
     more.className = "more";
-    more.textContent = `Showing the first ${shown} of ${first.count} pages. Download all of them as a ZIP.`;
+    more.textContent = `Showing the first ${shown} of ${first.count} pages. ${moreText}`;
     box.append(more);
   }
   showOnly("images");
@@ -373,6 +383,27 @@ async function downloadZip() {
     a.download = fileName + "-pages.zip";
     a.click();
     setStatus("ZIP downloaded.");
+  } catch (e) {
+    setStatus(e.message, true);
+  }
+}
+
+// One multi-page TIFF of the whole PDF, made only when asked for.
+async function downloadTiff() {
+  setStatus("Making the TIFF…");
+  const body = imageForm(lastPdf);
+  body.append("dpi", $("dpi").value);
+  body.append("format", "tiff");
+  body.append("color", $("tiffColor").value);
+  try {
+    const res = await fetch("/api/pdf-to-image", { method: "POST", body });
+    if (!res.ok) throw await problem(res);
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = blobUrl(blob);
+    a.download = fileName + ".tif";
+    a.click();
+    setStatus(`TIFF downloaded · ${(blob.size / 1024).toFixed(1)} KB`);
   } catch (e) {
     setStatus(e.message, true);
   }
@@ -401,6 +432,7 @@ async function openFile(f) {
 
 $("download").addEventListener("click", e => {
   if ($("download").getAttribute("href") === "#zip") { e.preventDefault(); downloadZip(); }
+  if ($("download").getAttribute("href") === "#tiff") { e.preventDefault(); downloadTiff(); }
 });
 $("viewSource").addEventListener("click", () => {
   const b = $("viewSource");

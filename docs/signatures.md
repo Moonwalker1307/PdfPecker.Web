@@ -74,7 +74,7 @@ callback and the timestamp server instead of blocking a thread; `PdfSigner.Sign`
 with `PdfOptions.Signature` wait for it. Everything else, visible boxes, timestamps and existing fields, works as with a
 certificate's own key.
 
-## Verifying signatures {new 1.9.0}
+## Verifying signatures {changed 1.10.0}
 
 `PdfSignatureVerifier` checks the signatures and document timestamps of any PDF, oldest first, and reports what it
 finds rather than throwing for a broken signature:
@@ -97,10 +97,20 @@ var results = PdfSignatureVerifier.VerifyFile("contract.pdf", new PdfSignatureVe
 
 `IsIntact` means the signed bytes are unchanged (`DigestMatches`), the byte range is well formed (`ByteRangeValid`), the
 signature value verifies with the signer's certificate (`SignatureValid`) and an embedded timestamp, if any, is sound
-(`TimestampValid`). `Valid` adds that the certificate chains to a trusted root at the time of the timestamp, else the
-claimed signing time (`ChainTrusted`, with `ChainErrors` saying why not). Chains are built from the certificates in the
+(`TimestampValid`). `Valid` adds that the certificate chains to a trusted root (`ChainTrusted`, with `ChainErrors`
+saying why not). Chains are built from the certificates in the
 signature, the PDF's Document Security Store and `ExtraCertificates`. Verification is offline by default:
 `RevocationMode` is `NoCheck` unless you set it, and `VerificationTime` checks the chain at another time.
+
+### Trusted timestamps {new 1.10.0}
+
+The chain is checked at the time of the signature's timestamp only when `TimestampTrusted` is true: the timestamp
+authority's certificate chains to the same trusted roots as the signer's and carries the timestamping key usage.
+Anyone can make a token that states any time, so an untrusted timestamp no longer lets an expired signer certificate
+pass; the chain is then checked now, and the untrusted timestamp is listed in `Problems` even when the signature is
+valid without it. The signing time the signer claims is never used. A signer certificate whose key usage allows neither
+digital signatures nor non-repudiation is not trusted, and a document timestamp's certificate must carry the
+timestamping usage. Add your timestamp authority's root to `TrustedRoots` when you trust only your own CA.
 
 A signature followed by later changes stays valid, because that is how a second signature or validation data is added:
 `UpdatesAfterSigning` counts the incremental updates after it, and `CoversWholeDocument` is false. What those updates
@@ -108,7 +118,7 @@ change is not analysed (see [Limitations](/docs/limitations/#reading-and-changin
 `CoversWholeDocument` on the last signature when nothing may follow it. PAdES, `adbe.pkcs7.detached`,
 `adbe.pkcs7.sha1` and document timestamps (`ETSI.RFC3161`, `IsDocumentTimestamp`) are read, from PDFs made by any tool.
 
-## Long-term validation {new 1.9.0}
+## Long-term validation {changed 1.10.0}
 
 A signature can normally be checked only while its certificates are valid and their CA answers. `PdfSigner.AddValidationData`
 makes it checkable for years: it adds a Document Security Store with every certificate in the chains of the PDF's
@@ -134,5 +144,19 @@ byte[] offline = PdfSigner.AddValidationData(signed, new PdfLtvOptions
 ```
 
 Without `FetchRevocationData` or `TimestampUrl` nothing goes over the network; OCSP and CRL requests use only the
-http and https addresses in the certificates, through `HttpClient` if you set one. To make the document timestamp itself
+http and https addresses in the certificates, through `HttpClient` if you set one. Those addresses come from the
+PDF, so set `UrlFilter` to keep requests away from internal hosts: it is asked about every URL, redirect
+targets included, and returning false skips it.
+
+```csharp
+var options = new PdfLtvOptions
+{
+    FetchRevocationData = true,
+    UrlFilter = url => url.Host.EndsWith(".digicert.com", StringComparison.OrdinalIgnoreCase),
+};
+```
+
+Whatever the filter says, one call contacts at most 32 distinct URLs (64 requests), follows at most 3 redirects per CRL
+download (never from https to http), bounds slow responses and stops fetching after two minutes in total. An
+`HttpClient` whose handler follows redirects itself does so without asking the filter. To make the document timestamp itself
 long-term verifiable, call `AddValidationData` again later without a `TimestampUrl`. A PDF without signatures throws `PdfSignatureException`.

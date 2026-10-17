@@ -1,8 +1,8 @@
 # PDF to image
 
-`PdfToImage` and `PdfRenderer` render PDF pages to PNG, JPEG or WebP (or raw RGBA pixels). This works for any PDF,
+`PdfToImage` and `PdfRenderer` render PDF pages to PNG, JPEG, WebP or TIFF (or raw RGBA pixels). This works for any PDF,
 not only PdfPecker's own output, and also uses no third-party packages: the PDF parser, font engines, JPEG and fax
-decoders, rasterizer and the PNG, JPEG and WebP encoders are all part of the library.
+decoders, rasterizer and the PNG, JPEG, WebP and TIFF encoders are all part of the library.
 
 ```csharp
 // Every page as PNG bytes (rendered in parallel), or one page (0-based index)
@@ -22,9 +22,13 @@ RenderedImage image = renderer.RenderPage(2, new ImageOptions { Width = 800 });
 image.SavePng("page3.png");
 File.WriteAllBytes("page3.jpg", image.ToJpeg(quality: 85));
 File.WriteAllBytes("page3.webp", image.ToWebP());
+
+// The whole PDF as one multi-page TIFF, here black and white for fax or archiving
+byte[] tiff = PdfToImage.ConvertToTiff(pdfBytes, new ImageOptions { Dpi = 200, TiffColorMode = TiffColorMode.BlackAndWhite });
+PdfToImage.ConvertFileToTiff("report.pdf", "report.tif");
 ```
 
-## Output formats {new 1.7.0}
+## Output formats {changed 1.10.0}
 
 Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`Save()` use it too):
 
@@ -38,12 +42,34 @@ Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`
   subtract-green and per-tile prediction, then LZ77, a colour cache and canonical prefix codes. Here `Quality` is the
   compression effort: higher spends more time searching for a smaller file and never changes a pixel. Lossy WebP is
   not written. WebP is limited to 16,384 pixels per side (JPEG to 65,535); larger images throw `NotSupportedException`.
+- **TIFF**: lossless, one page per file with `Format = PdfImageFormat.Tiff` (`.tif` from `ConvertFile`, or
+  `RenderedImage.ToTiff()`), or every page in one multi-page file with `ConvertToTiff`, `ConvertToTiffAsync`,
+  `ConvertFileToTiff` and `PdfRenderer.RenderAllToTiff`. See [TIFF](#tiff).
+
+## TIFF {new 1.10.0}
+
+`ImageOptions.TiffColorMode` picks `Color` (the default: RGB, or RGBA when the render is transparent), `Grayscale` or
+`BlackAndWhite`. `TiffCompression` defaults to CCITT Group 4 for black and white and LZW otherwise; `None`, `Lzw`,
+`Deflate`, `PackBits` and `CcittGroup4` (always black and white) can be set, and all of them are lossless. For black and
+white, `TiffThreshold` (1 to 255, default 128) is the brightness below which a pixel becomes black. Greyscale and black
+and white flatten transparency onto `BackgroundColor`, and `Dpi` is written into the file so it prints at the right
+size. Files are classic TIFF, so output over 4 GB throws `NotSupportedException` (BigTIFF is not written).
+
+```csharp
+// Greyscale archive copy with Deflate
+byte[] archive = PdfToImage.ConvertToTiff(pdfBytes, new ImageOptions
+{
+    Dpi = 300,
+    TiffColorMode = TiffColorMode.Grayscale,
+    TiffCompression = TiffCompression.Deflate,
+});
+```
 
 ## Options
 
 `ImageOptions` sets `Dpi` (default 150) or a target `Width`/`Height` in pixels, `BackgroundColor` or `Transparent`,
-`RenderAnnotations`, `Password`, `MaxDegreeOfParallelism`, `PngCompression`, `Format` and `Quality` (an
-`ArgumentOutOfRangeException` outside 1 to 100). A `PdfRenderer` is thread-safe and
+`RenderAnnotations`, `Password`, `MaxDegreeOfParallelism`, `PngCompression`, `Format`, `Quality` (an
+`ArgumentOutOfRangeException` outside 1 to 100) and the [TIFF](#tiff) options. A `PdfRenderer` is thread-safe and
 shares decoded fonts and images between pages. Encrypted files open with the user or owner password
 (`PdfPasswordException` otherwise); unreadable files throw `InvalidDataException`, as does a page that needs more than
 20 million drawing operations (nested forms can multiply a few bytes into billions). Pass a cancellation token to

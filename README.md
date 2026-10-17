@@ -57,11 +57,14 @@ curl -X POST http://localhost:8080/api/convert -F "file=@invoice.html" -F pageSi
 ```
 
 `POST /api/pdf-to-image` turns a PDF into PNGs: one page with `?page=N` (or when the PDF has one page), otherwise a
-zip with a PNG per page. Options: `dpi` (10 to 300, default 150), `width`, `height` and `password`.
+zip with a PNG per page. With `format=tiff` it returns one TIFF with every page (or the page asked for), in the colour
+mode `color` names (`color`, `grayscale` or `bw`). Options: `dpi` (10 to 300, default 150), `width`, `height` and
+`password`.
 
 ```
 curl -X POST "http://localhost:8080/api/pdf-to-image?page=1&dpi=200" --data-binary @report.pdf -o page1.png
 curl -X POST http://localhost:8080/api/pdf-to-image -F "file=@report.pdf" -o pages.zip
+curl -X POST "http://localhost:8080/api/pdf-to-image?format=tiff&color=bw&dpi=200" --data-binary @report.pdf -o report.tif
 ```
 
 `POST /api/convert` also accepts JSON: `{ "html": "...", "pageSize": "A4", "landscape": false, "marginMm": 12.7, "pageNumbers": true }`.

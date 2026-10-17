@@ -107,7 +107,7 @@
           <a href="/docs/html-to-pdf-csharp/">The C# guide</a> walks through invoices, headers and footers and ASP.NET Core.</p>
         <ul class="checks">
           <li>Runs wherever .NET 8 or later runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
-          <li>Pure managed code: a 4.0 MB DLL instead of a 600 MB browser</li>
+          <li>Pure managed code: a 4.3 MB DLL instead of a 600 MB browser</li>
           <li>Never touches the network or your files unless you allow it</li>
         </ul>
       </div>
@@ -147,7 +147,7 @@ app.MapGet("/invoice", () =&gt;
         <article class="feature"><span class="icon" aria-hidden="true">✍️</span><h3>Digital signatures</h3>
           <p>PAdES signatures with your certificate or a key in an HSM or cloud key vault, visible signature boxes and trusted timestamps, or signed into the empty signature field of your template. Verify signed PDFs and keep them verifiable for years.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🧾</span><h3>E-invoices</h3>
-          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing. For Peppol and OIOUBL, your PDF attached to the UBL invoice XML. Any other file can be attached too.</p></article>
+          <p>Factur-X and ZUGFeRD: your invoice XML embedded in a valid PDF/A-3, and read back out of the e-invoices you receive, following the EN 16931 standard of <a href="https://eur-lex.europa.eu/eli/dir/2014/55/oj">EU Directive 2014/55/EU</a> on e-invoicing. For Peppol and OIOUBL, your PDF attached to the UBL invoice XML. Any other file can be attached too.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🗂️</span><h3>Merge PDFs</h3>
           <p>Combine any PDFs, streamed one at a time, with links, bookmarks and form fields kept, and tagged files staying accessible. Or add them as they arrive.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">✂️</span><h3>Edit existing PDFs</h3>
@@ -157,7 +157,7 @@ app.MapGet("/invoice", () =&gt;
         <article class="feature"><span class="icon" aria-hidden="true">♿</span><h3>Accessible PDFs</h3>
           <p>Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML, so screen readers follow headings, tables, lists and images.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image</h3>
-          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image, with no Ghostscript or native code.</p></article>
+          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image, or a whole PDF into one multi-page TIFF in colour, greyscale or black and white for fax and archives, with no Ghostscript or native code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔗</span><h3>Links and bookmarks</h3>
           <p>Clickable links, jumps inside the document, and bookmarks from your headings.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🛡️</span><h3>Safe by default</h3>
@@ -182,7 +182,7 @@ app.MapGet("/invoice", () =&gt;
         <table class="compare">
           <thead><tr><th scope="col">Converter</th><th scope="col" class="wide">Engine</th><th scope="col" class="wide">To deploy</th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>30 pages</th><th scope="col" class="num"><span class="wide">Peak memory</span><span class="narrow">Memory</span></th></tr></thead>
           <tbody>
-            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">4.0 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
+            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">4.3 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
             <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">2.4 MB of DLLs</td><td class="num">6.3 ms</td><td class="num">639 ms</td><td class="num">236 MB</td></tr>
             <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">310 ms</td><td class="num">780 ms</td><td class="num">164 MB</td></tr>
             <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">153 ms</td><td class="num">792 ms</td><td class="num">829 MB</td></tr>
