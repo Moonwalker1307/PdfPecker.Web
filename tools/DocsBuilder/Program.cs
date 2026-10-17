@@ -58,6 +58,7 @@ Section[] sections =
     new("Switching",
     [
         new("wkhtmltopdf-alternative", "wkhtmltopdf-alternative", "From wkhtmltopdf", "A wkhtmltopdf alternative for .NET: replace DinkToPdf, Rotativa or the wkhtmltopdf command line with PdfPecker, option by option."),
+        new("htmlrenderer-pdfsharp-alternative", "htmlrenderer-pdfsharp-alternative", "From HtmlRenderer.PdfSharp", "An HtmlRenderer.PdfSharp alternative now that PDFsharp 6.5 is AGPL: MIT-licensed, managed HTML to PDF with modern CSS."),
         new("ironpdf-alternative", "ironpdf-alternative", "From IronPDF", "A free, MIT-licensed IronPDF alternative without Chrome: replace ChromePdfRenderer with PdfPecker and match its output."),
         new("puppeteer-alternative", "puppeteer-alternative", "From PuppeteerSharp or Playwright", "Make PDFs from HTML in .NET without Chrome: replace PuppeteerSharp or Playwright page.pdf() with PdfPecker."),
     ]),
