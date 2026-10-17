@@ -55,6 +55,12 @@ Section[] sections =
         new("text-extraction", "text-extraction", "Text extraction", "Extract the text of any PDF in reading order, with the position of every line and word."),
         new("pdf-to-image", "pdf-to-image", "PDF to image", "Render PDF pages to PNG, JPEG or WebP with PdfPecker's own renderer."),
     ]),
+    new("Switching",
+    [
+        new("wkhtmltopdf-alternative", "wkhtmltopdf-alternative", "From wkhtmltopdf", "A wkhtmltopdf alternative for .NET: replace DinkToPdf, Rotativa or the wkhtmltopdf command line with PdfPecker, option by option."),
+        new("ironpdf-alternative", "ironpdf-alternative", "From IronPDF", "A free, MIT-licensed IronPDF alternative without Chrome: replace ChromePdfRenderer with PdfPecker and match its output."),
+        new("puppeteer-alternative", "puppeteer-alternative", "From PuppeteerSharp or Playwright", "Make PDFs from HTML in .NET without Chrome: replace PuppeteerSharp or Playwright page.pdf() with PdfPecker."),
+    ]),
     new("Reference",
     [
         new("changelog", "changelog", "Changelog", "What changed in each PdfPecker release, from 1.0.0 to the latest."),
