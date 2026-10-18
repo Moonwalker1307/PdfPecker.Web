@@ -100,8 +100,11 @@ docker build -t pdfpecker-web . && docker run -p 8080:8080 --memory 2g pdfpecker
 
 ## Commit guidance
 
-- Branch from the latest `origin/main`, one branch per piece of work, named after it in lowercase words joined by
-  hyphens.
+- Branch from the latest `origin/main`, one branch per piece of work.
+- Name the branch after the work it carries, in lowercase words joined by hyphens, with a `claude/` prefix when an
+  agent creates it (e.g. `claude/barcode-qr-codes`). Never use a generic or generated name such as
+  `claude/project-thread-xxxx`, even when a tool suggests one, and never reuse a name, even one whose pull request is
+  merged. Don't rename a branch that already has an open pull request.
 - Commit subjects are short imperative or descriptive sentences without prefixes, e.g. "Site and docs on PdfPecker
   1.11.0".
 - Commit the regenerated `wwwroot/docs` in the same commit as the Markdown that caused it.
