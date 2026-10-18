@@ -107,7 +107,7 @@
           <a href="/docs/html-to-pdf-csharp/">The C# guide</a> walks through invoices, headers and footers and ASP.NET Core.</p>
         <ul class="checks">
           <li>Runs wherever .NET 8 or later runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
-          <li>Pure managed code: a 4.3 MB DLL instead of a 600 MB browser</li>
+          <li>Pure managed code: a 4.4 MB DLL instead of a 600 MB browser</li>
           <li>Never touches the network or your files unless you allow it</li>
         </ul>
       </div>
@@ -131,11 +131,11 @@ app.MapGet("/invoice", () =&gt;
       <p class="center sub">Built for invoices, payslips, reports, tickets and statements: the templates you control.</p>
       <div class="features">
         <article class="feature"><span class="icon" aria-hidden="true">🎨</span><h3>Modern CSS</h3>
-          <p>Flexbox, grid, <code>var()</code>, <code>calc()</code>, transforms, conic and other gradients, rounded corners, shadows, opacity, filters, blend modes, <code>clip-path</code>, <code>border-image</code>, container queries, <code>:has()</code>, nesting, <code>@layer</code>, <code>@supports</code> and modern and relative colours.</p></article>
+          <p>Flexbox, grid and subgrid, multi-column layout, <code>var()</code>, <code>calc()</code>, transforms, conic and other gradients, rounded corners, shadows, opacity, filters, blend modes, <code>clip-path</code>, <code>border-image</code>, container queries, <code>:has()</code>, nesting, <code>@layer</code>, <code>@supports</code> and modern and relative colours.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📝</span><h3>Markdown</h3>
           <p>CommonMark 0.31 plus GitHub tables, task lists and strikethrough. Out comes a styled PDF or HTML page.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔤</span><h3>Real fonts</h3>
-          <p>TrueType, OpenType, WOFF and WOFF2, subset and embedded, with kerning, ligatures, variable fonts, tabular figures, full Unicode and automatic hyphenation.</p></article>
+          <p>TrueType, OpenType, WOFF and WOFF2, subset and embedded, with kerning, ligatures, variable fonts, tabular figures, full Unicode and automatic hyphenation in eleven languages.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📄</span><h3>Proper paging</h3>
           <p>Page margin boxes and running headers with page numbers, its own margins for the first page, mirrored left and right pages, named pages, footnotes, tables of contents with page numbers, repeated table headers, orphans, widows and break control.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">↔️</span><h3>Right-to-left text</h3>
@@ -182,7 +182,7 @@ app.MapGet("/invoice", () =&gt;
         <table class="compare">
           <thead><tr><th scope="col">Converter</th><th scope="col" class="wide">Engine</th><th scope="col" class="wide">To deploy</th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>30 pages</th><th scope="col" class="num"><span class="wide">Peak memory</span><span class="narrow">Memory</span></th></tr></thead>
           <tbody>
-            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">4.3 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
+            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">4.4 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
             <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">2.4 MB of DLLs</td><td class="num">6.3 ms</td><td class="num">639 ms</td><td class="num">236 MB</td></tr>
             <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">310 ms</td><td class="num">780 ms</td><td class="num">164 MB</td></tr>
             <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">153 ms</td><td class="num">792 ms</td><td class="num">829 MB</td></tr>
