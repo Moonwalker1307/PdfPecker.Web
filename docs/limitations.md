@@ -13,14 +13,15 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.11.0}
+## Text and fonts {changed 1.12.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages); other characters are replaced with `?`. The bundled Liberation
   fonts add Central European, Greek and Cyrillic, but not CJK or other scripts: register fonts for those.
 - Complex-script shaping covers Arabic and Hebrew (and other scripts written with Arabic letters, such as Persian and
-  Urdu). Devanagari and other Indic scripts, Thai, Khmer, Myanmar and Syriac are not shaped, so their vowel signs
-  and conjuncts come out wrong, and Thai text breaks only at spaces. There is no vertical text (`writing-mode`).
+  Urdu), [nine Indic scripts, Thai and Lao](/docs/languages/#indic-thai-and-lao-scripts). Khmer, Myanmar, Sinhala,
+  Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped, so their vowel signs and conjuncts come out wrong.
+  Thai and Lao text breaks only at spaces, since there is no dictionary for word breaks. There is no vertical text (`writing-mode`).
 - Chinese, Japanese and Korean text [breaks into lines](/docs/languages/#chinese-japanese-and-korean-line-breaking), but
   `text-align: justify` stretches only spaces, so CJK lines without spaces are not justified (`text-justify` is not
   supported), and punctuation is not compressed at the start or end of a line.
@@ -60,10 +61,9 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` scrolls with the box, since paper has no scrolling viewport.
 
-## Backgrounds and transparency {changed 1.11.0}
+## Backgrounds and transparency {changed 1.12.0}
 
-- No `background-clip: text`; backgrounds of inline elements (`<span>`) show only their colour, not images or
-  gradients.
+- Backgrounds of inline elements (`<span>`) show only their colour, not images or gradients.
 - A translucent box shadow without blur is blended onto white rather than truly see-through. Blurs are drawn as
   bands, so very wide blurs may show faint steps when zoomed in.
 
@@ -89,7 +89,8 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 
 - [Text extraction](/docs/text-extraction/) reads columns that sit side by side across, line by line, rather than one
   column after the other, and it does not use the structure tree of a tagged PDF to find the reading order. Text drawn
-  only as outlines or images is not extracted; there is no OCR.
+  only as outlines or images is not extracted; there is no OCR. Indic vowel signs drawn before their consonant come
+  out in that visual order unless the PDF carries `/ActualText`.
 - [Form filling](/docs/forms/#filling-and-flattening-existing-pdfs) does not shape text, so values in Arabic, Hebrew,
   Devanagari and other scripts that need shaping are stored but not drawn correctly. XFA forms are not filled: their
   XFA data is removed and the AcroForm fields are filled instead. Field JavaScript (calculations, formats) is not run.

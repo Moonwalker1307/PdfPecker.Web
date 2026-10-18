@@ -24,8 +24,10 @@ PdfStamper.StampFile("in.pdf", "stamp.pdf", "out.pdf");
 PdfStamper.Stamp(inputStream, stampStream, outputStream);
 ```
 
-## Placement
+## Placement {changed 1.12.0}
 
+`StampHtml` renders the HTML with the options you pass but ignores their footer, header, watermark, attachments,
+bookmarks and tagging, so the main conversion's `PdfOptions` can be reused without drawing a second footer.
 `StampPage` picks the stamp PDF's page (0-based), `Pages` the pages to stamp (by 0-based index), `Scale` the size (0,
 the default, fits the stamp page on the page keeping its aspect ratio; 1 is its own size), and `Position`, `OffsetX`
 (right) and `OffsetY` (down) where it goes. The stamp is placed as the page is displayed, so it is upright on rotated

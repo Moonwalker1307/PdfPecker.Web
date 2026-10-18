@@ -28,6 +28,23 @@ and shaped too, with `direction` deciding which way a text chunk runs from its `
 the original characters in logical order. A font without OpenType Arabic
 features is shaped with the Unicode presentation forms instead.
 
+## Indic, Thai and Lao scripts {new 1.12.0}
+
+Devanagari, Bengali, Gurmukhi, Gujarati, Oriya, Tamil, Telugu, Kannada and Malayalam are shaped as HarfBuzz shapes
+them, from a port of its Indic shaper: conjuncts and half forms join, reph moves above its cluster and pre-base vowel
+signs are drawn before their consonant. Thai and Lao vowels and tone marks stack correctly, and combining marks in
+Latin, Greek and Cyrillic text are placed on their letters, or replaced by the font's precomposed letter. Register a
+font that has the script, such as one of the Noto fonts:
+
+```csharp
+var options = new PdfOptions();
+options.Fonts.AddFile("fonts/NotoSansDevanagari-Regular.ttf");
+byte[] pdf = HtmlToPdf.Convert("<p lang='hi' style=\"font-family: 'Noto Sans Devanagari'\">कुल राशि: ₹1,250</p>", options);
+```
+
+Khmer, Myanmar, Sinhala, Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped yet (see
+[Limitations](/docs/limitations/#text-and-fonts)).
+
 ## Chinese, Japanese and Korean line breaking {new 1.9.0}
 
 Chinese and Japanese are written without spaces, so a line may break between almost any two characters. PdfPecker

@@ -38,7 +38,9 @@ HtmlToPdf.ConvertFile("invoice.html", "invoice.pdf");
 byte[] pdf = await HtmlToPdf.ConvertAsync(html);
 ```
 
-All methods are static and thread-safe, so you can convert many documents in parallel. Page size, margins, headers,
+The conversion methods are static and thread-safe, so you can convert many documents in parallel. The few instance
+types are `FontCollection` and `PdfRenderer`, which parallel work can share, and `StreamingPdfMerger`, which builds
+one output and is used from one thread at a time. Page size, margins, headers,
 footers and the rest are set with [`PdfOptions`](/docs/options/).
 
 ## System requirements
