@@ -13,7 +13,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.12.0}
+## Text and fonts {changed 1.14.1}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages); other characters are replaced with `?`. The bundled Liberation
@@ -31,7 +31,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   capitals.
 - Automatic hyphenation (`hyphens: auto`) has [built-in patterns](/docs/languages/#hyphenation) for English, Danish,
   German, Dutch, Norwegian, Swedish, Spanish, French, Italian, Portuguese and Polish; other languages need their
-  patterns in `PdfOptions.Hyphenation`. `hyphenate-limit-chars` is not supported.
+  patterns in `PdfOptions.Hyphenation`.
 - SVG `<text>` uses only the first value of position lists and has no `textPath`; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
@@ -61,9 +61,12 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` scrolls with the box, since paper has no scrolling viewport.
 
-## Backgrounds and transparency {changed 1.12.0}
+## Backgrounds and transparency {changed 1.14.1}
 
-- Backgrounds of inline elements (`<span>`) show only their colour, not images or gradients.
+- Borders of inline elements (`<span>`) are not drawn, and neither are their inset box shadows.
+  `box-decoration-break` applies to inline elements, not to blocks split across pages or columns.
+- Inline boxes nested more than 16 deep are not decorated, and one layout paints at most 50,000 inline box fragments
+  with a shared budget for their layers, shadows and outlines; past it, fragments show only their background colour.
 - A translucent box shadow without blur is blended onto white rather than truly see-through. Blurs are drawn as
   bands, so very wide blurs may show faint steps when zoomed in.
 
@@ -99,9 +102,11 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   fill from a changed page. Revocation is checked only when `RevocationMode` asks the platform to, not from the OCSP
   responses and CRLs stored in the PDF.
 
-## Markdown and the PDF renderer
+## Markdown and the PDF renderer {changed 1.14.1}
 
-- Markdown: no `[^1]` footnote syntax (use HTML with `float: footnote`), definition lists, math or front matter.
+- Markdown: no math. Definition list terms are one line each (no several terms for one definition), and `~` does not
+  start a definition. A footnote's text cannot hold another page-bottom footnote: a reference inside a footnote links to
+  its note, and a note that only other notes reference is listed after the text.
 - `PdfRenderer` (PDF to image): no predefined CJK CMaps or non-embedded CJK fonts, and ICC profiles are not applied
   (ICC-based colours use their device equivalents). WebP output is lossless only (no lossy VP8), and JPEG output is
   baseline only (no progressive or arithmetic coding).
