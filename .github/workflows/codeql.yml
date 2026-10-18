@@ -1,5 +1,7 @@
 # Scans the web API (C#) and the site's scripts and the Worker (JavaScript and TypeScript) for security problems, on
 # every pull request, after each merge and once a week, so new CodeQL queries also run against unchanged code.
+# The repository is private and code scanning is not enabled for it, so the results are not uploaded: the job prints
+# each finding and fails instead.
 name: CodeQL
 
 on:
@@ -29,7 +31,6 @@ jobs:
     permissions:
       contents: read
       actions: read # the repository is private, so CodeQL needs this to read its own workflow run
-      security-events: write # uploads the results to code scanning
     strategy:
       fail-fast: false
       matrix:
@@ -60,3 +61,12 @@ jobs:
       - uses: github/codeql-action/analyze@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
           category: /language:${{ matrix.language }}
+          upload: never
+          output: codeql-results
+
+      - name: Fail on findings
+        run: |
+          count=$(jq '[.runs[].results[]] | length' codeql-results/*.sarif)
+          jq -r '.runs[].results[] | "::error file=\(.locations[0].physicalLocation.artifactLocation.uri),line=\(.locations[0].physicalLocation.region.startLine)::\(.ruleId): \(.message.text)"' codeql-results/*.sarif
+          echo "CodeQL findings: $count"
+          [ "$count" -eq 0 ]
