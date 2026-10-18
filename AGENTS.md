@@ -47,7 +47,8 @@ Before non-trivial work, read:
   and sidebar are in `Program.cs`.
 - `worker/index.ts`, `wrangler.jsonc`, `Dockerfile` – Cloudflare Worker and container.
 - `.github/workflows/build.yml` (build, docs check, Docker smoke test, Worker check, release assets) and `deploy.yml`
-  (deploys `main` after Build passes). `.github/dependabot.yml` proposes package bumps weekly.
+  (deploys `main` after Build passes). `.github/dependabot.yml` proposes package bumps weekly, and
+  `dependabot-auto-merge.yml` merges the patch and minor ones once CI passes (not PdfPecker bumps).
 
 ## Build and verify
 
