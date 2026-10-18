@@ -61,15 +61,34 @@ spaces and punctuation instead, which suits Korean, written with spaces between 
 any other text. A justified line is stretched only at its spaces, so a Chinese or Japanese line without spaces is not
 justified (see [Limitations](/docs/limitations/#text-and-fonts)).
 
-## Hyphenation {new 1.7.0}
+## Hyphenation {changed 1.11.0}
 
 `hyphens: auto` hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest `lang` attribute, else `PdfOptions.Language`. As in Chrome, a word is hyphenated only where it does not fit on
 its line, and a hyphen (or the `hyphenate-character`) is shown at the break. Words shorter than five letters, words with
 digits or other non-letters inside, URLs and e-mail addresses, and capitalized English words are not hyphenated, and a
-word with `&shy;` breaks only there. Patterns for English (US patterns for every `en` tag), Danish, German, Dutch and
-Norwegian (`nb`, `nn`, `no`) are built in and loaded on first use; others can be supplied as TeX pattern files, such as
-those of the [hyph-utf8](https://github.com/hyphenation/tex-hyphen) project:
+word with `&shy;` breaks only there. French and Italian also hyphenate words with an elided article or pronoun, such as
+*l'ordinateur* in French or *l'informazione* in Italian, with a straight or typographic apostrophe.
+
+Patterns for these languages are built in and loaded on first use, for every tag of the language (`fr-CA`, `pt-BR`,
+`es-MX` and so on):
+
+| Language | Tags |
+| --- | --- |
+| English (US patterns) | `en` |
+| Danish | `da` |
+| German (reformed spelling) | `de` |
+| Dutch | `nl` |
+| Norwegian | `nb`, `nn`, `no` |
+| Swedish | `sv` |
+| Spanish | `es` |
+| French | `fr` |
+| Italian | `it` |
+| Portuguese | `pt` |
+| Polish | `pl` |
+
+Others can be supplied as TeX pattern files, such as those of the
+[hyph-utf8](https://github.com/hyphenation/tex-hyphen) project:
 
 ```csharp
 var options = new PdfOptions
@@ -77,13 +96,13 @@ var options = new PdfOptions
     // Your own patterns for a language (they take precedence over the built-in ones).
     Hyphenation = new Dictionary<string, HyphenationPatterns>
     {
-        ["sv"] = new HyphenationPatterns(File.ReadAllText("hyph-sv.tex"), leftMin: 2, rightMin: 2),
+        ["fi"] = new HyphenationPatterns(File.ReadAllText("hyph-fi.tex"), leftMin: 2, rightMin: 2),
     },
 };
 byte[] pdf = HtmlToPdf.Convert("""
     <html lang="da"><body style="hyphens: auto; text-align: justify">
       <p>Arbejdsmarkedsbidraget betales af lønmodtageren.</p>
-      <p lang="sv">Avstavning med egna mönster.</p>
+      <p lang="fi">Tavutus omilla tavutussäännöillä.</p>
     </body></html>
     """, options);
 ```

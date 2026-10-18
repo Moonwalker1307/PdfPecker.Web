@@ -4,6 +4,25 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.11.0
+
+Released 18 October 2026.
+
+- [Subgrid](/docs/html-and-css/#subgrid) (CSS Grid Level 2): `grid-template-columns` and `grid-template-rows: subgrid`
+  line nested grids up with their parent's tracks.
+- [Multi-column layout](/docs/html-and-css/#multi-column-layout) splits paragraphs, lists and tables across columns
+  and onto later pages, as Chrome does, instead of keeping each child whole in the first columns.
+- [Percentage heights](/docs/html-and-css/#percentage-heights) resolve against definite containing blocks, as in
+  browsers.
+- Blurred box shadows, translucent gradient stops and SVG `stop-opacity` are truly transparent, blending with what is
+  behind them instead of with white.
+- [Hyphenation](/docs/languages/#hyphenation) in Swedish, Spanish, French, Italian, Portuguese and Polish; French and
+  Italian also hyphenate words with elisions such as *l'ordinateur*.
+- Correct word widths in paragraphs with an inline-block, and shaping of Arabic Extended-C characters outside the
+  Basic Multilingual Plane.
+- Bounded work on crafted fonts and malformed PDFs, and linear time for Markdown autolinks, nested inline-blocks and
+  headings kept with nested lists, flex rows and tables. No public API changes.
+
 ## 1.10.0
 
 Released 18 October 2026.
