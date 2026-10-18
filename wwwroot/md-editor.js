@@ -247,7 +247,9 @@
     const rows = [...el.rows];
     if (!rows.length) return "";
     const width = Math.max(...rows.map(r => r.cells.length));
-    const cell = c => c ? inline(c.childNodes).replace(/^(\\\n)+|(\\\n)+$/g, "").replace(/\\\n/g, "<br>").replace(/\|/g, "\\|").trim() : "";
+    // The cell is already Markdown, with its own backslashes escaped, so only the pipes that would end the cell need a
+    // backslash (inside code spans too: GFM removes it before parsing the cell).
+    const cell = c => c ? inline(c.childNodes).replace(/^(\\\n)+|(\\\n)+$/g, "").replace(/\\\n/g, "<br>").split("|").join("\\|").trim() : "";
     const line = r => "| " + Array.from({ length: width }, (_, i) => cell(r.cells[i])).join(" | ") + " |";
     const align = Array.from({ length: width }, (_, i) => {
       const c = rows[0].cells[i];
