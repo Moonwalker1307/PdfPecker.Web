@@ -4,6 +4,15 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.14.2
+
+Released 18 October 2026.
+
+- A table whose first row does not fit on the rest of a page starts on the next page, instead of leaving its header
+  row behind at the bottom of the page. Chrome does the same.
+- In tables with automatic layout, columns with a `width` keep it next to columns of long text, as in Chrome. Tables
+  without column widths are laid out as before.
+
 ## 1.14.1
 
 Released 18 October 2026.
