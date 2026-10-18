@@ -118,7 +118,7 @@ change is not analysed (see [Limitations](/docs/limitations/#reading-and-changin
 `CoversWholeDocument` on the last signature when nothing may follow it. PAdES, `adbe.pkcs7.detached`,
 `adbe.pkcs7.sha1` and document timestamps (`ETSI.RFC3161`, `IsDocumentTimestamp`) are read, from PDFs made by any tool.
 
-## Long-term validation {changed 1.10.0}
+## Long-term validation {changed 1.12.0}
 
 A signature can normally be checked only while its certificates are valid and their CA answers. `PdfSigner.AddValidationData`
 makes it checkable for years: it adds a Document Security Store with every certificate in the chains of the PDF's
@@ -160,3 +160,7 @@ Whatever the filter says, one call contacts at most 32 distinct URLs (64 request
 download (never from https to http), bounds slow responses and stops fetching after two minutes in total. An
 `HttpClient` whose handler follows redirects itself does so without asking the filter. To make the document timestamp itself
 long-term verifiable, call `AddValidationData` again later without a `TimestampUrl`. A PDF without signatures throws `PdfSignatureException`.
+
+`Sign` and `AddValidationData` take a `CancellationToken`, and `AddValidationDataAsync` awaits the OCSP, CRL and
+timestamp requests instead of blocking a thread. `HtmlToPdf.ConvertAsync` signs asynchronously with the caller's token.
+Cancelling throws `OperationCanceledException`, and an unreadable PDF throws `InvalidDataException`.

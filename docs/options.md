@@ -37,14 +37,37 @@ cancelling stops the conversion where it is.
 ## Page size from CSS
 
 A CSS `@page { size: A4 landscape; margin: 15mm }` rule overrides the page size and margins unless
-`IgnoreCssPageRules` is set. PdfPecker never makes network requests on its own: `http(s)` images and stylesheets are only
-loaded through `ResourceResolver`.
+`IgnoreCssPageRules` is set. Conversion never makes network requests: `http(s)` images and stylesheets are only
+loaded through `ResourceResolver`. Only [signing](/docs/signatures/) goes online, and only when asked: a timestamp from
+`TimestampUrl`, revocation data with `FetchRevocationData`, and online revocation checks when verifying.
 
 ## Document properties
 
 Custom properties are written to the document information dictionary, where Acrobat shows them under Document
 Properties > Custom and `pdfinfo -custom` lists them. For PDF/A they are also written to the XMP metadata (Acrobat's
 `pdfx` namespace, with the extension schema PDF/A requires), alongside Keywords, Creator and Producer.
+
+## Reproducible output {new 1.12.0}
+
+By default every PDF records the time it was made and gets a random file identifier, so two conversions of the same
+HTML differ. Set `CreationDate`, or the `SOURCE_DATE_EPOCH` environment variable (seconds since 1970, as used by
+reproducible builds), and the dates are fixed and the identifier is derived from a hash of the file, so the same input
+gives a byte-identical PDF. `PdfMergeOptions`, `PdfPagesOptions`, `PdfStampOptions` and `PdfFormFillOptions` have the
+same `CreationDate`. Signed and encrypted output still differs each time, since signing time and encryption keys are
+part of it.
+
+```csharp
+var options = new PdfOptions { CreationDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero) };
+```
+
+## Errors, cancellation and output files {new 1.12.0}
+
+Errors the library raises itself derive from `PdfPeckerException`: `PdfLimitException` (a limit such as `MaxPages`
+reached), `PdfPasswordException` and `PdfSignatureException`. Unreadable input PDFs throw `InvalidDataException`, and
+bad arguments the usual `ArgumentException`s; each method's documentation lists what it throws. Every method that
+writes a file (`ConvertFile`, `StampFile`, `SignFile`, `MergeFiles`, ...) writes to a temporary file first and
+replaces the target only when it succeeds, so a failure leaves an existing file untouched. Methods that read or write
+PDFs take a `CancellationToken` and have `Stream` overloads, and `ConvertAsync` can write straight to a `Stream`.
 
 ## More options
 
