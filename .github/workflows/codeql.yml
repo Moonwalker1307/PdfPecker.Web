@@ -28,6 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      actions: read # the repository is private, so CodeQL needs this to read its own workflow run
       security-events: write # uploads the results to code scanning
     strategy:
       fail-fast: false
