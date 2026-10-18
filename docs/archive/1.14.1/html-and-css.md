@@ -32,7 +32,7 @@ not understand), `:root`, `:link`, `:empty`, `:lang()`, form states (`:checked`,
 `::after`, `::marker`, `::first-letter` (drop caps, floated or not) and `::first-line`, with specificity and `!important`
 handled as in browsers. As when Chrome prints, interaction states such as `:hover` and `:focus` never match.
 
-## CSS properties {changed 1.14.1}
+## CSS properties {changed 1.14.0}
 
 | Area | Properties |
 | --- | --- |

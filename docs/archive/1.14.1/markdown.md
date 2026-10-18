@@ -21,7 +21,7 @@ ids (`HeadingIds = false`), shows raw HTML as text (`AllowRawHtml = false`), rep
 see `MarkdownToHtml.DefaultStyleSheet`) or sets the title (default: the front matter's `title`, else the first heading). `MarkdownToPdf` takes
 `PdfOptions` and `MarkdownOptions` side by side.
 
-## What is supported {changed 1.14.1}
+## What is supported {changed 1.14.0}
 
 [CommonMark 0.31](https://spec.commonmark.org/0.31.2/) (651 of the 652 spec examples pass; the one
 miss is an exotic HTML5 entity name) plus the GitHub Flavored Markdown extensions: tables with column alignment,
@@ -30,7 +30,7 @@ definition lists and YAML front matter (see [below](#footnotes-definition-lists-
 ids, so `[see below](#heading-text)` links work in the PDF too. The parser runs in linear time on hostile input
 (deep nesting, unclosed brackets, long delimiter runs). See [Limitations](/docs/limitations/) for what is not supported.
 
-## Footnotes, definition lists and front matter {new 1.14.1}
+## Footnotes, definition lists and front matter {new 1.14.0}
 
 Footnotes use GitHub's syntax and are numbered in the order they are first referenced. `MarkdownToPdf` puts each note
 at the bottom of the page that references it, with the CSS `float: footnote` engine, so this also works with your own

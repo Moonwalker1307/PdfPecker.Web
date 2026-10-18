@@ -78,7 +78,7 @@ spaces and punctuation instead, which suits Korean, written with spaces between 
 any other text. A justified line is stretched only at its spaces, so a Chinese or Japanese line without spaces is not
 justified (see [Limitations](/docs/limitations/#text-and-fonts)).
 
-## Hyphenation {changed 1.14.1}
+## Hyphenation {changed 1.14.0}
 
 `hyphens: auto` hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest `lang` attribute, else `PdfOptions.Language`. As in Chrome, a word is hyphenated only where it does not fit on
