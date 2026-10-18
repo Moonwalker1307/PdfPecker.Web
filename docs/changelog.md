@@ -4,6 +4,30 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.14.1
+
+Released 18 October 2026.
+
+- Collapsed table borders stay visible over cell backgrounds: shaded header and footer rows keep their vertical lines,
+  and striped rows keep the line above them, as in Chrome. Tables with `border-collapse` and cell backgrounds look
+  different from 1.14.0.
+
+## 1.14.0
+
+Released 18 October 2026.
+
+- [Backgrounds on inline elements](/docs/html-and-css/#css-properties): `<span>`, `<mark>`, `<code>` and badges get
+  images, gradients, `border-radius` and clipping to text, not just a colour, and `box-decoration-break` decides how a
+  background split over several lines is drawn.
+- [Markdown footnotes, definition lists and front matter](/docs/markdown/#footnotes-definition-lists-and-front-matter),
+  with footnotes at the bottom of the page in a PDF.
+- [`hyphenate-limit-chars`](/docs/languages/#hyphenation) for the shortest hyphenated word and the fewest letters around
+  a hyphen.
+- Rows of collapsed tables with lines only under or over each row now have Chrome's height, and balanced columns keep
+  `break-inside: avoid` boxes whole without growing taller than needed.
+- Bounded work for repeating gradients and deeply nested decorated inline elements on hostile input. Tables with
+  collapsed row lines, rounded inline badges and some multi-column layouts look different from 1.13.0.
+
 ## 1.13.0
 
 Released 18 October 2026.
