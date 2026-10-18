@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <!-- The docs are rendered by PdfPecker's own Markdown converter. -->
-    <PackageReference Include="PdfPecker" Version="1.12.0" />
+    <PackageReference Include="PdfPecker" Version="1.13.0" />
   </ItemGroup>
 
 </Project>

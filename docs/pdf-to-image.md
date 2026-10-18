@@ -28,6 +28,17 @@ byte[] tiff = PdfToImage.ConvertToTiff(pdfBytes, new ImageOptions { Dpi = 200, T
 PdfToImage.ConvertFileToTiff("report.pdf", "report.tif");
 ```
 
+## HTML to images {new 1.13.0}
+
+`HtmlToImage` converts HTML straight to one image per page, for previews, thumbnails and e-mails. It is the shortcut
+for `HtmlToPdf.Convert` followed by `PdfToImage.Convert`, takes the same `PdfOptions` and `ImageOptions`, and gives
+the same images. `Security` and `Signature` are ignored, since they change nothing on the page.
+
+```csharp
+byte[][] pages = HtmlToImage.Convert(html, new PdfOptions { PageSize = PageSize.A4 }, new ImageOptions { Dpi = 96 });
+byte[][] jpegs = await HtmlToImage.ConvertAsync(html, imageOptions: new ImageOptions { Format = PdfImageFormat.Jpeg });
+```
+
 ## Output formats {changed 1.10.0}
 
 Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`Save()` use it too):
