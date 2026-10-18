@@ -4,6 +4,29 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.12.0
+
+Released 18 October 2026.
+
+- [Indic, Thai and Lao shaping](/docs/languages/#indic-thai-and-lao-scripts): Devanagari, Bengali, Gurmukhi, Gujarati,
+  Oriya, Tamil, Telugu, Kannada and Malayalam, Thai and Lao are shaped as HarfBuzz shapes them, and combining marks in
+  Latin, Greek and Cyrillic are placed on their letters.
+- `background-clip: text` (also as `-webkit-background-clip`).
+- [Tables across pages](/docs/html-and-css/#pagination): `<tfoot>` repeats at the bottom of every page, and tables
+  inside flex and grid items break across pages instead of moving whole.
+- [Reproducible output](/docs/options/#reproducible-output): with `CreationDate` or `SOURCE_DATE_EPOCH` the same input
+  gives a byte-identical PDF, also for merging, page tools, stamping and form filling.
+- [Cancellable signing](/docs/signatures/#long-term-validation), `AddValidationDataAsync`, and cancellation-token and
+  `Stream` overloads across the API.
+- [`PdfPeckerException`](/docs/options/#errors-cancellation-and-output-files) as the base of the library's own
+  exceptions, and file output that leaves an existing file untouched when a conversion fails.
+- [`StampHtml`](/docs/stamping/#placement) ignores the footer, header, watermark and other document-level options.
+- `text-transform: uppercase` turns ß into SS and handles Turkish dotted and dotless i; `hyphens: auto` hyphenates
+  decomposed words; CSS integers are read correctly on servers with an Arabic or Persian culture.
+- Bounded work on malformed JPEG 2000, JBIG2, e-invoices, attachments and CSS, and less memory for JPEG and WebP
+  output. Tables with a `<tfoot>`, tables in flex and grid, and Indic and Thai text look different from 1.11.0 on
+  purpose.
+
 ## 1.11.0
 
 Released 18 October 2026.
