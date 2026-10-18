@@ -67,6 +67,8 @@ jobs:
       - name: Fail on findings
         run: |
           count=$(jq '[.runs[].results[]] | length' codeql-results/*.sarif)
-          jq -r '.runs[].results[] | "::error file=\(.locations[0].physicalLocation.artifactLocation.uri),line=\(.locations[0].physicalLocation.region.startLine)::\(.ruleId): \(.message.text)"' codeql-results/*.sarif
+          # Each finding as a plain line (the log keeps the file and line) and as an annotation on the pull request.
+          jq -r '.runs[].results[] | (.locations[0].physicalLocation | "\(.artifactLocation.uri):\(.region.startLine)") as $at
+            | "\($at) \(.ruleId): \(.message.text)", "::error file=\($at | split(":")[0]),line=\($at | split(":")[1])::\(.ruleId): \(.message.text)"' codeql-results/*.sarif
           echo "CodeQL findings: $count"
           [ "$count" -eq 0 ]
