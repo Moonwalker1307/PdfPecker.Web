@@ -140,6 +140,13 @@ Every pull request and push to `main` builds the site and the Docker image and c
 serves the page. Publishing a GitHub release (tag `v1.2.3`) attaches the published site as a zip and the Docker image
 as a `.docker.tar.gz` to the release.
 
+Dependabot's patch and minor updates merge themselves: `.github/workflows/dependabot-auto-merge.yml` turns on
+auto-merge (squash) and GitHub merges once the required checks pass. Major updates and PdfPecker updates wait for a
+person. This needs "Allow auto-merge" under Settings → General and a branch ruleset (or branch protection) on `main`
+that requires the checks `build`, `worker`, `analyze (csharp)` and `analyze (javascript-typescript)` and no approving
+review. A merge made this way does not start the Build workflow on `main` (GitHub does not start workflows for pushes
+made with a workflow's token), so it reaches pdfpecker.net with the next deploy; run Deploy by hand to ship it sooner.
+
 ## License
 
 [MIT](LICENSE)
