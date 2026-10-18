@@ -151,6 +151,10 @@
     var option = select.options[select.selectedIndex];
     var slug = select.getAttribute('data-slug') || '';
     var pages = (option.getAttribute('data-pages') || '').split(' ');
-    location.href = option.value + (slug && pages.indexOf(slug) >= 0 ? slug + '/' : '');
+    // Only a manual on this site is opened: the value must be /docs/ or /docs/v1.2.3/, and the address is built from a
+    // fixed /docs/ prefix, so nothing read from the page can turn into a javascript: or off-site link.
+    var match = /^\/docs\/(v\d+\.\d+\.\d+\/)?$/.exec(option.value);
+    if (!match) return;
+    location.href = '/docs/' + (match[1] || '') + (slug && pages.indexOf(slug) >= 0 ? slug + '/' : '');
   });
 })();
