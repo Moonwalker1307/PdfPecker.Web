@@ -103,6 +103,11 @@ CDN, set `TrustedProxies` to the proxy's addresses or networks (for example `-e 
 rate limit applies to each visitor rather than to the proxy. The page sends a strict Content-Security-Policy (no inline
 script) along with the usual security headers.
 
+CI checks this on every pull request: `tools/check-api.sh` sends bad requests to the built Docker image and expects
+a clear 4xx for each, the security headers and a working `/health` afterwards (run it locally against a running app
+with `tools/check-api.sh http://localhost:8080`), and `.github/workflows/codeql.yml` scans the C# and the site's
+JavaScript and TypeScript with CodeQL. The converters themselves are fuzzed in the PdfPecker repository.
+
 ## Requirements
 
 .NET 10. The container needs about 2 GB (`--memory 2g`): it runs one conversion per 512 MB of its memory limit (up to

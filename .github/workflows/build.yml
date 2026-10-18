@@ -96,7 +96,14 @@ jobs:
           curl -fsS http://localhost:8080/docs/versions/pdfpecker-docs-1.6.0.pdf -o /dev/null
           curl -fsS http://localhost:8080/docs/v1.7.0/fonts/ -o /dev/null
           curl -fsS http://localhost:8080/docs/v1.6.0/ -o /dev/null
-          docker rm -f web
+
+      # Bad requests must get a clear 4xx (never a 500), the security headers must be there, and the app must keep answering.
+      - name: Check the API rejects bad requests
+        run: tools/check-api.sh http://localhost:8080
+
+      - name: Stop the image
+        if: always()
+        run: docker rm -f web
 
       - name: Package
         run: |
