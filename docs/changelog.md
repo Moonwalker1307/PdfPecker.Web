@@ -4,6 +4,19 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.13.0
+
+Released 18 October 2026.
+
+- [Barcodes](/docs/barcodes/): QR codes (versions 1 to 40, error correction L to H), Code 128 and EAN-13 as vector SVG
+  for your templates, and `Barcode.ToDataUri` for an `<img>`, a CSS background or a Markdown image.
+- [EPC payment QR codes](/docs/barcodes/#epc-payment-qr-codes) (GiroCode) for euro transfers, with the IBAN, BIC,
+  amount and field lengths checked.
+- [Images to PDF](/docs/images-to-pdf/): PNG, JPEG, GIF, WebP, BMP and TIFF images one per page, at their own size or
+  fitted to a page size with margins.
+- [HTML to images](/docs/pdf-to-image/#html-to-images) in one call with `HtmlToImage`.
+- No output changes: PDFs from 1.12.0 templates are byte-identical.
+
 ## 1.12.0
 
 Released 18 October 2026.
