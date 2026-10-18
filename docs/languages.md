@@ -78,7 +78,7 @@ spaces and punctuation instead, which suits Korean, written with spaces between 
 any other text. A justified line is stretched only at its spaces, so a Chinese or Japanese line without spaces is not
 justified (see [Limitations](/docs/limitations/#text-and-fonts)).
 
-## Hyphenation {changed 1.11.0}
+## Hyphenation {changed 1.14.1}
 
 `hyphens: auto` hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest `lang` attribute, else `PdfOptions.Language`. As in Chrome, a word is hyphenated only where it does not fit on
@@ -86,6 +86,13 @@ its line, and a hyphen (or the `hyphenate-character`) is shown at the break. Wor
 digits or other non-letters inside, URLs and e-mail addresses, and capitalized English words are not hyphenated, and a
 word with `&shy;` breaks only there. French and Italian also hyphenate words with an elided article or pronoun, such as
 *l'ordinateur* in French or *l'informazione* in Italian, with a straight or typographic apostrophe.
+
+`hyphenate-limit-chars` sets the shortest word that is hyphenated and the fewest letters before and after a hyphen: up
+to three values, each `auto` or a whole number, such as `hyphenate-limit-chars: 8 3 3`. One value sets only the word
+length; with two, the letters after a hyphen are the same as before it. It is inherited, so it can be set on the whole
+document or on a single element. `auto` keeps the defaults above: words of at least five letters, and the patterns' own
+minimums around a hyphen (two letters before and three after in English, as in Chrome). Larger values make hyphenation
+more selective; smaller values do not go below the patterns' own minimums, as in Chrome.
 
 Patterns for these languages are built in and loaded on first use, for every tag of the language (`fr-CA`, `pt-BR`,
 `es-MX` and so on):
