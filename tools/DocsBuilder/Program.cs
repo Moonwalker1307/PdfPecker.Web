@@ -46,7 +46,7 @@ Section[] sections =
         new("accessibility", "accessibility", "Accessibility", "Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML."),
         new("forms", "forms", "Fillable forms", "HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields, and filling and flattening the forms of existing PDFs."),
         new("signatures", "signatures", "Digital signatures", "Sign PDFs with PAdES signatures, visible boxes, timestamps, existing fields and external signers, verify signatures, and add long-term validation data."),
-        new("e-invoices", "e-invoices", "E-invoices", "Factur-X and ZUGFeRD PDF/A-3 e-invoices, and PDFs in Peppol and OIOUBL UBL invoices."),
+        new("e-invoices", "e-invoices", "E-invoices", "Factur-X, ZUGFeRD, XRechnung and Peppol invoice XML from invoice data, a ready-made invoice template, Factur-X PDF/A-3 e-invoices, and PDFs in UBL invoices."),
         new("barcodes", "barcodes", "Barcodes", "QR codes, EPC payment QR codes (GiroCode), Code 128 and EAN-13 barcodes as vector SVG for your templates."),
         new("attachments", "attachments", "Attachments", "Embed files in a PDF, read them back, or attach them to an existing PDF."),
     ]),
@@ -54,6 +54,7 @@ Section[] sections =
     [
         new("merging", "merging", "Merging and splitting", "Merge any PDFs, stream them as they arrive, and extract, reorder, rotate and split pages."),
         new("stamping", "stamping", "Stamping", "Put a stamp over or letterhead under the pages of any PDF."),
+        new("compacting", "compacting", "Compacting", "Make any PDF smaller, losslessly or with images downsampled and recompressed, keeping bookmarks, forms, tags and PDF/A."),
         new("text-extraction", "text-extraction", "Text extraction", "Extract the text of any PDF in reading order, with the position of every line and word."),
         new("pdf-to-image", "pdf-to-image", "PDF to image", "Render PDF pages to PNG, JPEG, WebP or TIFF with PdfPecker's own renderer, or HTML straight to images."),
     ]),
