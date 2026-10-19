@@ -60,7 +60,7 @@
         <li><a href="/docs/accessibility/">Accessibility</a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/">E-invoices</a></li>
+        <li><a href="/docs/e-invoices/">E-invoices <span class="change" title="Changed in 1.15.0">Changed</span></a></li>
         <li><a href="/docs/barcodes/">Barcodes</a></li>
         <li><a href="/docs/attachments/">Attachments</a></li>
       </ul>
@@ -68,6 +68,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/compacting/">Compacting <span class="change new" title="New in 1.15.0">New</span></a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
@@ -107,7 +108,7 @@
         <li><a href="/docs/accessibility/">Accessibility</a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/">E-invoices</a></li>
+        <li><a href="/docs/e-invoices/">E-invoices <span class="change" title="Changed in 1.15.0">Changed</span></a></li>
         <li><a href="/docs/barcodes/">Barcodes</a></li>
         <li><a href="/docs/attachments/">Attachments</a></li>
       </ul>
@@ -115,6 +116,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/compacting/">Compacting <span class="change new" title="New in 1.15.0">New</span></a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
@@ -146,7 +148,8 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="changelog">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.14.2 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.15.0 (latest)</option>
+          <option value="/docs/v1.14.2/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.2</option>
           <option value="/docs/v1.14.1/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.1</option>
           <option value="/docs/v1.14.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.0</option>
           <option value="/docs/v1.13.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.13.0</option>
@@ -165,7 +168,7 @@
           <option value="/docs/v1.1.0/" data-pages="">1.1.0</option>
           <option value="/docs/v1.0.0/" data-pages="">1.0.0</option>
         </select>
-        <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download="pdfpecker-docs-v1.14.2.pdf">Download PDF</a>
+        <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download="pdfpecker-docs-v1.15.0.pdf">Download PDF</a>
         <a class="docs-changelog" href="/docs/changelog/">Changelog</a>
       </div>
     </div>
@@ -174,6 +177,24 @@
 <p>What changed in each PdfPecker release on <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>, newest first. The
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the <a href="https://github.com/Moonwalker1307/PdfPecker">PdfPecker repository</a>.</p>
+<h2 id="1150">1.15.0</h2>
+<p>Released 19 October 2026.</p>
+<ul>
+<li><a href="/docs/e-invoices/#invoice-xml-from-invoice-data">Invoice XML from invoice data</a>: <code>InvoiceData</code> writes Factur-X /
+ZUGFeRD EN 16931 and XRechnung CII, and Peppol BIS 3.0 and XRechnung UBL, with the totals and VAT breakdown
+calculated and the EN 16931 rules checked.</li>
+<li><a href="/docs/e-invoices/#ready-made-invoice-template">A ready-made invoice template</a>: <code>InvoiceTemplate.ToPdf</code> renders an
+A4 invoice with your logo and colour in English, German or Danish, with an EPC payment QR code and the Factur-X XML
+embedded.</li>
+<li><a href="/docs/compacting/">Compacting</a>: <code>PdfCompactor</code> makes any PDF smaller, losslessly by default, or with images
+downsampled and recompressed as JPEG.</li>
+<li>A cell's <code>rowspan</code> stops at the end of its table header, body or footer, as in HTML, instead of throwing
+<code>NullReferenceException</code>.</li>
+<li>Deeply nested <code>break-inside: avoid</code> boxes in columns are laid out in bounded time; the output is unchanged.</li>
+<li><code>PdfSignatureVerifier</code> reports a signature whose signer key cannot be read instead of throwing <code>OverflowException</code>
+(Windows, .NET 8 and 9).</li>
+<li>No other output changes: PDFs from 1.14.2 templates are byte-identical.</li>
+</ul>
 <h2 id="1142">1.14.2</h2>
 <p>Released 18 October 2026.</p>
 <ul>
