@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>E-invoices · PdfPecker docs</title>
-<meta name="description" content="Factur-X and ZUGFeRD PDF/A-3 e-invoices, and PDFs in Peppol and OIOUBL UBL invoices.">
+<meta name="description" content="Factur-X, ZUGFeRD, XRechnung and Peppol invoice XML from invoice data, a ready-made invoice template, Factur-X PDF/A-3 e-invoices, and PDFs in UBL invoices.">
 <link rel="canonical" href="https://pdfpecker.net/docs/e-invoices/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="PdfPecker">
 <meta property="og:title" content="E-invoices · PdfPecker docs">
-<meta property="og:description" content="Factur-X and ZUGFeRD PDF/A-3 e-invoices, and PDFs in Peppol and OIOUBL UBL invoices.">
+<meta property="og:description" content="Factur-X, ZUGFeRD, XRechnung and Peppol invoice XML from invoice data, a ready-made invoice template, Factur-X PDF/A-3 e-invoices, and PDFs in UBL invoices.">
 <meta property="og:url" content="https://pdfpecker.net/docs/e-invoices/">
 <meta property="og:image" content="https://pdfpecker.net/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -60,7 +60,7 @@
         <li><a href="/docs/accessibility/">Accessibility</a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/" aria-current="page">E-invoices</a></li>
+        <li><a href="/docs/e-invoices/" aria-current="page">E-invoices <span class="change" title="Changed in 1.15.0">Changed</span></a></li>
         <li><a href="/docs/barcodes/">Barcodes</a></li>
         <li><a href="/docs/attachments/">Attachments</a></li>
       </ul>
@@ -68,6 +68,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/compacting/">Compacting <span class="change new" title="New in 1.15.0">New</span></a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
@@ -107,7 +108,7 @@
         <li><a href="/docs/accessibility/">Accessibility</a></li>
         <li><a href="/docs/forms/">Fillable forms</a></li>
         <li><a href="/docs/signatures/">Digital signatures</a></li>
-        <li><a href="/docs/e-invoices/" aria-current="page">E-invoices</a></li>
+        <li><a href="/docs/e-invoices/" aria-current="page">E-invoices <span class="change" title="Changed in 1.15.0">Changed</span></a></li>
         <li><a href="/docs/barcodes/">Barcodes</a></li>
         <li><a href="/docs/attachments/">Attachments</a></li>
       </ul>
@@ -115,6 +116,7 @@
       <ul>
         <li><a href="/docs/merging/">Merging and splitting</a></li>
         <li><a href="/docs/stamping/">Stamping</a></li>
+        <li><a href="/docs/compacting/">Compacting <span class="change new" title="New in 1.15.0">New</span></a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
       </ul>
@@ -146,7 +148,8 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="e-invoices">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.14.2 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.15.0 (latest)</option>
+          <option value="/docs/v1.14.2/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.2</option>
           <option value="/docs/v1.14.1/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.1</option>
           <option value="/docs/v1.14.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.0</option>
           <option value="/docs/v1.13.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.13.0</option>
@@ -165,15 +168,135 @@
           <option value="/docs/v1.1.0/" data-pages="">1.1.0</option>
           <option value="/docs/v1.0.0/" data-pages="">1.0.0</option>
         </select>
-        <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download="pdfpecker-docs-v1.14.2.pdf">Download PDF</a>
+        <a class="button docs-pdf" href="/docs/pdfpecker-docs.pdf" download="pdfpecker-docs-v1.15.0.pdf">Download PDF</a>
         <a class="docs-changelog" href="/docs/changelog/">Changelog</a>
       </div>
     </div>
     <article class="prose">
 <h1 id="e-invoices">E-invoices</h1>
-<h2 id="factur-x-and-zugferd">Factur-X and ZUGFeRD</h2>
-<p>Pass the invoice's CII XML (from your invoicing system) and PdfPecker attaches it to the PDF, making a Factur-X /
-ZUGFeRD e-invoice: the pages are the human-readable invoice and the XML is what accounting software reads.</p>
+<p class="changes"><b>Changed in 1.15.0:</b> <a href="#invoice-xml-from-invoice-data">Invoice XML from invoice data</a>, <a href="#ready-made-invoice-template">Ready-made invoice template</a>, <a href="#factur-x-and-zugferd">Factur-X and ZUGFeRD</a>.</p>
+<h2 id="invoice-xml-from-invoice-data">Invoice XML from invoice data <span class="change new">New in 1.15.0</span></h2>
+<p><code>InvoiceData</code> describes an invoice by the European e-invoicing standard EN 16931: the seller and buyer, the lines,
+allowances and charges, payment and references. PdfPecker calculates the totals and the VAT breakdown from the lines
+and writes the invoice as XML, so you do not need a separate e-invoicing library:</p>
+<pre class="cs"><code><span class="k">var</span> invoice = <span class="k">new</span> <span class="t">InvoiceData</span>
+{
+    Number = <span class="s">&quot;INV-2026-0042&quot;</span>,
+    IssueDate = <span class="k">new</span> DateOnly(<span class="n">2026</span>, <span class="n">10</span>, <span class="n">13</span>),
+    DueDate = <span class="k">new</span> DateOnly(<span class="n">2026</span>, <span class="n">11</span>, <span class="n">12</span>),
+    BuyerReference = <span class="s">&quot;04011000-12345-34&quot;</span>,
+    Seller = <span class="k">new</span> <span class="t">InvoiceParty</span>
+    {
+        Name = <span class="s">&quot;Example Seller GmbH&quot;</span>,
+        VatId = <span class="s">&quot;DE123456789&quot;</span>,
+        Address = <span class="k">new</span> <span class="t">InvoiceAddress</span> { Line1 = <span class="s">&quot;Musterstra&#223;e 1&quot;</span>, City = <span class="s">&quot;Berlin&quot;</span>, PostalCode = <span class="s">&quot;10115&quot;</span>, CountryCode = <span class="s">&quot;DE&quot;</span> },
+        ElectronicAddress = <span class="s">&quot;DE123456789&quot;</span>, ElectronicAddressScheme = <span class="s">&quot;9930&quot;</span>,
+    },
+    Buyer = <span class="k">new</span> <span class="t">InvoiceParty</span>
+    {
+        Name = <span class="s">&quot;Example Buyer AG&quot;</span>,
+        Address = <span class="k">new</span> <span class="t">InvoiceAddress</span> { Line1 = <span class="s">&quot;Beispielweg 2&quot;</span>, City = <span class="s">&quot;M&#252;nchen&quot;</span>, PostalCode = <span class="s">&quot;80331&quot;</span>, CountryCode = <span class="s">&quot;DE&quot;</span> },
+        ElectronicAddress = <span class="s">&quot;04011000-12345-34&quot;</span>, ElectronicAddressScheme = <span class="s">&quot;0204&quot;</span>,
+    },
+    Payment = <span class="k">new</span> <span class="t">InvoicePayment</span> { Iban = <span class="s">&quot;DE02 1203 0000 0000 2020 51&quot;</span>, Reference = <span class="s">&quot;INV-2026-0042&quot;</span> },
+};
+invoice.Lines.Add(<span class="k">new</span> <span class="t">InvoiceLine</span> { Name = <span class="s">&quot;Consulting&quot;</span>, Quantity = <span class="n">10</span>, UnitCode = <span class="s">&quot;HUR&quot;</span>, NetPrice = <span class="n">100</span>, VatRate = <span class="n">19</span> });
+
+<span class="k">byte</span>[] facturX   = invoice.ToCii();                            <span class="c">// Factur-X / ZUGFeRD EN 16931</span>
+<span class="k">byte</span>[] xrechnung = invoice.ToCii(<span class="t">EInvoiceProfile</span>.XRechnung);   <span class="c">// XRechnung 3.0 CII</span>
+<span class="k">byte</span>[] peppol    = invoice.ToUbl();                            <span class="c">// Peppol BIS Billing 3.0 UBL</span>
+<span class="k">byte</span>[] pdf = <span class="t">HtmlToPdf</span>.Convert(invoiceHtml, <span class="k">new</span> <span class="t">PdfOptions</span> { EInvoice = invoice.ToEInvoice() });  <span class="c">// Factur-X PDF</span>
+</code></pre>
+<ul>
+<li><code>ToCii()</code> writes Factur-X / ZUGFeRD EN 16931 CII, and <code>ToCii(EInvoiceProfile.XRechnung)</code> XRechnung 3.0 CII.</li>
+<li><code>ToUbl()</code> writes Peppol BIS Billing 3.0 UBL, an Invoice or, for <code>InvoiceType.CreditNote</code>, a CreditNote;
+<code>ToUbl(UblFormat.XRechnung)</code> writes XRechnung 3.0 UBL. Attach the PDF with <code>UblInvoice.AttachPdf</code> (see below). Peppol
+needs real participant IDs as electronic addresses, with an EAS scheme such as 0184, 0088 or 9930; an email address
+(EM) is not accepted.</li>
+<li><code>ToEInvoice()</code> returns a <code>PdfEInvoice</code> for <code>PdfOptions.EInvoice</code>, so one conversion makes the Factur-X PDF.</li>
+<li><code>CalculateTotals()</code> returns the <code>InvoiceTotals</code>: line total, allowances, charges, net total, the VAT breakdown, grand
+total and amount due. Money is rounded to two decimals, half away from zero, as EN 16931 expects.</li>
+<li><code>Validate()</code> (with an <code>EInvoiceProfile</code> or a <code>UblFormat</code>) lists the problems with their EN 16931 rule numbers, plus
+XRechnung's BR-DE and the Peppol rules for those formats, or an empty list. <code>ToCii</code>, <code>ToUbl</code> and <code>ToEInvoice</code> throw
+<code>ArgumentException</code> with every problem in the message. The checks cover the fields the model has; they do not
+replace the receiver's own validator.</li>
+<li>VAT categories are standard (S), zero rated (Z), exempt (E, which needs a reason in <code>VatExemptionReasons</code>), reverse
+charge (AE), intra-community supply (K), export (G), outside scope (O), and the Canary Islands (L) and Ceuta and
+Melilla (M) taxes. Reverse charge, intra-community supply, export and outside scope get the standard EU wording and
+VATEX code when no reason is given.</li>
+<li>The same invoice always gives the same bytes. Only the EN 16931 and XRechnung profiles are written; MINIMUM,
+BASIC WL, BASIC and EXTENDED throw.</li>
+</ul>
+<p>The XML passes the Mustang validator (CII and UBL, with XRechnung) and the Peppol BIS 3.0 schematrons.</p>
+<h2 id="ready-made-invoice-template">Ready-made invoice template <span class="change new">New in 1.15.0</span></h2>
+<p><code>InvoiceTemplate</code> turns an <code>InvoiceData</code> into a print-ready A4 invoice, with the Factur-X EN 16931 XML embedded by
+default (which makes the file PDF/A-3b):</p>
+<pre class="cs"><code><span class="k">byte</span>[] pdf = <span class="t">InvoiceTemplate</span>.ToPdf(invoice, <span class="k">new</span> <span class="t">InvoiceTemplateOptions</span>
+{
+    Logo = <span class="t">File</span>.ReadAllBytes(<span class="s">&quot;logo.png&quot;</span>),
+    AccentColor = <span class="s">&quot;#0b6e4f&quot;</span>,
+    Labels = <span class="t">InvoiceLabels</span>.German,
+});
+
+<span class="k">string</span> html = <span class="t">InvoiceTemplate</span>.ToHtml(invoice);   <span class="c">// the HTML, to adapt and convert yourself</span>
+</code></pre>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Logo</code></td>
+<td>null</td>
+<td>Your logo as PNG, JPEG, GIF, WebP, BMP or SVG bytes, drawn at most 180 by 64 pixels.</td>
+</tr>
+<tr>
+<td><code>LogoUri</code></td>
+<td>null</td>
+<td>The logo as a data URI, or a URL your <code>ResourceResolver</code> loads; used when <code>Logo</code> is null.</td>
+</tr>
+<tr>
+<td><code>AccentColor</code></td>
+<td><code>#1f4e79</code></td>
+<td>The colour of the title, headings and table header, as CSS.</td>
+</tr>
+<tr>
+<td><code>Labels</code></td>
+<td><code>InvoiceLabels.English</code></td>
+<td>The texts, number and date formats: start from <code>English</code>, <code>German</code> or <code>Danish</code> and change any text, the decimal and group separators, the date format and the unit names.</td>
+</tr>
+<tr>
+<td><code>Css</code></td>
+<td>null</td>
+<td>Extra CSS after the template's own, to change fonts, spacing or anything else.</td>
+</tr>
+<tr>
+<td><code>PaymentQrCode</code></td>
+<td>true</td>
+<td>Prints an EPC payment QR code (GiroCode) next to the payment details for euro invoices paid to an IBAN.</td>
+</tr>
+<tr>
+<td><code>EInvoice</code></td>
+<td><code>EInvoiceProfile.En16931</code></td>
+<td>The e-invoice <code>ToPdf</code> embeds: <code>En16931</code>, <code>XRechnung</code>, or null for a plain PDF.</td>
+</tr>
+<tr>
+<td><code>PdfOptions</code></td>
+<td>null</td>
+<td>The PDF settings to start from, such as fonts, metadata or a signature. They are copied, not changed; page size and margins come from the template's CSS.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Long invoices continue on more pages with the table header repeated. The labels need no <code>CultureInfo</code>, so the template
+also works in apps that run with invariant globalization.</p>
+<h2 id="factur-x-and-zugferd">Factur-X and ZUGFeRD <span class="change">Changed in 1.15.0</span></h2>
+<p>Pass the invoice's CII XML (from your invoicing system, or from <code>InvoiceData.ToCii()</code>) and PdfPecker attaches it to the
+PDF, making a Factur-X / ZUGFeRD e-invoice: the pages are the human-readable invoice and the XML is what accounting
+software reads.</p>
 <pre class="cs"><code><span class="k">var</span> options = <span class="k">new</span> <span class="t">PdfOptions</span>
 {
     EInvoice = <span class="k">new</span> PdfEInvoice(<span class="t">File</span>.ReadAllBytes(<span class="s">&quot;invoice.xml&quot;</span>)),
@@ -188,8 +311,8 @@ XMP metadata gets the Factur-X extension schema with the document type, version 
 BASIC WL, BASIC, EN 16931, EXTENDED or XRECHNUNG) is read from the XML's guideline ID; pass it as the second constructor
 argument to set it yourself. The relationship to the pages defaults to <code>Data</code> for MINIMUM and BASIC WL and <code>Alternative</code>
 otherwise; set <code>Relationship</code> to change it. PdfPecker checks that the XML is a well-formed Cross Industry Invoice (UBL is
-not allowed in Factur-X) but does not validate its content or build it from invoice data: make sure the visible pages
-show the same invoice. The output passes the Mustang validator (PDF/A-3b via veraPDF, and the XML's schematron).
+not allowed in Factur-X) but does not validate XML you pass in yourself: make sure the visible pages show the same
+invoice. XML from <code>InvoiceData</code> is checked before it is written. The output passes the Mustang validator (PDF/A-3b via veraPDF, and the XML's schematron).
 Other files can be attached next to the invoice with <code>Attachments</code> (see <a href="/docs/attachments/">Attachments</a>).</p>
 <h2 id="reading-the-invoice-from-a-received-pdf">Reading the invoice from a received PDF</h2>
 <p><code>PdfEInvoice.Read</code> gets the XML back out of a Factur-X, ZUGFeRD 2.x or XRechnung PDF, from PdfPecker or any other
@@ -218,7 +341,8 @@ and the file name), after any attachments already there and where the UBL schema
 including its indentation, encoding and declaration, is kept as it was. The reference ID defaults to the file name; pass
 <code>id</code> and <code>description</code> to set them. For OIOUBL 2.1 (UBL 2.0) the description is written as the <code>DocumentType</code> OIOUBL
 requires, <code>PDF</code> by default. The output passes the UBL schemas, the Peppol BIS 3.0 and EN 16931 schematrons, and the
-OIOUBL 2.1 schematron. PdfPecker does not build or validate the rest of the invoice.</p>
+OIOUBL 2.1 schematron. PdfPecker does not validate the rest of an invoice you pass in; to build the UBL itself, use
+<code>InvoiceData.ToUbl()</code> (see above).</p>
       </article>
       <nav class="docs-pager" aria-label="Previous and next">
         <a class="prev" href="/docs/signatures/"><small>Previous</small>Digital signatures</a>
