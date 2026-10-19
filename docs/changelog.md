@@ -4,6 +4,25 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.15.0
+
+Released 19 October 2026.
+
+- [Invoice XML from invoice data](/docs/e-invoices/#invoice-xml-from-invoice-data): `InvoiceData` writes Factur-X /
+  ZUGFeRD EN 16931 and XRechnung CII, and Peppol BIS 3.0 and XRechnung UBL, with the totals and VAT breakdown
+  calculated and the EN 16931 rules checked.
+- [A ready-made invoice template](/docs/e-invoices/#ready-made-invoice-template): `InvoiceTemplate.ToPdf` renders an
+  A4 invoice with your logo and colour in English, German or Danish, with an EPC payment QR code and the Factur-X XML
+  embedded.
+- [Compacting](/docs/compacting/): `PdfCompactor` makes any PDF smaller, losslessly by default, or with images
+  downsampled and recompressed as JPEG.
+- A cell's `rowspan` stops at the end of its table header, body or footer, as in HTML, instead of throwing
+  `NullReferenceException`.
+- Deeply nested `break-inside: avoid` boxes in columns are laid out in bounded time; the output is unchanged.
+- `PdfSignatureVerifier` reports a signature whose signer key cannot be read instead of throwing `OverflowException`
+  (Windows, .NET 8 and 9).
+- No other output changes: PDFs from 1.14.2 templates are byte-identical.
+
 ## 1.14.2
 
 Released 18 October 2026.
