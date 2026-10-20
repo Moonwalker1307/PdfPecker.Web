@@ -1,7 +1,8 @@
 {
-  "latest": "1.15.0",
+  "latest": "1.16.0",
   "manuals": [
-    { "version": "1.15.0", "url": "/docs/pdfpecker-docs.pdf" },
+    { "version": "1.16.0", "url": "/docs/pdfpecker-docs.pdf" },
+    { "version": "1.15.0", "url": "/docs/versions/pdfpecker-docs-1.15.0.pdf" },
     { "version": "1.14.2", "url": "/docs/versions/pdfpecker-docs-1.14.2.pdf" },
     { "version": "1.14.1", "url": "/docs/versions/pdfpecker-docs-1.14.1.pdf" },
     { "version": "1.14.0", "url": "/docs/versions/pdfpecker-docs-1.14.0.pdf" },

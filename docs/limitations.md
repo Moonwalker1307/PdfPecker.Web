@@ -13,7 +13,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.14.1}
+## Text and fonts {changed 1.16.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages); other characters are replaced with `?`. The bundled Liberation
@@ -32,7 +32,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - Automatic hyphenation (`hyphens: auto`) has [built-in patterns](/docs/languages/#hyphenation) for English, Danish,
   German, Dutch, Norwegian, Swedish, Spanish, French, Italian, Portuguese and Polish; other languages need their
   patterns in `PdfOptions.Hyphenation`.
-- SVG `<text>` uses only the first value of position lists and has no `textPath`; in a text chunk with right-to-left
+- SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
 ## CSS {changed 1.11.0}
@@ -61,9 +61,9 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` scrolls with the box, since paper has no scrolling viewport.
 
-## Backgrounds and transparency {changed 1.14.1}
+## Backgrounds and transparency {changed 1.16.0}
 
-- Borders of inline elements (`<span>`) are not drawn, and neither are their inset box shadows.
+- Inset box shadows of inline elements (`<span>`) are not drawn.
   `box-decoration-break` applies to inline elements, not to blocks split across pages or columns.
 - Inline boxes nested more than 16 deep are not decorated, and one layout paints at most 50,000 inline box fragments
   with a shared budget for their layers, shadows and outlines; past it, fragments show only their background colour.
