@@ -4,6 +4,30 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.16.0
+
+Released 20 October 2026.
+
+- [Borders on inline elements](/docs/html-and-css/#css-properties): badges, keyboard keys and dotted underlines drawn
+  with `border` on a `<span>` are painted, with `box-decoration-break` deciding how a border split over several lines
+  is drawn.
+- [SVG](/docs/html-and-css/#svg) dashed strokes with `stroke-dasharray`, `stroke-dashoffset` and `pathLength`, and text
+  along a path with `textPath`.
+- [Grid rows break across pages](/docs/html-and-css/#pagination) where they start instead of moving whole and leaving a
+  gap, and a margin that runs past the end of a page is dropped, as in Chrome. A box's top and bottom borders stay on
+  the page with its content, and a paragraph that ends just past the page keeps its widows.
+- A `<fieldset>`'s legend sits on its top border, and groove and ridge borders have Chrome's two shades.
+- Form controls are sized as in Chrome: text fields in tables, textarea rows, drop-downs, date fields and check boxes,
+  and controls the page gives its own border have Chrome's plain square look.
+- Text can break before and after inline-blocks, images and form controls, so a label no longer wraps a word down
+  next to its input.
+- Line heights are rounded to Chrome's layout units, and line breaking counts the kerning next to spaces, so lines
+  break where Chrome breaks them more often.
+- Text extraction reads the standard Symbol and ZapfDingbats fonts (αβγ, ✓✔) instead of returning their raw codes.
+- Bounded layout time for deeply nested flex, grid, tables, columns and keep-with-next chains found by fuzzing.
+- Line positions, page breaks, forms, fieldsets and SVG dashes look different from 1.15.0; most documents move by a
+  pixel or less.
+
 ## 1.15.0
 
 Released 19 October 2026.
