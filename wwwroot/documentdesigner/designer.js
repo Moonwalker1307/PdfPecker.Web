@@ -31,12 +31,14 @@ let codeDirty = false;
 // parser hands GrapesJS the declarations exactly as written, in the shape its own browser parser returns.
 
 // Splits CSS into top-level pieces: { prelude, body } for a block, { prelude } for a statement such as @import.
-// Comments are dropped; strings and parentheses may hold any of ; { }.
+// Comments are dropped; strings and parentheses may hold any of ; { }. A statement the CSS ends without a ";" is
+// marked last, so that writing the pieces out again does not add a ";" on every round trip.
 function cssBlocks(css) {
   const out = [];
   let i = 0, start = 0;
   const n = css.length;
-  const skipString = q => { i++; while (i < n && css[i] !== q) { if (css[i] === "\\") i++; i++; } };
+  // As in CSS itself, a string the line ends without closing stops there instead of swallowing the rest.
+  const skipString = q => { i++; while (i < n && css[i] !== q && css[i] !== "\n") { if (css[i] === "\\") i++; i++; } };
   let prelude = "";
   while (i < n) {
     const ch = css[i];
@@ -53,7 +55,7 @@ function cssBlocks(css) {
       while (j < n && depth > 0) {
         const c = css[j];
         if (c === "/" && css[j + 1] === "*") { const end = css.indexOf("*/", j + 2); body += css.slice(segStart, j); j = end < 0 ? n : end + 2; segStart = j; continue; }
-        if (c === "\"" || c === "'") { j++; while (j < n && css[j] !== c) { if (css[j] === "\\") j++; j++; } j++; continue; }
+        if (c === "\"" || c === "'") { j++; while (j < n && css[j] !== c && css[j] !== "\n") { if (css[j] === "\\") j++; j++; } j++; continue; }
         if (c === "{") depth++;
         else if (c === "}") depth--;
         j++;
@@ -69,7 +71,7 @@ function cssBlocks(css) {
   }
   // The last declaration of a block often has no ";".
   prelude += css.slice(start);
-  if (prelude.trim()) out.push({ prelude: prelude.trim() });
+  if (prelude.trim()) out.push({ prelude: prelude.trim(), last: true });
   return out;
 }
 
@@ -81,10 +83,36 @@ function cssDeclarations(body) {
     const colon = piece.prelude.indexOf(":");
     if (colon < 1) continue;
     const name = piece.prelude.slice(0, colon).trim();
-    const value = piece.prelude.slice(colon + 1).trim().replace(/\s*!\s*important$/i, " !important");
-    if (name && value) style[name.startsWith("--") ? name : name.toLowerCase()] = value;
+    let value = piece.prelude.slice(colon + 1).trim();
+    // Broken CSS such as "url(x;;" leaves semicolons at the end, and GrapesJS adds one more each time it is written.
+    let end = value.length;
+    while (end > 0 && value[end - 1] === ";") end--;
+    value = value.slice(0, end).trimEnd();
+    // A regular expression with \s* before the "!" would take quadratic time on long runs of spaces.
+    const bang = value.lastIndexOf("!");
+    if (bang >= 0 && /^!\s*important$/i.test(value.slice(bang))) value = value.slice(0, bang).trimEnd() + " !important";
+    if (/^[-\w\u0080-\uffff]+$/.test(name) && value && balanced(value)) style[name.startsWith("--") ? name : name.toLowerCase()] = value;
   }
   return style;
+}
+
+// Browsers drop a declaration with an unclosed string or bracket; kept, it would swallow the declarations after it
+// each time the CSS is written and read again.
+function balanced(value) {
+  let depth = 0;
+  for (let i = 0; i < value.length; i++) {
+    const ch = value[i];
+    if (ch === "\\") i++;
+    else if (ch === "\"" || ch === "'") {
+      i++;
+      while (i < value.length && value[i] !== ch) { if (value[i] === "\n") return false; if (value[i] === "\\") i++; i++; }
+      if (i >= value.length) return false;
+    }
+    else if (ch === "(" || ch === "[") depth++;
+    else if (ch === ")" || ch === "]") { if (--depth < 0) return false; }
+    else if (ch === "{" || ch === "}") return false;
+  }
+  return depth === 0;
 }
 
 // Class and id selectors become GrapesJS selectors the style panel can edit; anything else stays a plain selector.
@@ -94,23 +122,38 @@ function parseSelectorList(text) {
   const checkForId = /^#[\w\-]+((:{1,2}[\w\-]+)(\([^)]*\))?)*$/;
   for (const raw of text.split(",")) {
     const sel = raw.trim();
-    if (checkForClass.test(sel) || checkForId.test(sel)) result.push(sel.split(/\.(?![^()]*\))/).filter(Boolean));
+    if (checkForClass.test(sel) || checkForId.test(sel)) result.push(splitClasses(sel));
     else add.push(sel);
   }
   return { result, add };
 }
 
+// ".a.b:not(.c)" → ["a", "b:not(.c)"]: dots inside parentheses do not split.
+function splitClasses(sel) {
+  const parts = [];
+  let depth = 0, start = 0;
+  for (let i = 0; i < sel.length; i++) {
+    const ch = sel[i];
+    if (ch === "(") depth++;
+    else if (ch === ")") depth = Math.max(0, depth - 1);
+    else if (ch === "." && depth === 0) { if (i > start) parts.push(sel.slice(start, i)); start = i + 1; }
+  }
+  if (sel.length > start) parts.push(sel.slice(start));
+  return parts;
+}
+
 const GROUPING_AT_RULES = new Set(["media", "supports", "container", "layer"]);
 
-function parseCss(css) {
+function parseCss(css, inAtRule) {
   const rules = [];
   for (const block of cssBlocks(css)) {
     if (block.body === undefined) continue;
     const at = /^@([\w-]+)\s*(.*)$/s.exec(block.prelude);
     if (at) {
       const name = at[1].toLowerCase();
-      if (!GROUPING_AT_RULES.has(name)) continue; // importDocument keeps other at-rules verbatim
-      for (const r of parseCss(block.body)) {
+      // importDocument keeps other at-rules, and at-rules inside at-rules (GrapesJS holds one level), verbatim.
+      if (inAtRule || !GROUPING_AT_RULES.has(name)) continue;
+      for (const r of parseCss(block.body, true)) {
         r.atRuleType = name;
         if (at[2].trim()) r.mediaText = at[2].trim();
         rules.push(r);
@@ -141,7 +184,7 @@ function parseCss(css) {
 function splitAtRules(css) {
   let keep = "", verbatim = "";
   for (const block of cssBlocks(css)) {
-    const text = block.body === undefined ? block.prelude + ";" : `${block.prelude} {${block.body}}`;
+    const text = block.body === undefined ? block.prelude + (block.last ? "" : ";") : `${block.prelude} {${block.body}}`;
     const at = /^@([\w-]+)/.exec(block.prelude);
     // GrapesJS holds one level of @media; nested at-rules would lose their inner condition.
     const nested = at && block.body !== undefined && cssBlocks(block.body).some(b => b.body !== undefined && b.prelude.startsWith("@"));
@@ -366,10 +409,10 @@ function readPageRule(css, keepExtra) {
   const extra = [];
   for (const piece of cssBlocks(rule.body)) {
     if (piece.body !== undefined) extra.push(`${piece.prelude} {${piece.body}}`);
-    else if (!/^(size|margin)\s*:/i.test(piece.prelude)) extra.push(piece.prelude + ";");
+    else if (!/^(size|margin)\s*:/i.test(piece.prelude)) extra.push(piece.prelude + (piece.last ? "" : ";"));
   }
   page.extra = extra.join(" ").replace(/;$/, "");
-  return blocks.filter(b => b !== rule).map(b => b.body === undefined ? b.prelude + ";" : `${b.prelude} {${b.body}}`).join("\n");
+  return blocks.filter(b => b !== rule).map(b => b.body === undefined ? b.prelude + (b.last ? "" : ";") : `${b.prelude} {${b.body}}`).join("\n");
 }
 
 function elementsCss() {
@@ -444,6 +487,7 @@ function importDocument(html) {
   if (split.verbatim.trim()) verbatim.push(split.verbatim.trim());
   verbatimCss = verbatim.filter(t => t && t !== VERBATIM_HINT).join("\n\n");
   for (const el of d.querySelectorAll("script, link[rel=stylesheet]")) el.remove();
+  replaceInvalidNames(d.body);
   $("docTitle").value = d.title || "";
   editor.setComponents(d.body.innerHTML);
   editor.setStyle(elements);
@@ -451,6 +495,33 @@ function importDocument(html) {
   editor.Layers.setOpen(editor.getWrapper(), true);
   syncPageForm();
   updateCanvas();
+}
+
+// The HTML parser accepts tag and attribute names such as <t!d> or a"b that document.createElement and setAttribute
+// refuse, and GrapesJS would stop halfway through building the canvas on them. Such elements become <span>s and such
+// attributes are dropped.
+const validNames = new Map();
+function isValidName(name, attribute) {
+  const key = (attribute ? "@" : "") + name;
+  let ok = validNames.get(key);
+  if (ok === undefined) {
+    try { if (attribute) document.createElement("i").setAttribute(name, ""); else document.createElement(name); ok = true; }
+    catch { ok = false; }
+    validNames.set(key, ok);
+  }
+  return ok;
+}
+
+function replaceInvalidNames(root) {
+  for (const el of [...root.querySelectorAll("*")]) {
+    for (const a of [...el.attributes]) if (!isValidName(a.name, true)) el.removeAttributeNode(a);
+    if (!isValidName(el.localName, false)) {
+      const span = el.ownerDocument.createElement("span");
+      for (const a of el.attributes) span.setAttribute(a.name, a.value);
+      span.append(...el.childNodes);
+      el.replaceWith(span);
+    }
+  }
 }
 
 function escapeText(s) {
@@ -510,9 +581,12 @@ function prettyHtml(html) {
 // Puts each rule and declaration on its own line, minding strings and url(...) values that hold ; or }.
 function prettyCss(css) {
   let out = "", depth = 0, quote = null, parens = 0, line = "";
-  const flush = () => { const t = line.trim(); if (t) out += "  ".repeat(depth) + t + "\n"; line = ""; };
+  // Indentation stops growing at 16 levels, so deeply nested input cannot make the text quadratically long.
+  const pad = () => "  ".repeat(Math.min(depth, 16));
+  const flush = () => { const t = line.trim(); if (t) out += pad() + t + "\n"; line = ""; };
   for (let i = 0; i < css.length; i++) {
     const ch = css[i];
+    if (quote && (ch === "\n" || ch === "\r")) { quote = null; line += " "; continue; }
     if (quote) { line += ch; if (ch === "\\") line += css[++i] ?? ""; else if (ch === quote) quote = null; continue; }
     if (ch === "\"" || ch === "'") { quote = ch; line += ch; continue; }
     if (ch === "(") parens++;
@@ -520,7 +594,7 @@ function prettyCss(css) {
     if (parens > 0) { line += ch; continue; }
     if (ch === "{") { line = line.trim() + " {"; flush(); depth++; }
     else if (ch === ";") { line = line.replace(/^\s*([\w-]+)\s*:\s*/, "$1: ") + ";"; flush(); }
-    else if (ch === "}") { flush(); depth = Math.max(0, depth - 1); out += "  ".repeat(depth) + "}\n"; }
+    else if (ch === "}") { flush(); depth = Math.max(0, depth - 1); out += pad() + "}\n"; }
     else if (ch === "\n" || ch === "\r") line += " ";
     else line += ch;
   }
@@ -541,8 +615,9 @@ function lookup(path, scopes) {
   for (let i = scopes.length - 1; i >= 0; i--) {
     let v = scopes[i];
     if (v === null || typeof v !== "object" || !Object.prototype.hasOwnProperty.call(v, parts[0])) continue;
+    // Only the data's own properties: {{a.constructor}} must not reach into Object.prototype.
     for (const p of parts) {
-      if (v === null || v === undefined) return undefined;
+      if (v === null || typeof v !== "object" || !Object.prototype.hasOwnProperty.call(v, p)) return undefined;
       v = v[p];
     }
     return v;
@@ -566,7 +641,11 @@ function substitute(text, scopes) {
   });
 }
 
-function fillNode(node, scopes) {
+// Repeats nested in repeats multiply, so a small template and a little data could otherwise make millions of
+// elements and freeze the page (on every reload too, since the document is saved).
+const MAX_FILLED_ELEMENTS = 100000;
+
+function fillNode(node, scopes, budget) {
   if (node.nodeType === Node.TEXT_NODE) {
     if (node.data.includes("{{")) node.data = substitute(node.data, scopes);
     return;
@@ -580,24 +659,26 @@ function fillNode(node, scopes) {
     if (Array.isArray(list)) {
       node.removeAttribute("data-repeat");
       list.forEach((item, i) => {
+        budget.left -= node.getElementsByTagName("*").length + 1;
+        if (budget.left < 0) throw new RangeError(`The sample data repeats to more than ${MAX_FILLED_ELEMENTS.toLocaleString("en")} elements.`);
         const copy = node.cloneNode(true);
         node.before(copy);
         const scope = item !== null && typeof item === "object" ? { ...item } : {};
         scope.$item = item;
         scope.$number = i + 1;
-        fillNode(copy, [...scopes, scope]);
+        fillNode(copy, [...scopes, scope], budget);
       });
       node.remove();
       return;
     }
   }
   for (const a of [...node.attributes]) if (a.value.includes("{{")) a.value = substitute(a.value, scopes);
-  for (const c of [...node.childNodes]) fillNode(c, scopes);
+  for (const c of [...node.childNodes]) fillNode(c, scopes, budget);
 }
 
 function fill(html, data) {
   const d = new DOMParser().parseFromString(html, "text/html");
-  fillNode(d.documentElement, [data]);
+  fillNode(d.documentElement, [data], { left: MAX_FILLED_ELEMENTS });
   return "<!DOCTYPE html>\n" + d.documentElement.outerHTML;
 }
 
@@ -617,13 +698,17 @@ function currentHtml() {
   return codeDirty ? $("code").value : exportDocument();
 }
 
+let fillProblem = "";
 function previewHtml() {
+  fillProblem = "";
   const html = currentHtml();
   if (!$("fillData").checked) return html;
   try {
     return fill(html, readData());
-  } catch {
-    return html; // The data panel reports the JSON error.
+  } catch (e) {
+    // The data panel reports a JSON error itself.
+    if (e instanceof RangeError) fillProblem = e.message + " The PDF shows the template unfilled.";
+    return html;
   }
 }
 
@@ -674,7 +759,8 @@ async function preview(force) {
     lastPdf = blob;
     await show(blob);
     const size = (blob.size / 1024).toFixed(1) + " KB";
-    setStatus(isNaN(serverMs) ? size : `${size} · ${serverMs.toFixed(0)} ms (round trip ${Math.round(performance.now() - started)} ms)`);
+    if (fillProblem) setStatus(fillProblem, true);
+    else setStatus(isNaN(serverMs) ? size : `${size} · ${serverMs.toFixed(0)} ms (round trip ${Math.round(performance.now() - started)} ms)`);
   } catch (e) {
     setStatus(e.message, true);
   } finally {
@@ -828,8 +914,13 @@ function setCodeState(text) {
 function applyCode() {
   if (!codeDirty) return;
   const html = $("code").value;
+  try {
+    importDocument(html);
+  } catch (e) {
+    setCodeState("Could not apply: " + e.message);
+    return;
+  }
   codeDirty = false;
-  importDocument(html);
   refreshCode();
   setCodeState("Applied.");
   schedulePreview();
@@ -953,7 +1044,7 @@ $("downloadFilled").addEventListener("click", () => {
   try {
     downloadBlob(new Blob([fill(currentHtml(), readData())], { type: "text/html" }), fileName() + "-filled.html");
   } catch (e) {
-    setStatus("The sample data is not valid JSON.", true);
+    setStatus(e instanceof RangeError ? e.message : "The sample data is not valid JSON.", true);
   }
 });
 $("copyCode").addEventListener("click", async () => {
