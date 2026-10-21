@@ -107,7 +107,7 @@
           <a href="/docs/html-to-pdf-csharp/">The C# guide</a> walks through invoices, headers and footers and ASP.NET Core.</p>
         <ul class="checks">
           <li>Runs wherever .NET 8 or later runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
-          <li>Pure managed code: a 4.6 MB DLL instead of a 600 MB browser</li>
+          <li>Pure managed code: a 5.0 MB DLL instead of a 600 MB browser</li>
           <li>Never touches the network or your files unless you allow it</li>
         </ul>
       </div>
@@ -182,7 +182,7 @@ app.MapGet("/invoice", () =&gt;
         <table class="compare">
           <thead><tr><th scope="col">Converter</th><th scope="col" class="wide">Engine</th><th scope="col" class="wide">To deploy</th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>30 pages</th><th scope="col" class="num"><span class="wide">Peak memory</span><span class="narrow">Memory</span></th></tr></thead>
           <tbody>
-            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">4.6 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
+            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">5.0 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
             <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">2.4 MB of DLLs</td><td class="num">6.3 ms</td><td class="num">639 ms</td><td class="num">236 MB</td></tr>
             <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">310 ms</td><td class="num">780 ms</td><td class="num">164 MB</td></tr>
             <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">153 ms</td><td class="num">792 ms</td><td class="num">829 MB</td></tr>
