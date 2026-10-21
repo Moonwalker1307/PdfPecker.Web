@@ -712,10 +712,12 @@ function previewHtml() {
   }
 }
 
-function requestBody(html) {
-  const body = { html, fileName: fileName() };
-  if ($("embedFonts").checked) body.options = { embedStandardFonts: true };
-  return JSON.stringify(body);
+// The preview leaves out the password, which would make the browser's PDF viewer ask for it after every change; the
+// downloaded PDF has it.
+function requestBody(html, download) {
+  const options = pdfSettings();
+  if (!download) options.security = null;
+  return JSON.stringify({ html, fileName: fileName(), options });
 }
 
 function fileName() {
@@ -820,7 +822,7 @@ function save() {
     try {
       localStorage.setItem(STORE_KEY, JSON.stringify({
         html: exportDocument(), data: $("data").value, fill: $("fillData").checked,
-        live: $("live").checked, breaks: $("showBreaks").checked, embedFonts: $("embedFonts").checked,
+        live: $("live").checked, breaks: $("showBreaks").checked, pdf: settingsValues(),
         code: codeDirty ? $("code").value : null,
       }));
       saveFailed = false;
@@ -841,7 +843,7 @@ function restore() {
     $("fillData").checked = s.fill !== false;
     $("live").checked = s.live !== false;
     $("showBreaks").checked = s.breaks !== false;
-    $("embedFonts").checked = !!s.embedFonts;
+    restoreSettings(s.pdf, s.embedFonts);
     importDocument(s.html);
     if (typeof s.code === "string") {
       $("code").value = s.code;
@@ -946,7 +948,7 @@ function downloadBlob(blob, name) {
 async function downloadPdf() {
   setStatus("Making the PDF…");
   try {
-    const res = await fetch("/api/convert", { method: "POST", headers: { "Content-Type": "application/json" }, body: requestBody(previewHtml()) });
+    const res = await fetch("/api/convert", { method: "POST", headers: { "Content-Type": "application/json" }, body: requestBody(previewHtml(), true) });
     if (!res.ok) throw await problem(res);
     downloadBlob(await res.blob(), fileName() + ".pdf");
     setStatus("PDF downloaded.");
@@ -956,15 +958,186 @@ async function downloadPdf() {
 }
 
 function csharp() {
+  const lines = optionLines();
+  const options = lines.length ? `new PdfOptions\n{\n${lines.map(l => "    " + l).join("\n")}\n}` : "new PdfOptions()";
   return `// The page size and margins are in the HTML's @page rule. Fill in the {{placeholders}} with your own
 // template engine (or string.Replace) before converting.
 using PdfPecker;
 
 string html = File.ReadAllText("${fileName()}.html");
-var options = new PdfOptions${$("embedFonts").checked ? " { EmbedStandardFonts = true }" : "()"};
+var options = ${options};
 byte[] pdf = HtmlToPdf.Convert(html, options);
 File.WriteAllBytes("${fileName()}.pdf", pdf);
 `;
+}
+
+// ---------- PDF settings ----------
+
+// The drawer holds the PdfOptions the API takes from a browser, as on the converter pages, except the page size and
+// margins: the designer writes those into the document's @page rule, so the downloaded HTML converts the same.
+const settingsForm = $("settingsForm");
+const settingsField = name => settingsForm.elements.namedItem(name);
+const settingsNum = name => { const v = settingsField(name).value.trim(); return v === "" ? null : +v; };
+const settingsText = name => settingsField(name).value.trim() || null;
+let wmImage = null, eInvoiceXml = null; // files picked in the settings; not saved in the browser
+
+function pdfSettings() {
+  const custom = {};
+  for (const line of settingsField("customProperties").value.split("\n")) {
+    const i = line.indexOf("=");
+    if (i > 0) custom[line.slice(0, i).trim()] = line.slice(i + 1).trim();
+  }
+  const userPassword = settingsField("userPassword").value, ownerPassword = settingsField("ownerPassword").value;
+  return {
+    scale: settingsNum("scale") ?? 1,
+    truncateBandsToWholePoints: settingsField("truncateBandsToWholePoints").checked,
+    headerText: settingsText("headerText") ?? "",
+    footerText: settingsText("footerText") ?? "",
+    embedStandardFonts: settingsField("embedStandardFonts").checked,
+    userStyleSheet: settingsField("userStyleSheet").value || null,
+    watermark: settingsText("wmText") || wmImage ? {
+      text: settingsText("wmText"),
+      image: wmImage ? wmImage.base64 : null,
+      imageWidth: settingsNum("wmImageWidth") ?? 0,
+      fontFamily: settingsField("wmFontFamily").value,
+      fontSize: settingsNum("wmFontSize") ?? 0,
+      letterSpacing: settingsNum("wmLetterSpacing") ?? 0,
+      bold: settingsField("wmBold").checked,
+      color: settingsField("wmColor").value,
+      opacity: settingsNum("wmOpacity") ?? 0.3,
+      angle: settingsNum("wmAngle"),
+      behind: settingsField("wmBehind").checked,
+    } : null,
+    security: userPassword || ownerPassword ? {
+      userPassword: userPassword || null,
+      ownerPassword: ownerPassword || null,
+      permissions: [...settingsForm.querySelectorAll("input[name=perm]:checked")].map(c => c.value),
+    } : null,
+    conformance: settingsField("conformance").value,
+    eInvoiceXml: eInvoiceXml ? eInvoiceXml.text : null,
+    eInvoiceProfile: eInvoiceXml ? settingsField("eInvoiceProfile").value || null : null,
+    title: settingsText("title"), author: settingsText("author"), subject: settingsText("subject"),
+    keywords: settingsText("keywords"), creator: settingsText("creator"), producer: settingsText("producer"),
+    customProperties: custom,
+    bookmarks: settingsField("bookmarks").checked,
+    compress: settingsField("compress").checked,
+    compressionLevel: settingsField("compressionLevel").value,
+    maxPages: settingsNum("maxPages") ?? 1000,
+  };
+}
+
+// The settings as C# object initializer lines, leaving out what is still PdfOptions' default.
+function optionLines() {
+  const s = pdfSettings();
+  const str = v => JSON.stringify(v);
+  const f = v => (Number.isInteger(v) ? v : +v.toFixed(4)) + "f";
+  const lines = [];
+  if (s.scale !== 1) lines.push(`Scale = ${f(s.scale)},`);
+  if (s.truncateBandsToWholePoints) lines.push("TruncateBandsToWholePoints = true,");
+  if (s.headerText) lines.push(`HeaderText = ${str(s.headerText)},`);
+  if (s.footerText) lines.push(`FooterText = ${str(s.footerText)},`);
+  if (s.embedStandardFonts) lines.push("EmbedStandardFonts = true,");
+  if (s.userStyleSheet) lines.push(`UserStyleSheet = ${str(s.userStyleSheet)},`);
+  if (s.watermark) {
+    const w = s.watermark, p = [];
+    if (w.text) p.push(`Text = ${str(w.text)}`);
+    if (w.image) p.push(`Image = File.ReadAllBytes(${str(wmImage.name)})`);
+    if (w.image && w.imageWidth) p.push(`ImageWidth = ${f(w.imageWidth)}`);
+    if (w.fontFamily !== "sans-serif") p.push(`FontFamily = ${str(w.fontFamily)}`);
+    if (w.fontSize) p.push(`FontSize = ${f(w.fontSize)}`);
+    if (w.letterSpacing) p.push(`LetterSpacing = ${f(w.letterSpacing)}`);
+    if (!w.bold) p.push("Bold = false");
+    if (w.color !== "#808080") p.push(`Color = ${str(w.color)}`);
+    if (w.opacity !== 0.3) p.push(`Opacity = ${f(w.opacity)}`);
+    if (w.angle !== null) p.push(`Angle = ${f(w.angle)}`);
+    if (w.behind) p.push("Behind = true");
+    lines.push(`Watermark = new PdfWatermark { ${p.join(", ")} },`);
+  }
+  if (s.security) {
+    const sec = s.security, p = [];
+    if (sec.userPassword) p.push(`UserPassword = ${str(sec.userPassword)}`);
+    if (sec.ownerPassword) p.push(`OwnerPassword = ${str(sec.ownerPassword)}`);
+    p.push(`Permissions = ${sec.permissions.length ? sec.permissions.map(x => "PdfPermissions." + x).join(" | ") : "PdfPermissions.None"}`);
+    lines.push(`Security = new PdfSecurity { ${p.join(", ")} },`);
+  }
+  if (s.conformance !== "None") lines.push(`Conformance = PdfConformance.${s.conformance},`);
+  if (s.eInvoiceXml) lines.push(`EInvoice = new PdfEInvoice(File.ReadAllBytes(${str(eInvoiceXml.name)})${s.eInvoiceProfile ? ", EInvoiceProfile." + s.eInvoiceProfile : ""}),`);
+  for (const k of ["title", "author", "subject", "keywords", "creator", "producer"])
+    if (s[k]) lines.push(`${k[0].toUpperCase() + k.slice(1)} = ${str(s[k])},`);
+  const props = Object.entries(s.customProperties);
+  if (props.length) lines.push(`CustomProperties = { ${props.map(([k, v]) => `[${str(k)}] = ${str(v)}`).join(", ")} },`);
+  if (!s.bookmarks) lines.push("Bookmarks = false,");
+  if (!s.compress) lines.push("Compress = false,");
+  if (s.compressionLevel !== "Fastest") lines.push(`CompressionLevel = System.IO.Compression.CompressionLevel.${s.compressionLevel},`);
+  if (s.maxPages !== 1000) lines.push(`MaxPages = ${s.maxPages},`);
+  return lines;
+}
+
+// The form's values by name, for the browser copy and the count of changed settings. Passwords and files stay out.
+function settingsValues() {
+  const values = {};
+  for (const el of settingsForm.elements) {
+    if (!el.name || el.type === "password" || el.type === "file") continue;
+    values[el.name + (el.type === "checkbox" ? ":" + el.value : "")] = el.type === "checkbox" ? el.checked : el.value;
+  }
+  return values;
+}
+
+const defaultSettings = settingsValues();
+
+function restoreSettings(values, embedFonts) {
+  settingsForm.reset();
+  wmImage = eInvoiceXml = null;
+  // Documents saved before the drawer kept only this one setting.
+  if (embedFonts) settingsField("embedStandardFonts").checked = true;
+  if (values && typeof values === "object") {
+    for (const el of settingsForm.elements) {
+      if (!el.name || el.type === "password" || el.type === "file") continue;
+      const v = values[el.name + (el.type === "checkbox" ? ":" + el.value : "")];
+      if (el.type === "checkbox") { if (typeof v === "boolean") el.checked = v; }
+      else if (typeof v === "string") el.value = v;
+    }
+  }
+  syncSettingsUi();
+}
+
+function syncSettingsUi() {
+  $("wmOpacityOut").textContent = settingsField("wmOpacity").value;
+  const pdfa = settingsField("conformance").value !== "None" || !!eInvoiceXml;
+  const pw = !!(settingsField("userPassword").value || settingsField("ownerPassword").value);
+  settingsField("userPassword").setCustomValidity(pdfa && pw ? "PDF/A and e-invoices cannot have a password." : "");
+  let n = (wmImage ? 1 : 0) + (eInvoiceXml ? 1 : 0) + (pw ? 1 : 0);
+  const now = settingsValues();
+  for (const k in now) if (defaultSettings[k] !== now[k]) n++;
+  $("changedCount").textContent = n;
+  $("changedCount").hidden = n === 0;
+  $("changedCount").setAttribute("aria-label", `${n} changed`);
+}
+
+function toggleSettings(open) {
+  const drawer = $("settings");
+  drawer.classList.toggle("open", open);
+  drawer.inert = !open;
+  document.body.classList.toggle("settings-open", open);
+  $("settingsToggle").setAttribute("aria-expanded", open);
+  if (open) $("closeSettings").focus({ preventScroll: true });
+  else if (drawer.contains(document.activeElement) || document.activeElement === document.body) $("settingsToggle").focus({ preventScroll: true });
+  // The canvas fits its new width once the panes have moved.
+  setTimeout(fitCanvas, 260);
+}
+
+async function readSettingsFile(input, kind) {
+  const f = input.files[0];
+  if (!f) return null;
+  if (kind === "image") {
+    if (f.size > MAX_IMAGE_BYTES) { setStatus("The watermark image is larger than 2 MB.", true); input.value = ""; return null; }
+    const bytes = new Uint8Array(await f.arrayBuffer());
+    let bin = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return { name: f.name, base64: btoa(bin) };
+  }
+  if (f.size > 1024 * 1024) { setStatus("The e-invoice XML is larger than 1 MB.", true); input.value = ""; return null; }
+  return { name: f.name, text: await f.text() };
 }
 
 // ---------- Wiring ----------
@@ -991,7 +1164,25 @@ $("pageSize").addEventListener("change", readPageForm);
 $("landscape").addEventListener("change", readPageForm);
 for (const el of marginInputs) el.addEventListener("change", readPageForm);
 $("showBreaks").addEventListener("change", () => { updateCanvas(); save(); });
-$("embedFonts").addEventListener("change", schedulePreview);
+$("settingsToggle").addEventListener("click", () => toggleSettings(!$("settings").classList.contains("open")));
+$("closeSettings").addEventListener("click", () => toggleSettings(false));
+$("doneSettings").addEventListener("click", () => toggleSettings(false));
+settingsForm.addEventListener("input", () => { syncSettingsUi(); if (settingsForm.checkValidity()) schedulePreview(); });
+settingsForm.addEventListener("change", e => { if (e.target.type !== "file") { syncSettingsUi(); if (settingsForm.checkValidity()) schedulePreview(); } });
+settingsForm.addEventListener("submit", e => e.preventDefault());
+$("wmImage").addEventListener("change", async e => { wmImage = await readSettingsFile(e.target, "image"); syncSettingsUi(); schedulePreview(); });
+$("eInvoiceFile").addEventListener("change", async e => { eInvoiceXml = await readSettingsFile(e.target, "xml"); syncSettingsUi(); schedulePreview(); });
+$("resetSettings").addEventListener("click", () => { restoreSettings(null, false); schedulePreview(); });
+$("copySettingsCode").addEventListener("click", async () => {
+  const b = $("copySettingsCode");
+  try {
+    await navigator.clipboard.writeText(csharp());
+    b.textContent = "Copied!";
+  } catch {
+    b.textContent = "Copy failed";
+  }
+  setTimeout(() => { b.textContent = "Copy as C#"; }, 1200);
+});
 $("docTitle").addEventListener("input", () => {
   if (codeDirty) {
     const title = $("docTitle").value;
@@ -1008,7 +1199,11 @@ document.addEventListener("click", e => {
   for (const m of document.querySelectorAll("details.menu[open]")) if (!m.contains(e.target)) m.open = false;
 });
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape") for (const m of document.querySelectorAll("details.menu[open]")) m.open = false;
+  if (e.key !== "Escape") return;
+  const menus = document.querySelectorAll("details.menu[open]");
+  for (const m of menus) m.open = false;
+  // Escape closes an open menu first, then the settings drawer.
+  if (!menus.length && $("settings").classList.contains("open")) toggleSettings(false);
 });
 
 $("template").addEventListener("change", e => {

@@ -23,7 +23,8 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
   CSP stays `'self'`); a Code tab shows the whole HTML document to edit by hand; and the PDF beside it is remade
   through `/api/convert` a moment after each change, one request at a time. `{{placeholders}}` and `data-repeat` are
   filled from sample JSON for the preview. The page size and margins are written into the HTML as an `@page` rule, so
-  a downloaded template converts the same with `HtmlToPdf.Convert(html)`. The document is kept in the browser only.
+  a downloaded template converts the same with `HtmlToPdf.Convert(html)`; the other `PdfOptions` (header and footer
+  text, watermark, password, PDF/A, document properties) are in a PDF settings drawer that slides in from the right. The document is kept in the browser only.
 - `/docs/`: the PdfPecker manual, one page per topic. The pages in `wwwroot/docs` are generated from the Markdown in
   `docs/` by `tools/DocsBuilder`, which renders it with PdfPecker's own Markdown converter. Edit the Markdown, then run
   `dotnet run --project tools/DocsBuilder` and commit both; CI fails when they are out of step. The same run writes
