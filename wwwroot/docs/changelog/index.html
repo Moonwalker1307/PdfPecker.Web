@@ -71,6 +71,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -119,6 +120,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -148,7 +150,7 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="changelog">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
           <option value="/docs/v1.15.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.15.0</option>
           <option value="/docs/v1.14.2/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.2</option>
           <option value="/docs/v1.14.1/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.1</option>
@@ -178,6 +180,48 @@
 <p>What changed in each PdfPecker release on <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>, newest first. The
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the <a href="https://github.com/Moonwalker1307/PdfPecker">PdfPecker repository</a>.</p>
+<h2 id="1170">1.17.0</h2>
+<p>Released 21 October 2026.</p>
+<ul>
+<li><a href="/docs/pdf-to-html/">PDF to HTML</a>: <code>PdfToHtml</code> turns any PDF into one self-contained HTML page, with the page images,
+an invisible text layer that can be selected, searched and read aloud, and working links.</li>
+<li><a href="/docs/html-and-css/#float-shapes">Float shapes</a> (<code>shape-outside</code>, <code>shape-margin</code>, <code>shape-image-threshold</code>),
+<a href="/docs/html-and-css/#drop-caps">drop caps</a> with <code>initial-letter</code>, <a href="/docs/html-and-css/#masks-and-backdrop-filter">masks and <code>backdrop-filter</code></a>
+on HTML elements, <a href="/docs/html-and-css/#display-contents"><code>display: contents</code></a>,
+<a href="/docs/html-and-css/#3d-transforms">3D transforms</a> drawn flat, and <a href="/docs/html-and-css/#vertical-text">vertical text</a>
+with <code>writing-mode</code>.</li>
+<li><a href="/docs/html-and-css/#text-wrapping-and-justification">Text wrapping and justification</a>: <code>text-wrap: balance</code> and
+<code>pretty</code>, and <code>text-justify</code>; justified Chinese and Japanese text is spread between characters, as in Chrome.</li>
+<li><a href="/docs/languages/#cjk-punctuation-trimming">CJK punctuation trimming</a> with <code>text-spacing-trim</code>. CJK text with
+adjacent punctuation is narrower than before and can break into lines differently; <code>text-spacing-trim: space-all</code>
+keeps the old spacing.</li>
+<li>Text: underlines and overlines skip descenders (<code>text-decoration-skip-ink</code>), dashed, dotted, double and wavy lines
+are drawn as Chrome draws them, outlined text with <code>-webkit-text-stroke</code> and <code>paint-order</code>, nested superscripts, and
+<a href="/docs/fonts/#font-properties">font properties</a> <code>font-kerning</code>, <code>font-synthesis</code>, <code>font-size-adjust</code>,
+<code>font-variant-position</code> and <code>font-variant-east-asian</code>, with the font's own small capitals and the <code>@font-face</code>
+<code>font-stretch</code> descriptor.</li>
+<li>Units measured from the font (<code>ex</code>, <code>ch</code>, <code>cap</code>, <code>ic</code>, <code>lh</code> and the root versions), the viewport units <code>vi</code>, <code>vb</code>,
+<code>svh</code>, <code>dvh</code> and the rest, <code>q</code>, and the logical <code>inset-inline</code>, <code>inset-block</code>, <code>inline-size</code> and <code>block-size</code>.</li>
+<li><code>width: min-content</code>, <code>max-content</code> and <code>fit-content</code>, wrapping column flex boxes, <code>min-width: 0</code> on flex items,
+capped grid <code>fit-content()</code> tracks, and flex items taller than their row staying in place (Bootstrap progress bars).</li>
+<li><a href="/docs/html-and-css/#tables">Tables</a>: CSS tables on any element with anonymous table boxes, <code>inline-table</code>, row group
+and column backgrounds, <code>caption-side</code>, <code>empty-cells</code>, cell <code>min-width</code> and <code>max-width</code>, column widths under spanning
+cells and percentages over 100% shared out as in Chrome, long words widening a table instead of overflowing, and
+collapsed borders resolved as in Chrome, on rows and row groups too.</li>
+<li>HTML: <code>&lt;details&gt;</code>, <code>&lt;progress&gt;</code> and <code>&lt;meter&gt;</code>, <code>list-style-position: inside</code>, old attributes (<code>img align</code>, <code>hspace</code>,
+<code>table bordercolor</code> and <code>rules</code>, list <code>type</code>, <code>reversed</code>, <code>align=center</code>), and the <code>html</code>, <code>head</code> and <code>body</code>
+elements a fragment leaves out (an implied body has no default margin, so fragments keep their layout).</li>
+<li>Images: a missing image prints its alt text, inline images draw their border, padding, background and shadow, take
+vertical margins in the line, and resolve percentage widths against the containing block, as in Chrome.</li>
+<li>Selectors and the cascade: <code>:dir()</code>, <code>::placeholder</code>, the <code>quotes</code> property (also <code>auto</code> by language), the <code>all</code>
+property and CSS-wide keywords on shorthands; <code>vertical-align</code> lengths and percentages.</li>
+<li>SVG: <code>use</code> of a symbol from another inline SVG, symbol <code>viewBox</code> fitting, group <code>opacity</code>, and <code>text-decoration</code> on
+SVG text. Gradients and background tiles turn and scale with transformed boxes.</li>
+<li>Despite the new features, warm conversions are within a few percent of 1.16.0's speed. Bounded work for nested columns,
+tables, generated content and backdrop filters on hostile input.</li>
+<li>Tables with colspans, percentages, long words or collapsed borders, lines with superscripts, decorated text,
+inline images and justified CJK text look different from 1.16.0, closer to Chrome.</li>
+</ul>
 <h2 id="1160">1.16.0</h2>
 <p>Released 20 October 2026.</p>
 <ul>

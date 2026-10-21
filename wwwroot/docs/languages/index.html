@@ -71,6 +71,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -119,6 +120,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -148,7 +150,7 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="languages">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
           <option value="/docs/v1.15.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.15.0</option>
           <option value="/docs/v1.14.2/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.2</option>
           <option value="/docs/v1.14.1/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.1</option>
@@ -236,8 +238,19 @@ an ellipsis.</li>
 </ul>
 <p>Korean text breaks between its syllables by default, as in Chrome. <code>word-break: keep-all</code> breaks CJK text only at
 spaces and punctuation instead, which suits Korean, written with spaces between words. <code>word-break: break-all</code> and <code>white-space: nowrap</code> work as for
-any other text. A justified line is stretched only at its spaces, so a Chinese or Japanese line without spaces is not
-justified (see <a href="/docs/limitations/#text-and-fonts">Limitations</a>).</p>
+any other text. A justified Chinese or Japanese line is spread between its characters and punctuation, as in Chrome,
+and <code>text-justify</code> chooses where the space goes (see
+<a href="/docs/html-and-css/#text-wrapping-and-justification">Text wrapping and justification</a>).</p>
+<h2 id="cjk-punctuation-trimming">CJK punctuation trimming</h2>
+<p>Fullwidth CJK punctuation such as <code>（</code>, <code>」</code> and <code>。</code> is drawn with blank space on one side. <code>text-spacing-trim</code> trims
+that blank half where it would look too wide, as Chrome does. The default, <code>normal</code>, trims it where two punctuation
+marks meet (<code>）。</code>, <code>：「</code>, <code>。」</code>), and a closing bracket or quote at the end of a line also loses its blank half when
+that lets it fit. <code>space-first</code> also trims the opening bracket that starts each wrapped line, <code>trim-start</code> the one that
+starts any line, and <code>space-all</code> turns trimming off and keeps the spacing of PdfPecker 1.16 and earlier.</p>
+<p>Trimming needs a font with the OpenType <code>halt</code> feature, which Noto Sans CJK, Source Han and most Chinese and Japanese
+fonts have. The font decides whether dots, colons and quotes count as opening or closing (Simplified Chinese fonts draw
+<code>，。：</code> on the left, Traditional Chinese ones centre them), and <code>font-feature-settings</code> that set punctuation widths
+themselves (<code>palt</code>, <code>halt</code>, <code>pwid</code> and the like) turn trimming off, as in Chrome.</p>
 <h2 id="hyphenation">Hyphenation</h2>
 <p><code>hyphens: auto</code> hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest <code>lang</code> attribute, else <code>PdfOptions.Language</code>. As in Chrome, a word is hyphenated only where it does not fit on

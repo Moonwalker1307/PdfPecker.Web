@@ -71,6 +71,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -119,6 +120,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -148,7 +150,7 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="fonts">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
           <option value="/docs/v1.15.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.15.0</option>
           <option value="/docs/v1.14.2/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.2</option>
           <option value="/docs/v1.14.1/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.1</option>
@@ -192,7 +194,10 @@ refers to registered fonts):</p>
 </code></pre>
 <p>A <code>FontCollection</code> can be shared between options and parallel conversions. Formats: <code>.ttf</code>, <code>.otf</code>, <code>.ttc</code>
 collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's built-in Brotli). Fonts are matched like browsers do: by family, then style, then the nearest
-weight; a missing bold or italic face is synthesized. A character that the chosen font lacks is drawn with the next
+weight; a missing bold or italic face is synthesized. With the <code>font-stretch</code> descriptor (a keyword, a percentage or a
+range such as <code>75% 100%</code>), faces of one family are matched by width first, as in browsers, and a variable font's
+<code>wdth</code> axis is kept within the declared range. <code>font-display</code> is accepted and ignored, since nothing loads
+progressively. A character that the chosen font lacks is drawn with the next
 font in the <code>font-family</code> list that has it, then the standard font, then any other registered font.</p>
 <h2 id="variable-fonts">Variable fonts</h2>
 <p>Variable fonts (one file with a weight, width, slant or other axis, with TrueType or CFF2 outlines) work with the
@@ -219,6 +224,21 @@ line up amounts in a column:</p>
 <p>Features that swap one glyph for another (<code>tnum</code>, <code>pnum</code>, <code>lnum</code>, <code>onum</code>, <code>zero</code>, <code>ss01</code> to <code>ss20</code>, <code>salt</code>, <code>case</code>
 and the like) are applied; the font must have them. Features that depend on the surrounding characters, such as
 <code>diagonal-fractions</code> and <code>ordinal</code> in most fonts, are not. Text copied from the PDF keeps the original characters.</p>
+<h2 id="font-properties">Font properties</h2>
+<ul>
+<li><code>font-kerning: none</code> turns kerning off (so does <code>font-feature-settings: &quot;kern&quot; 0</code>), for the standard fonts too.</li>
+<li><code>font-synthesis: none</code> (or the longhands <code>font-synthesis-weight</code>, <code>-style</code> and <code>-small-caps</code>) stops the made-up bold
+and italic for an <code>@font-face</code> family that has only a regular face, as in Chrome.</li>
+<li><code>font-size-adjust</code> (a number, <code>from-font</code>, or <code>ex-height</code>, <code>cap-height</code>, <code>ch-width</code>, <code>ic-width</code> or <code>ic-height</code> with a
+number) draws text in the size that gives the first font of the family that proportion, so a fallback font with
+small letters does not look smaller; <code>em</code> units and <code>line-height</code> numbers keep the computed size.</li>
+<li><code>font-variant-position: sub | super</code> uses the font's own <code>subs</code> and <code>sups</code> glyphs; a font without them is unchanged,
+as in Chrome.</li>
+<li><code>font-variant-east-asian</code> (<code>jis78</code> to <code>jis04</code>, <code>simplified</code>, <code>traditional</code>, <code>full-width</code>, <code>proportional-width</code>,
+<code>ruby</code>) picks the font's alternate CJK glyphs.</li>
+<li><code>font-variant-caps: small-caps</code> and <code>all-small-caps</code> use the font's own <code>smcp</code> and <code>c2sc</code> glyphs when it has them, and
+otherwise scaled capitals, unless <code>font-synthesis</code> turns that off.</li>
+</ul>
 <h2 id="standard-fonts">Standard fonts</h2>
 <p>Text without a registered font uses the standard PDF fonts (Helvetica, Times, Courier), which viewers supply
 themselves, so files stay small but are limited to Western European characters. Set <code>EmbedStandardFonts = true</code> to

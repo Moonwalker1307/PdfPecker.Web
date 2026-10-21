@@ -131,7 +131,7 @@ app.MapGet("/invoice", () =&gt;
       <p class="center sub">Built for invoices, payslips, reports, tickets and statements: the templates you control.</p>
       <div class="features">
         <article class="feature"><span class="icon" aria-hidden="true">🎨</span><h3>Modern CSS</h3>
-          <p>Flexbox, grid and subgrid, multi-column layout, <code>var()</code>, <code>calc()</code>, transforms, conic and other gradients, rounded corners, shadows, opacity, filters, blend modes, <code>clip-path</code>, <code>border-image</code>, container queries, <code>:has()</code>, nesting, <code>@layer</code>, <code>@supports</code> and modern and relative colours.</p></article>
+          <p>Flexbox, grid and subgrid, multi-column layout, <code>var()</code>, <code>calc()</code>, transforms, conic and other gradients, rounded corners, shadows, opacity, filters, blend modes, <code>clip-path</code>, masks, <code>backdrop-filter</code>, text wrapping round float shapes, drop caps, balanced headings, vertical text, <code>border-image</code>, container queries, <code>:has()</code>, nesting, <code>@layer</code>, <code>@supports</code> and modern and relative colours.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📝</span><h3>Markdown</h3>
           <p>CommonMark 0.31 with GitHub tables, task lists, strikethrough and footnotes, plus definition lists and front matter. Out comes a styled PDF or HTML page.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔤</span><h3>Real fonts</h3>
@@ -156,8 +156,8 @@ app.MapGet("/invoice", () =&gt;
           <p>Inputs, check boxes, radio buttons, selects and text areas become PDF form fields people can fill in, and the forms of existing PDFs can be filled and flattened from code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">♿</span><h3>Accessible PDFs</h3>
           <p>Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML, so screen readers follow headings, tables, lists and images.</p></article>
-        <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image</h3>
-          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image (or HTML straight into images), or a whole PDF into one multi-page TIFF in colour, greyscale or black and white for fax and archives, with no Ghostscript or native code.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image and HTML</h3>
+          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image (or HTML straight into images), a whole PDF into one multi-page TIFF for fax and archives, or any PDF into one <a href="/docs/pdf-to-html/">HTML page</a> with selectable, searchable text and working links, with no Ghostscript or native code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔗</span><h3>Links and bookmarks</h3>
           <p>Clickable links, jumps inside the document, and bookmarks from your headings.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🛡️</span><h3>Safe by default</h3>

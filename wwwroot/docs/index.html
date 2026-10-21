@@ -71,6 +71,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -119,6 +120,7 @@
         <li><a href="/docs/compacting/">Compacting</a></li>
         <li><a href="/docs/text-extraction/">Text extraction</a></li>
         <li><a href="/docs/pdf-to-image/">PDF to image</a></li>
+        <li><a href="/docs/pdf-to-html/">PDF to HTML</a></li>
       </ul>
       <p>Switching</p>
       <ul>
@@ -148,7 +150,7 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations performance how-it-works" selected>1.16.0 (latest)</option>
           <option value="/docs/v1.15.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.15.0</option>
           <option value="/docs/v1.14.2/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.2</option>
           <option value="/docs/v1.14.1/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping text-extraction pdf-to-image wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.14.1</option>
@@ -178,17 +180,14 @@
 <div class="changes changes-list">
 <p><b>New and changed in PdfPecker 1.16.0</b> (since 1.15.0):</p>
 <ul>
-<li><a href="/docs/html-and-css/#css-properties">HTML and CSS: CSS properties</a> <span class="change">Changed</span></li>
 <li><a href="/docs/html-and-css/#pagination">HTML and CSS: Pagination</a> <span class="change">Changed</span></li>
-<li><a href="/docs/html-and-css/#svg">HTML and CSS: SVG</a> <span class="change">Changed</span></li>
-<li><a href="/docs/limitations/#text-and-fonts">Limitations: Text and fonts</a> <span class="change">Changed</span></li>
 <li><a href="/docs/limitations/#backgrounds-and-transparency">Limitations: Backgrounds and transparency</a> <span class="change">Changed</span></li>
 </ul>
 <p class="changes-more"><a href="/docs/changelog/">Every release in the changelog</a></p>
 </div>
 <p>PdfPecker turns HTML and Markdown into PDF, and PDF pages into PNG, JPEG, WebP or TIFF images, in .NET. It has its own HTML
 parser, CSS engine, layout engine, PDF writer and PDF renderer, so it never starts a browser, ships no native binaries
-and depends on nothing but the .NET base class library. These pages describe PdfPecker 1.13.</p>
+and depends on nothing but the .NET base class library. These pages describe PdfPecker 1.17.</p>
 <pre class="cs"><code><span class="k">using</span> <span class="t">PdfPecker</span>;
 
 <span class="k">byte</span>[] pdf = <span class="t">HtmlToPdf</span>.Convert(<span class="s">&quot;&lt;h1&gt;Hello&lt;/h1&gt;&lt;p&gt;World&lt;/p&gt;&quot;</span>);
