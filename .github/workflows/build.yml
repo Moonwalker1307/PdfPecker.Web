@@ -37,9 +37,11 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
-          # Keeps ~/.nuget/packages between runs, so PdfPecker is only downloaded again when the csproj changes.
+          # Keeps ~/.nuget/packages between runs, so PdfPecker is only downloaded again when a csproj changes.
           cache: true
-          cache-dependency-path: PdfPecker.Web.csproj
+          cache-dependency-path: |
+            PdfPecker.Web.csproj
+            tools/DocsBuilder/DocsBuilder.csproj
 
       - name: Compute version
         id: version
@@ -70,6 +72,11 @@ jobs:
 
       - name: Publish
         run: dotnet publish -c Release -p:Version=${{ steps.version.outputs.version }} -o publish
+
+      # The runner's Docker cache starts empty, so the image gets the packages restored above instead of downloading
+      # PdfPecker from nuget.org again (see nuget-seed/README.md).
+      - name: Hand the restored packages to the Docker build
+        run: cp -R ~/.nuget/packages/. nuget-seed/
 
       - name: Build Docker image
         run: >

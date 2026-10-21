@@ -140,6 +140,10 @@ Every pull request and push to `main` builds the site and the Docker image and c
 serves the page. Publishing a GitHub release (tag `v1.2.3`) attaches the published site as a zip and the Docker image
 as a `.docker.tar.gz` to the release.
 
+The workflows cache `~/.nuget/packages`, and CI copies the restored packages into `nuget-seed/` before it builds the
+Docker image, because the runner's Docker cache starts empty. That way a run does not download PdfPecker from
+nuget.org again, which would count towards its public download number.
+
 Dependabot's patch and minor updates merge themselves: `.github/workflows/dependabot-auto-merge.yml` turns on
 auto-merge (squash) and GitHub merges once the required checks pass. Major updates and PdfPecker updates wait for a
 person. This needs "Allow auto-merge" under Settings → General and a branch ruleset (or branch protection) on `main`

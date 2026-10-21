@@ -486,3 +486,7 @@ $RECYCLE.BIN/
 # Cloudflare Worker
 .wrangler/
 wwwroot/docs/pdfpecker-docs.pdf
+
+# NuGet packages CI copies into the Docker build context (see the Dockerfile)
+nuget-seed/*
+!nuget-seed/README.md
