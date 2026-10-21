@@ -8,7 +8,11 @@ WORKDIR /src
 COPY PdfPecker.Web.csproj .
 # The NuGet cache mount keeps downloaded packages between builds on the same machine, so a changed csproj does not
 # download PdfPecker again unless its version changed. Publish needs the same mount to find the restored packages.
-RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages dotnet restore
+# A CI runner starts with an empty mount, so CI copies the packages it has already restored into nuget-seed and they
+# are added to the mount first; a local build has only the README there and restores as before.
+COPY nuget-seed/ /nuget-seed/
+RUN --mount=type=cache,id=nuget,target=/root/.nuget/packages \
+    cp -Rn /nuget-seed/. /root/.nuget/packages/ && dotnet restore
 COPY Program.cs .
 COPY wwwroot/ wwwroot/
 ARG VERSION=0.1.0

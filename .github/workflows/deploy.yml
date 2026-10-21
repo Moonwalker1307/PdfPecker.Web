@@ -38,6 +38,11 @@ jobs:
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
+          # The same package cache as the Build workflow, so PdfPecker is not downloaded from nuget.org again.
+          cache: true
+          cache-dependency-path: |
+            PdfPecker.Web.csproj
+            tools/DocsBuilder/DocsBuilder.csproj
 
       - name: Build the docs PDF
         run: dotnet run --project tools/DocsBuilder -c Release
@@ -47,6 +52,11 @@ jobs:
           node-version: 22
 
       - run: npm ci
+
+      # The runner's Docker cache starts empty, so the image gets the packages the docs builder restored instead of
+      # downloading PdfPecker from nuget.org again (see nuget-seed/README.md).
+      - name: Hand the restored packages to the Docker build
+        run: cp -R ~/.nuget/packages/. nuget-seed/
 
       # Builds the image with the runner's Docker, pushes it to Cloudflare's registry, uploads the Worker and the page,
       # and rolls the container over to the new image.
