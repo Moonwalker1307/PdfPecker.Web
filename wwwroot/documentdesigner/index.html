@@ -48,7 +48,6 @@
         <label>Left<input type="number" id="marginLeft" min="0" max="100" step="0.5"></label>
       </fieldset>
       <label class="check"><input type="checkbox" id="showBreaks" checked> <span>Show where pages break</span></label>
-      <label class="check"><input type="checkbox" id="embedFonts"> <span>Embed the fonts <small>(adds Greek, Cyrillic and Central European)</small></span></label>
       <p class="help">The size and margins are written into the HTML as an <code>@page</code> rule, so the downloaded
         file converts the same with <code>HtmlToPdf.Convert(html)</code>.</p>
     </div>
@@ -58,6 +57,7 @@
     <button type="button" class="small icon-only" id="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo">↷</button>
   </span>
   <span class="spacer"></span>
+  <button type="button" id="settingsToggle" aria-expanded="false" aria-controls="settings">PDF settings <span class="badge" id="changedCount" hidden></span></button>
   <label class="button" for="file">Open</label>
   <input type="file" id="file" accept=".html,.htm,text/html" hidden>
   <details class="menu right" id="downloadMenu">
@@ -136,6 +136,104 @@
     <div class="images" id="images" hidden></div>
   </section>
 </main>
+
+<!-- The options HtmlToPdf takes besides the page size and margins, which the document's @page rule holds. It slides in
+     from the right; on a wide screen the panes make room for it, so the PDF stays in view. -->
+<aside class="settings drawer" id="settings" aria-labelledby="settingsTitle" inert>
+  <div class="settings-head">
+    <h2 id="settingsTitle">PDF settings</h2>
+    <span class="spacer"></span>
+    <button type="button" class="small" id="resetSettings">Reset</button>
+    <button type="button" class="small icon-only" id="closeSettings" aria-label="Close PDF settings">✕</button>
+  </div>
+  <form class="settings-body" id="settingsForm" autocomplete="off">
+    <p class="settings-note">The <code>PdfOptions</code> the PDF is made with. The page size and margins are in the
+      Page menu, because they are part of the HTML.</p>
+
+    <details open><summary>Header and footer</summary>
+      <label class="field">Header text<input type="text" name="headerText" maxlength="300" placeholder="none"></label>
+      <label class="field">Footer text<input type="text" name="footerText" maxlength="300" placeholder="e.g. Page {page} of {pages}"></label>
+      <p class="help"><code>{page}</code> and <code>{pages}</code> become the page number and page count. A header or
+        footer in the design (Pages blocks) gives you more control.</p>
+    </details>
+
+    <details><summary>Fonts and layout</summary>
+      <label class="check"><input type="checkbox" name="embedStandardFonts"> <span>Embed the fonts <small>(Liberation copies of Helvetica, Times and Courier; adds Greek, Cyrillic and Central European)</small></span></label>
+      <label class="field">Scale <small>0.1 to 2, like Chrome's print scale</small><input type="number" name="scale" value="1" min="0.1" max="2" step="0.01"></label>
+      <label class="check"><input type="checkbox" name="truncateBandsToWholePoints"> <span>Round header and footer heights down to whole points</span></label>
+      <label class="field">Extra CSS <small>applied after the document's own</small><textarea name="userStyleSheet" rows="4" maxlength="100000" spellcheck="false" placeholder="body { font-size: 10pt }"></textarea></label>
+    </details>
+
+    <details><summary>Watermark</summary>
+      <label class="field">Text<input type="text" name="wmText" maxlength="200" placeholder="e.g. DRAFT"></label>
+      <label class="field">Or an image <small>PNG, JPEG, GIF or WebP, up to 2 MB</small><input type="file" id="wmImage" accept="image/png,image/jpeg,image/gif,image/webp"></label>
+      <div class="grid2">
+        <label class="field">Font
+          <select name="wmFontFamily"><option value="sans-serif">Helvetica</option><option value="serif">Times</option><option value="monospace">Courier</option></select></label>
+        <label class="field">Colour<span class="color-row"><input type="color" name="wmColor" value="#808080"></span></label>
+        <label class="field">Size (pt) <small>0 = fit</small><input type="number" name="wmFontSize" value="0" min="0" max="300"></label>
+        <label class="field">Angle (°) <small>empty = diagonal</small><input type="number" name="wmAngle" min="-360" max="360" placeholder="auto"></label>
+        <label class="field">Letter spacing<input type="number" name="wmLetterSpacing" value="0" min="-20" max="100" step="0.5"></label>
+        <label class="field">Image width (pt) <small>0 = half</small><input type="number" name="wmImageWidth" value="0" min="0" max="2000"></label>
+      </div>
+      <label class="field">Opacity <output id="wmOpacityOut">0.3</output><input type="range" name="wmOpacity" min="0" max="1" step="0.05" value="0.3"></label>
+      <label class="check"><input type="checkbox" name="wmBold" checked> Bold</label>
+      <label class="check"><input type="checkbox" name="wmBehind"> Behind the content</label>
+    </details>
+
+    <details><summary>Password and permissions</summary>
+      <label class="field">Password to open<input type="password" name="userPassword" maxlength="128" autocomplete="new-password" placeholder="none"></label>
+      <label class="field">Owner password <small>empty = random</small><input type="password" name="ownerPassword" maxlength="128" autocomplete="new-password" placeholder="none"></label>
+      <fieldset class="perms"><legend>With a password, allow</legend>
+        <label class="check"><input type="checkbox" name="perm" value="Print" checked> Printing</label>
+        <label class="check"><input type="checkbox" name="perm" value="PrintHighQuality" checked> High-quality printing</label>
+        <label class="check"><input type="checkbox" name="perm" value="Copy"> Copying text</label>
+        <label class="check"><input type="checkbox" name="perm" value="Modify"> Changing content</label>
+        <label class="check"><input type="checkbox" name="perm" value="Annotate"> Comments</label>
+        <label class="check"><input type="checkbox" name="perm" value="FillForms"> Filling in forms</label>
+        <label class="check"><input type="checkbox" name="perm" value="Assemble"> Rearranging pages</label>
+        <label class="check"><input type="checkbox" name="perm" value="ExtractForAccessibility" checked> Screen readers</label>
+      </fieldset>
+      <p class="help">The preview has no password; the downloaded PDF has it. Passwords are not saved in the browser
+        with the rest of the settings.</p>
+    </details>
+
+    <details><summary>PDF/A and e-invoice</summary>
+      <label class="field">Archival format
+        <select name="conformance"><option value="None">None</option><option value="PdfA2b">PDF/A-2b</option><option value="PdfA3b">PDF/A-3b</option></select></label>
+      <p class="help">PDF/A embeds the fonts and cannot have a password.</p>
+      <label class="field">Factur-X / ZUGFeRD XML <small>makes a PDF/A-3 e-invoice</small><input type="file" id="eInvoiceFile" accept=".xml,text/xml,application/xml"></label>
+      <label class="field">Profile
+        <select name="eInvoiceProfile"><option value="">From the XML</option><option>Minimum</option><option value="BasicWL">Basic WL</option><option>Basic</option><option value="En16931">EN 16931</option><option>Extended</option><option value="XRechnung">XRechnung</option></select></label>
+    </details>
+
+    <details><summary>Document properties</summary>
+      <div class="grid2">
+        <label class="field">Title <small>default: the document title</small><input type="text" name="title" maxlength="500"></label>
+        <label class="field">Author<input type="text" name="author" maxlength="500"></label>
+        <label class="field">Subject<input type="text" name="subject" maxlength="500"></label>
+        <label class="field">Keywords<input type="text" name="keywords" maxlength="500"></label>
+        <label class="field">Creator<input type="text" name="creator" maxlength="500"></label>
+        <label class="field">Producer<input type="text" name="producer" maxlength="500" placeholder="PdfPecker"></label>
+      </div>
+      <label class="field">Custom properties <small>one <code>Name=value</code> per line, up to 20</small><textarea name="customProperties" rows="3" spellcheck="false" placeholder="OrderNumber=42"></textarea></label>
+    </details>
+
+    <details><summary>Output</summary>
+      <label class="check"><input type="checkbox" name="bookmarks" checked> Bookmarks from headings</label>
+      <label class="check"><input type="checkbox" name="compress" checked> Compress page content</label>
+      <div class="grid2">
+        <label class="field">Compression
+          <select name="compressionLevel"><option>Fastest</option><option>Optimal</option><option value="SmallestSize">Smallest size</option></select></label>
+        <label class="field">Most pages <small>1 to 1,000</small><input type="number" name="maxPages" value="1000" min="1" max="1000"></label>
+      </div>
+    </details>
+  </form>
+  <div class="settings-foot">
+    <button type="button" id="copySettingsCode">Copy as C#</button>
+    <button type="button" class="primary" id="doneSettings">Done</button>
+  </div>
+</aside>
 
 <script src="vendor/grapesjs/grapes.min.js"></script>
 <script src="templates.js"></script>
