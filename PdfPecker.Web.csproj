@@ -9,10 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- The docs generator is a separate program; its sources and Markdown are not part of the site. -->
-    <Compile Remove="tools/**" />
-    <Content Remove="tools/**;docs/**" />
-    <None Remove="tools/**;docs/**" />
+    <!-- The docs generator is a separate program; its sources and Markdown are not part of the site. nuget-seed holds
+         packages CI hands to the Docker build (see the Dockerfile). -->
+    <Compile Remove="tools/**;nuget-seed/**" />
+    <Content Remove="tools/**;docs/**;nuget-seed/**" />
+    <None Remove="tools/**;docs/**;nuget-seed/**" />
   </ItemGroup>
 
   <ItemGroup>
