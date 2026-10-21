@@ -9,6 +9,7 @@ var options = new PdfOptions
     PageSize = PageSize.Letter.Landscape,            // A3, A4 (default), A5, Letter, Legal or new PageSize(w, h) in points
     Margins = PageMargins.FromMillimeters(20, 15, 20, 15),
     Scale = 1,                                        // like Chrome's print scale (see its docs to match IronPDF's output)
+    ShrinkToFit = true,                               // lay out too-wide content wider and draw it smaller, as Chrome prints (default)
     TruncateBandsToWholePoints = false,               // round header/footer height attributes down to whole points, as Chrome does
     BaseDirectory = "/var/app/templates",             // where relative image/stylesheet paths are resolved
     ResourceResolver = url => myCache.Get(url),       // serve http(s) or embedded resources yourself; null = default handling

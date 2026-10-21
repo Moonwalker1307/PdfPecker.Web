@@ -13,11 +13,12 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.17.0}
+## Text and fonts {changed 1.18.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
-  the Windows-1252 set (Western European languages); other characters are replaced with `?`. The bundled Liberation
-  fonts add Central European, Greek and Cyrillic, but not CJK or other scripts: register fonts for those.
+  the Windows-1252 set (Western European languages) plus what the [built-in fallback fonts](/docs/fonts/#missing-fonts-and-characters)
+  add: Central European, Greek and Cyrillic letters and common symbols. They have no CJK or other scripts, and no
+  emoji: register fonts for those.
 - Complex-script shaping covers Arabic and Hebrew (and other scripts written with Arabic letters, such as Persian and
   Urdu), [nine Indic scripts, Thai and Lao](/docs/languages/#indic-thai-and-lao-scripts). Khmer, Myanmar, Sinhala,
   Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped, so their vowel signs and conjuncts come out wrong.
@@ -30,8 +31,8 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) does not use the vertical `vhal` feature, and the
   `text-spacing` shorthand is not read. `text-emphasis` marks and `hanging-punctuation` are not supported.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
-  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)); contextual alternates and other
-  features that depend on neighbouring characters are not applied, and `small-caps` is synthesized from scaled
+  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)) and fractions; contextual alternates
+  (`calt`) and ordinals are not applied, and `small-caps` is synthesized from scaled
   capitals when the font has no small capitals of its own. `font-variant-alternates` and `font-palette` (colour font
   palettes) are not supported.
 - Solid underlines, overlines and line-throughs are a little thinner than Chrome's (about 1.5 px for 20 px text where
@@ -43,7 +44,7 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
 - SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS {changed 1.17.0}
+## CSS {changed 1.18.0}
 
 - Container queries: no `scroll-state()` queries, `style()` works only on custom properties, and style containment
   (counter scoping) and the `contain` property are not implemented. A document with container queries takes about two
@@ -63,6 +64,8 @@ not listed in [What is supported](/docs/html-and-css/) should be assumed missing
   rather than between them and their own underline. `filter: blur()` and `drop-shadow()` draw the box as an image;
   its text stays selectable, and the colour filters keep everything as vectors.
 - `text-overflow` applies only at the end of the line, as in the spec and Chrome.
+- `inline-size`, `block-size` and their `min-` and `max-` forms always mean width and height, also in vertical
+  writing modes; the logical margins, paddings, insets and borders do follow `writing-mode`.
 - [Percentage heights](/docs/html-and-css/#percentage-heights) still count as `auto` in a flexed item of a container
   that has only a `min-height`, against a table row's height on its own or a rowspanning cell, and in footnotes and
   running headers and footers. When pages differ in size, a box resolves its percentage height against the page it

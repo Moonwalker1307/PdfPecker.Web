@@ -95,8 +95,8 @@ app.MapGet("/invoice/{id}", (int id) =>
 
 ## Speed and size
 
-On the same 4-core Linux VM, a one-page invoice took 310 ms with wkhtmltopdf and 0.86 ms with PdfPecker, and a
-30-page report 780 ms and 45 ms. Deployment drops from about 90 MB of native files to one 4 MB DLL. The full
+On the same 4-core Linux VM, a one-page invoice took 282 ms with wkhtmltopdf and 0.92 ms with PdfPecker, and a
+30-page report 600 ms and 33 ms. Deployment drops from about 90 MB of native files to one 5 MB DLL. The full
 comparison is on the [Performance](/docs/performance/) page.
 
 ## Next steps

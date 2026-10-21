@@ -100,9 +100,9 @@ Unlike Chrome's templates, these elements use the page's own stylesheets, fonts 
 
 ## Speed and memory
 
-On the same 4-core Linux VM, a one-page invoice took 153 ms with PuppeteerSharp, 194 ms with Playwright and 0.86 ms
-with PdfPecker. Peak memory was 829 MB and 967 MB for the browser-based converters and 90 MB for PdfPecker, and in
-parallel PdfPecker made 818 documents per second against 8 to 11. The full table is on the
+On the same 4-core Linux VM, a one-page invoice took 106 ms with PuppeteerSharp, 131 ms with Playwright and 0.92 ms
+with PdfPecker. Peak memory was 813 MB and 1,027 MB for the browser-based converters and 92 MB for PdfPecker, and in
+parallel PdfPecker made 1,132 documents per second against 12 to 15. The full table is on the
 [Performance](/docs/performance/) page.
 
 ## When to keep Chrome
