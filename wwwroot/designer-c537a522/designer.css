@@ -24,6 +24,9 @@
 .page-settings .margins legend { font-size: 13px; font-weight: 500; padding: 0 0 4px; }
 .page-settings .margins label { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
 .page-settings .margins input { width: 100%; }
+.page-settings .custom-size { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.page-settings .custom-size[hidden] { display: none; }
+.page-settings .custom-size label { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
 .page-settings select, .page-settings input[type=number], .data-panel textarea {
   font: inherit; font-size: 13px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; background: var(--code-bg); color: var(--text); }
 .page-settings .help { margin: 0; }
@@ -127,6 +130,8 @@
   .designer[data-view=code] .designer-main, .designer[data-view=preview] .designer-main { grid-template-rows: minmax(0, 1fr); }
   .designer .code-pane .hint { display: none; }
   .designer-tag { display: none; }
+  /* The menus span the screen instead of hanging off the right edge. */
+  .designer .menu-body { position: fixed; left: 8px; right: 8px; top: 112px; width: auto; max-height: calc(100dvh - 124px); overflow-y: auto; }
 }
 .designer .gjs-sm-label, .designer .gjs-trt-trait .gjs-label { font-size: 12px; font-weight: 500; }
 

@@ -13,10 +13,13 @@ const ua = navigator.userAgent;
 const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const isSafari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(ua);
 const pdfAsImages = isIOS || isSafari || navigator.pdfViewerEnabled === false;
-const PNG_PAGES = 5;
+// Each PNG page is a request of its own, and every request counts towards the API's 120 a minute, so live previews
+// there show the first two pages and wait a little longer.
+const PNG_PAGES = 2;
 
 // What the designer keeps outside GrapesJS: the page, the CSS it must not rewrite, and the document's title.
-const page = { size: "A4", landscape: false, margins: [20, 20, 20, 20] };
+const DEFAULT_MARGIN = 12.7; // PdfOptions' default, used when a document has no @page
+const page = { size: "A4", landscape: false, margins: [20, 20, 20, 20], custom: null, extra: "" };
 let verbatimCss = "";
 let codeDirty = false;
 
@@ -63,6 +66,9 @@ function cssBlocks(css) {
     }
     i++;
   }
+  // The last declaration of a block often has no ";".
+  prelude += css.slice(start);
+  if (prelude.trim()) out.push({ prelude: prelude.trim() });
   return out;
 }
 
@@ -136,7 +142,9 @@ function splitAtRules(css) {
   for (const block of cssBlocks(css)) {
     const text = block.body === undefined ? block.prelude + ";" : `${block.prelude} {${block.body}}`;
     const at = /^@([\w-]+)/.exec(block.prelude);
-    if (at && !GROUPING_AT_RULES.has(at[1].toLowerCase())) verbatim += text + "\n";
+    // GrapesJS holds one level of @media; nested at-rules would lose their inner condition.
+    const nested = at && block.body !== undefined && cssBlocks(block.body).some(b => b.body !== undefined && b.prelude.startsWith("@"));
+    if (at && (nested || !GROUPING_AT_RULES.has(at[1].toLowerCase()))) verbatim += text + "\n";
     else keep += text + "\n";
   }
   return { keep, verbatim };
@@ -186,7 +194,10 @@ const editor = grapesjs.init({
       font: 600 9px/13px Helvetica, Arial, sans-serif; color: #fff; background: rgba(224, 37, 43, .85); padding: 0 5px; border-radius: 3px 3px 0 0; }
     [data-sticky-pdf-header]::before { content: "Header on every page"; }
     [data-sticky-pdf-footer]::before { content: "Footer on every page"; }`,
-  deviceManager: { devices: [{ id: "page", name: "Page", width: "794px" }] },
+  // widthMedia "" keeps style edits out of an @media (max-width) rule tied to the canvas width.
+  deviceManager: { devices: [{ id: "page", name: "Page", width: "794px", widthMedia: "" }] },
+  // CSS for classes no element has yet (status-{{invoice.status}}, say) is part of the template, not clutter.
+  keepUnusedStyles: true,
   blockManager: { appendTo: "#blocks", blocks },
   layerManager: { appendTo: "#layers" },
   // Rendered into #selectors once the editor has loaded: with appendTo GrapesJS 0.23 renders it twice.
@@ -232,6 +243,7 @@ const editor = grapesjs.init({
 // ---------- The canvas looks like a page ----------
 
 function pageMm() {
+  if (page.size === "Custom" && page.custom) return page.custom;
   const [w, h] = PAGE_SIZES[page.size] || PAGE_SIZES.A4;
   return page.landscape ? [h, w] : [w, h];
 }
@@ -280,7 +292,8 @@ function updateCanvas() {
     device.set("width", width);
     editor.setDevice("page");
   }
-  $("pageSummary").textContent = page.size + (page.landscape ? " landscape" : "");
+  $("pageSummary").textContent = page.size === "Custom" && page.custom ? `${fmt(page.custom[0])} × ${fmt(page.custom[1])} mm`
+    : page.size + (page.landscape ? " landscape" : "");
   fitCanvas();
 }
 
@@ -311,33 +324,51 @@ function pageRule() {
   const margin = m.every(x => x === m[0]) ? `${fmt(m[0])}mm`
     : m[0] === m[2] && m[1] === m[3] ? `${fmt(m[0])}mm ${fmt(m[1])}mm`
     : m.map(x => fmt(x) + "mm").join(" ");
-  return `@page { size: ${page.size}${page.landscape ? " landscape" : ""}; margin: ${margin} }`;
+  const size = page.size === "Custom" && page.custom ? `${fmt(page.custom[0])}mm ${fmt(page.custom[1])}mm`
+    : page.size + (page.landscape ? " landscape" : "");
+  return `@page { size: ${size}; margin: ${margin}${page.extra ? "; " + page.extra : ""} }`;
 }
 
-// Reads size and margins back from an @page rule, in mm, cm, in, pt or px.
-function readPageRule(css) {
-  const m = /@page\s*\{([^}]*)\}/i.exec(css);
-  if (!m) return false;
-  const size = /size\s*:\s*([^;]+)/i.exec(m[1]);
-  if (size) {
-    const words = size[1].trim().split(/\s+/);
+function toMm(v) {
+  const x = /^(-?[\d.]+)(mm|cm|in|pt|px|q)?$/i.exec(v);
+  if (!x) return null;
+  const n = parseFloat(x[1]);
+  return { cm: n * 10, in: n * 25.4, pt: n * 25.4 / 72, px: n / PX_PER_MM, q: n / 4 }[(x[2] || "mm").toLowerCase()] ?? n;
+}
+
+// Reads size and margins from the first plain @page rule. With keepExtra, whatever else that rule holds (background,
+// margin boxes) is kept in page.extra, and the CSS around the rule is returned to be kept verbatim. Returns null when
+// there is no @page rule.
+function readPageRule(css, keepExtra) {
+  const blocks = cssBlocks(css);
+  const rule = blocks.find(b => b.body !== undefined && /^@page$/i.test(b.prelude));
+  if (!rule) return null;
+  const decl = cssDeclarations(rule.body);
+  if (decl.size) {
+    const words = decl.size.trim().split(/\s+/);
     const named = Object.keys(PAGE_SIZES).find(k => words.some(w => w.toLowerCase() === k.toLowerCase()));
-    if (named) page.size = named;
+    const lengths = words.map(toMm).filter(x => x !== null && x > 0);
     page.landscape = words.some(w => w.toLowerCase() === "landscape");
+    if (named) { page.size = named; page.custom = null; }
+    else if (lengths.length) {
+      page.size = "Custom";
+      page.custom = [lengths[0], lengths[1] ?? lengths[0]].map(x => Math.round(x * 10) / 10);
+      page.landscape = false;
+    }
   }
-  const margin = /margin\s*:\s*([^;]+)/i.exec(m[1]);
-  if (margin) {
-    const toMm = v => {
-      const x = /^(-?[\d.]+)(mm|cm|in|pt|px)?$/i.exec(v);
-      if (!x) return 0;
-      const n = parseFloat(x[1]);
-      return { cm: n * 10, in: n * 25.4, pt: n * 25.4 / 72, px: n / PX_PER_MM }[(x[2] || "mm").toLowerCase()] ?? n;
-    };
-    const v = margin[1].trim().split(/\s+/).map(toMm);
+  if (decl.margin) {
+    const v = decl.margin.trim().split(/\s+/).map(x => toMm(x) ?? 0);
     const [t, r = t, b = t, l = r] = v;
     page.margins = [t, r, b, l].map(x => Math.min(100, Math.max(0, Math.round(x * 10) / 10)));
   }
-  return true;
+  if (!keepExtra) return "";
+  const extra = [];
+  for (const piece of cssBlocks(rule.body)) {
+    if (piece.body !== undefined) extra.push(`${piece.prelude} {${piece.body}}`);
+    else if (!/^(size|margin)\s*:/i.test(piece.prelude)) extra.push(piece.prelude + ";");
+  }
+  page.extra = extra.join(" ").replace(/;$/, "");
+  return blocks.filter(b => b !== rule).map(b => b.body === undefined ? b.prelude + ";" : `${b.prelude} {${b.body}}`).join("\n");
 }
 
 function elementsCss() {
@@ -358,11 +389,11 @@ function exportDocument() {
 <head>
 <meta charset="utf-8">
 <title>${escapeText(title)}</title>
-<style data-designer="page">
-${pageRule()}
-</style>
 <style>
 ${verbatimCss.trim()}
+</style>
+<style data-designer="page">
+${pageRule()}
 </style>
 <style data-designer="elements">
 ${prettyCss(elementsCss())}
@@ -381,15 +412,32 @@ function importDocument(html) {
   const d = new DOMParser().parseFromString(html, "text/html");
   let elements = "", verbatim = [];
   let hasPage = false;
+  // A document without an @page rule gets PdfPecker's defaults, not the previous document's page.
+  Object.assign(page, { size: "A4", landscape: false, margins: Array(4).fill(DEFAULT_MARGIN), custom: null, extra: "" });
   for (const s of d.querySelectorAll("style")) {
     const kind = s.getAttribute("data-designer");
-    if (kind === "page") hasPage = readPageRule(s.textContent) || hasPage;
-    else if (kind === "elements") elements += s.textContent + "\n";
+    const rest = kind === "page" && !hasPage ? readPageRule(s.textContent, true) : null;
+    if (rest !== null) {
+      hasPage = true;
+      if (rest.trim()) verbatim.push(rest.trim());
+    } else if (kind === "elements") elements += s.textContent + "\n";
     else verbatim.push(s.textContent.trim());
     s.remove();
   }
   // A document from elsewhere may set its page in its own CSS; show that in the page settings too.
-  if (!hasPage) readPageRule(verbatim.join("\n"));
+  if (!hasPage) readPageRule(verbatim.join("\n"), false);
+  // Inline styles become rules of their own here: GrapesJS would do the same, but its reader splits values such as
+  // url(data:image/png;base64,...) at the ";".
+  for (const el of d.body.querySelectorAll("[style]")) {
+    const style = el.getAttribute("style").trim();
+    el.removeAttribute("style");
+    if (!style) continue;
+    if (!el.id) {
+      do el.id = "s" + Math.random().toString(36).slice(2, 8);
+      while (d.querySelectorAll("#" + el.id).length > 1);
+    }
+    elements += `#${CSS.escape(el.id)} { ${style} }\n`;
+  }
   const split = splitAtRules(elements);
   elements = split.keep;
   if (split.verbatim.trim()) verbatim.push(split.verbatim.trim());
@@ -421,31 +469,39 @@ function openTag(el) {
   return VOID_TAGS.has(tag) ? shallow : shallow.slice(0, shallow.length - tag.length - 3);
 }
 
-// One element per line for block elements; an element holding only text and inline elements stays on one line.
+// An element holding only block elements gets one line per child; anything holding text or inline elements is
+// written exactly as it is, so no space, line break or non-breaking space in the text changes.
+const blankText = /^[ \t\n\r\f]*$/;
 function prettyNode(node, depth, out) {
   const pad = "  ".repeat(depth);
   if (node.nodeType === Node.TEXT_NODE) {
-    const t = node.textContent.replace(/\s+/g, " ").trim();
-    if (t) out.push(pad + escapeText(t));
+    if (!blankText.test(node.data)) out.push(pad + escapeText(node.data));
     return;
   }
   if (node.nodeType === Node.COMMENT_NODE) { out.push(pad + `<!--${node.data}-->`); return; }
   if (node.nodeType !== Node.ELEMENT_NODE) return;
   const tag = node.tagName.toLowerCase();
-  const blockChildren = [...node.childNodes].some(c => c.nodeType === Node.ELEMENT_NODE && BLOCK_TAGS.has(c.tagName.toLowerCase()));
-  if (!blockChildren || tag === "pre" || tag === "textarea" || tag === "svg") {
-    out.push(pad + node.outerHTML.replace(/\n\s*/g, tag === "pre" || tag === "textarea" ? "\n" : " "));
+  const kids = [...node.childNodes];
+  const onlyBlocks = kids.some(c => c.nodeType === Node.ELEMENT_NODE)
+    && kids.every(c => c.nodeType === Node.COMMENT_NODE
+      || (c.nodeType === Node.TEXT_NODE && blankText.test(c.data))
+      || (c.nodeType === Node.ELEMENT_NODE && BLOCK_TAGS.has(c.tagName.toLowerCase())));
+  if (!onlyBlocks || tag === "pre" || tag === "textarea" || tag === "svg") {
+    out.push(pad + node.outerHTML);
     return;
   }
   out.push(pad + openTag(node));
-  for (const c of node.childNodes) prettyNode(c, depth + 1, out);
+  for (const c of kids) prettyNode(c, depth + 1, out);
   out.push(pad + `</${tag}>`);
 }
 
 function prettyHtml(html) {
   const body = new DOMParser().parseFromString(`<!DOCTYPE html><body>${html}`, "text/html").body;
+  const kids = [...body.childNodes];
+  if (kids.some(c => c.nodeType === Node.TEXT_NODE && !blankText.test(c.data)
+    || c.nodeType === Node.ELEMENT_NODE && !BLOCK_TAGS.has(c.tagName.toLowerCase()))) return body.innerHTML.trim();
   const out = [];
-  for (const c of body.childNodes) prettyNode(c, 0, out);
+  for (const c of kids) prettyNode(c, 0, out);
   return out.join("\n");
 }
 
@@ -551,7 +607,7 @@ function setStatus(text, isError) {
   statusEl.classList.toggle("error", !!isError);
 }
 
-let previewTimer = 0, inFlight = false, again = false, lastSent = null, lastPdf = null, lastUrl = null;
+let previewTimer = 0, inFlight = false, again = false, againForce = false, lastSent = null, lastPdf = null, lastUrl = null;
 let pngUrls = [];
 
 // The HTML the PDF is made from: the code view while it has edits that are not applied yet, the design otherwise.
@@ -584,11 +640,13 @@ function schedulePreview() {
   save();
   if (!$("live").checked) return;
   clearTimeout(previewTimer);
-  previewTimer = setTimeout(() => preview(false), PREVIEW_DELAY);
+  previewTimer = setTimeout(() => preview(false), pdfAsImages ? 2 * PREVIEW_DELAY : PREVIEW_DELAY);
 }
 
 async function problem(res) {
-  let message = res.status === 429 ? "Too many requests, wait a moment." : "Conversion failed (" + res.status + ").";
+  let message = res.status === 429 ? "Too many requests, wait a moment."
+    : res.status === 413 ? "The document is larger than the 5 MB the converter takes; use smaller images."
+    : "Conversion failed (" + res.status + ").";
   try { const p = await res.json(); if (p.detail) message = p.detail; } catch {}
   return new Error(message);
 }
@@ -596,7 +654,7 @@ async function problem(res) {
 // One request at a time: changes made while a PDF is being made are sent when it is done, so a busy editor never
 // has more than one conversion running.
 async function preview(force) {
-  if (inFlight) { again = true; return; }
+  if (inFlight) { again = true; againForce ||= force; return; }
   const body = requestBody(previewHtml());
   if (!force && body === lastSent) return;
   inFlight = true;
@@ -619,7 +677,7 @@ async function preview(force) {
     setStatus(e.message, true);
   } finally {
     inFlight = false;
-    if (again) { again = false; preview(false); }
+    if (again) { const f = againForce; again = againForce = false; preview(f); }
   }
 }
 
@@ -667,7 +725,7 @@ async function show(pdf) {
 
 // ---------- Saving in the browser ----------
 
-let saveTimer = 0;
+let saveTimer = 0, saveFailed = false;
 function save() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
@@ -675,14 +733,21 @@ function save() {
       localStorage.setItem(STORE_KEY, JSON.stringify({
         html: exportDocument(), data: $("data").value, fill: $("fillData").checked,
         live: $("live").checked, breaks: $("showBreaks").checked, embedFonts: $("embedFonts").checked,
+        code: codeDirty ? $("code").value : null,
       }));
-    } catch {}
+      saveFailed = false;
+    } catch {
+      if (!saveFailed) setStatus("This browser could not keep a copy: the document is too large for its storage. Download the HTML to keep it.", true);
+      saveFailed = true;
+    }
   }, 400);
 }
 
 function restore() {
+  let raw = null;
   try {
-    const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    raw = localStorage.getItem(STORE_KEY);
+    const s = JSON.parse(raw || "null");
     if (!s || typeof s.html !== "string") return false;
     $("data").value = s.data || "";
     $("fillData").checked = s.fill !== false;
@@ -690,8 +755,15 @@ function restore() {
     $("showBreaks").checked = s.breaks !== false;
     $("embedFonts").checked = !!s.embedFonts;
     importDocument(s.html);
+    if (typeof s.code === "string") {
+      $("code").value = s.code;
+      codeDirty = true;
+      setCodeState("Not applied yet; the PDF already shows it.");
+    }
     return true;
   } catch {
+    // Keep what could not be read, rather than let the starting template overwrite it.
+    try { if (raw) localStorage.setItem(STORE_KEY + ".unreadable", raw); } catch {}
     return false;
   }
 }
@@ -711,18 +783,26 @@ function loadTemplate(name) {
 
 const marginInputs = ["marginTop", "marginRight", "marginBottom", "marginLeft"].map($);
 function syncPageForm() {
+  const custom = page.size === "Custom";
   $("pageSize").value = page.size;
+  for (const el of document.querySelectorAll(".custom-size")) el.hidden = !custom;
+  $("landscape").disabled = custom;
+  if (custom && page.custom) [$("customWidth").value, $("customHeight").value] = page.custom;
   $("landscape").checked = page.landscape;
   marginInputs.forEach((el, i) => { el.value = page.margins[i]; });
 }
 
 function readPageForm() {
-  page.size = $("pageSize").value;
-  page.landscape = $("landscape").checked;
-  page.margins = marginInputs.map(el => {
+  const size = $("pageSize").value, landscape = $("landscape").checked;
+  const margins = marginInputs.map(el => {
     const v = parseFloat(el.value);
     return isNaN(v) ? 0 : Math.min(100, Math.max(0, v));
   });
+  const custom = [$("customWidth"), $("customHeight")].map(el => Math.min(2000, Math.max(50, parseFloat(el.value) || 210)));
+  // Unapplied code edits are applied first, so they are neither lost nor allowed to undo this change.
+  if (codeDirty) applyCode();
+  Object.assign(page, { size, landscape, margins, custom: size === "Custom" ? custom : null });
+  syncPageForm();
   updateCanvas();
   refreshCode();
   schedulePreview();
@@ -819,7 +899,16 @@ $("landscape").addEventListener("change", readPageForm);
 for (const el of marginInputs) el.addEventListener("change", readPageForm);
 $("showBreaks").addEventListener("change", () => { updateCanvas(); save(); });
 $("embedFonts").addEventListener("change", schedulePreview);
-$("docTitle").addEventListener("input", () => { refreshCode(); schedulePreview(); });
+$("docTitle").addEventListener("input", () => {
+  if (codeDirty) {
+    const title = $("docTitle").value;
+    applyCode();
+    $("docTitle").value = title;
+  }
+  refreshCode();
+  schedulePreview();
+});
+for (const el of [$("customWidth"), $("customHeight")]) el.addEventListener("change", readPageForm);
 
 // Menus close when something outside them is clicked.
 document.addEventListener("click", e => {
