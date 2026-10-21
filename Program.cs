@@ -395,6 +395,7 @@ static void ApplySettings(PdfOptions options, PdfSettings o)
             Range(o.MarginTopMm ?? 0, 0, 100, "marginTopMm") * Mm, Range(o.MarginRightMm ?? 0, 0, 100, "marginRightMm") * Mm,
             Range(o.MarginBottomMm ?? 0, 0, 100, "marginBottomMm") * Mm, Range(o.MarginLeftMm ?? 0, 0, 100, "marginLeftMm") * Mm);
     if (o.Scale is not null) options.Scale = Range(o.Scale, 0.1f, 2f, "scale");
+    if (o.ShrinkToFit is bool fit) options.ShrinkToFit = fit;
     options.TruncateBandsToWholePoints = o.TruncateBandsToWholePoints;
     options.IgnoreCssPageRules = o.IgnoreCssPageRules;
     options.UserStyleSheet = LimitOrNull(o.UserStyleSheet, 100_000, "userStyleSheet");
@@ -617,6 +618,7 @@ public sealed class PdfSettings
     public float? MarginBottomMm { get; set; }
     public float? MarginLeftMm { get; set; }
     public float? Scale { get; set; }
+    public bool? ShrinkToFit { get; set; }
     public bool TruncateBandsToWholePoints { get; set; }
     public bool IgnoreCssPageRules { get; set; }
     public string? UserStyleSheet { get; set; }

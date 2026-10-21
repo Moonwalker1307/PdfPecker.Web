@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <!-- The published package from nuget.org; Dependabot opens a pull request when a new version is released. -->
-    <PackageReference Include="PdfPecker" Version="1.17.0" />
+    <PackageReference Include="PdfPecker" Version="1.18.0" />
   </ItemGroup>
 
 </Project>

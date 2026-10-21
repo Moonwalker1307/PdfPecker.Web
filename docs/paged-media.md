@@ -67,3 +67,19 @@ Inside it, `{page}` and `{total-pages}` (or `{pages}`) are replaced with the pag
 <main>...</main>
 <footer data-sticky-pdf-footer height="12mm">Page {page} of {total-pages}</footer>
 ```
+
+## Shrink to fit {new 1.18.0}
+
+When content sticks out past the right edge of the page area, Chrome prints the page laid out as much wider as the
+content reaches and drawn smaller, and PdfPecker does the same. A box or image wider than the page, a long word or
+`white-space: nowrap` text, a Bootstrap `.row` without a `.container` (its negative margin), a relative offset, a
+`translateX()` or an absolutely positioned box can each widen the layout, by at most 1.5 times (drawn at 67%), on top
+of `Scale`. The paper keeps its size and the margins keep theirs. As in Chrome, overflow to the left, content inside an
+`overflow: hidden` or `clip` box (other than `html` and `body`) and `position: fixed` boxes do not count.
+
+Set `ShrinkToFit = false` to lay the document out at the page width as before 1.18.0, with the overflow running into
+the margin; an image wider than the page is then scaled down on its own.
+
+```csharp
+var pdf = HtmlToPdf.Convert(html, new PdfOptions { ShrinkToFit = false });
+```

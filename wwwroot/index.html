@@ -91,8 +91,8 @@
 
   <section class="stats" aria-label="At a glance">
     <div class="wrap stat-grid">
-      <div class="stat"><b>0.86 ms</b><span>for a one-page invoice</span></div>
-      <div class="stat"><b>818</b><span>documents a second on 4 cores</span></div>
+      <div class="stat"><b>0.92 ms</b><span>for a one-page invoice</span></div>
+      <div class="stat"><b>1,132</b><span>documents a second on 4 cores</span></div>
       <div class="stat"><b>90 MB</b><span>peak memory under load</span></div>
       <div class="stat"><b>0</b><span>dependencies beyond .NET</span></div>
     </div>
@@ -170,23 +170,23 @@ app.MapGet("/invoice", () =&gt;
     <div class="wrap">
       <h2 class="center">Fast. Really fast.</h2>
       <p class="center sub">Documents a second with one conversion per core on a 4-core cloud VM, on a 5-page document.</p>
-      <div class="bars" role="img" aria-label="Documents per second: PdfPecker 818, HtmlRenderer.PdfSharp 72, wkhtmltopdf 11, PuppeteerSharp 11, Playwright 8">
-        <div class="bar win"><span class="name">PdfPecker</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">818</span></div>
-        <div class="bar"><span class="name">HtmlRenderer.PdfSharp</span><span class="track"><span class="fill" style="width:8.80%"></span></span><span class="val">72</span></div>
-        <div class="bar"><span class="name">wkhtmltopdf</span><span class="track"><span class="fill" style="width:1.34%"></span></span><span class="val">11</span></div>
-        <div class="bar"><span class="name">PuppeteerSharp</span><span class="track"><span class="fill" style="width:1.34%"></span></span><span class="val">11</span></div>
-        <div class="bar"><span class="name">Playwright</span><span class="track"><span class="fill" style="width:0.98%"></span></span><span class="val">8</span></div>
+      <div class="bars" role="img" aria-label="Documents per second: PdfPecker 1,132, HtmlRenderer.PdfSharp 114, wkhtmltopdf 12, PuppeteerSharp 15, Playwright 12">
+        <div class="bar win"><span class="name">PdfPecker</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">1,132</span></div>
+        <div class="bar"><span class="name">HtmlRenderer.PdfSharp</span><span class="track"><span class="fill" style="width:10.07%"></span></span><span class="val">114</span></div>
+        <div class="bar"><span class="name">wkhtmltopdf</span><span class="track"><span class="fill" style="width:1.06%"></span></span><span class="val">12</span></div>
+        <div class="bar"><span class="name">PuppeteerSharp</span><span class="track"><span class="fill" style="width:1.33%"></span></span><span class="val">15</span></div>
+        <div class="bar"><span class="name">Playwright</span><span class="track"><span class="fill" style="width:1.06%"></span></span><span class="val">12</span></div>
       </div>
 
       <div class="table-scroll">
         <table class="compare">
           <thead><tr><th scope="col">Converter</th><th scope="col" class="wide">Engine</th><th scope="col" class="wide">To deploy</th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>30 pages</th><th scope="col" class="num"><span class="wide">Peak memory</span><span class="narrow">Memory</span></th></tr></thead>
           <tbody>
-            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">5.0 MB DLL</td><td class="num">0.86 ms</td><td class="num">45 ms</td><td class="num">90 MB</td></tr>
-            <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">2.4 MB of DLLs</td><td class="num">6.3 ms</td><td class="num">639 ms</td><td class="num">236 MB</td></tr>
-            <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">310 ms</td><td class="num">780 ms</td><td class="num">164 MB</td></tr>
-            <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">153 ms</td><td class="num">792 ms</td><td class="num">829 MB</td></tr>
-            <tr><th scope="row">Playwright</th><td class="wide">Chromium</td><td class="wide">browser + 135 MB</td><td class="num">194 ms</td><td class="num">726 ms</td><td class="num">967 MB</td></tr>
+            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">5.1 MB DLL</td><td class="num">0.92 ms</td><td class="num">33 ms</td><td class="num">92 MB</td></tr>
+            <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">2.4 MB of DLLs</td><td class="num">4.9 ms</td><td class="num">360 ms</td><td class="num">255 MB</td></tr>
+            <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">282 ms</td><td class="num">600 ms</td><td class="num">165 MB</td></tr>
+            <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">106 ms</td><td class="num">496 ms</td><td class="num">813 MB</td></tr>
+            <tr><th scope="row">Playwright</th><td class="wide">Chromium</td><td class="wide">browser + 135 MB</td><td class="num">131 ms</td><td class="num">517 ms</td><td class="num">1,027 MB</td></tr>
           </tbody>
         </table>
       </div>

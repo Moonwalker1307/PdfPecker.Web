@@ -80,7 +80,7 @@ Add `watermark` (text stamped on every page), `password` (AES-256, needed to ope
 any of the three forms; send passwords in the form or JSON body rather than the query string, which servers tend to log.
 
 The JSON form also takes an `options` object with the rest of `PdfOptions` that is safe to take from a visitor:
-page size (or `pageWidthMm`/`pageHeightMm`), `landscape`, the four `margin*Mm`, `scale`, `headerText`, `footerText`,
+page size (or `pageWidthMm`/`pageHeightMm`), `landscape`, the four `margin*Mm`, `scale`, `shrinkToFit`, `headerText`, `footerText`,
 `userStyleSheet`, `embedStandardFonts`, `watermark` (text or base64 image, font, colour, opacity, angle, ...),
 `security` (passwords and `permissions` by name), `conformance`, `eInvoiceXml`, the document properties,
 `customProperties`, `bookmarks`, `compress`, `compressionLevel` and `maxPages` (at most 1,000). Every value is checked

@@ -77,6 +77,7 @@ function settings() {
     marginLeftMm: num("marginLeftMm") ?? 0,
     scale: num("scale") ?? 1,
     ignoreCssPageRules: field("ignoreCssPageRules").checked,
+    shrinkToFit: field("shrinkToFit").checked,
     truncateBandsToWholePoints: field("truncateBandsToWholePoints").checked,
     headerText: text("headerText") ?? "",
     footerText: text("footerText") ?? "",
@@ -127,6 +128,7 @@ function csharp() {
   lines.push(`Margins = PageMargins.FromMillimeters(${m.map(f).join(", ")}),`);
   if (s.scale !== 1) lines.push(`Scale = ${f(s.scale)},`);
   if (s.ignoreCssPageRules) lines.push("IgnoreCssPageRules = true,");
+  if (!s.shrinkToFit) lines.push("ShrinkToFit = false,");
   if (s.truncateBandsToWholePoints) lines.push("TruncateBandsToWholePoints = true,");
   if (s.headerText) lines.push(`HeaderText = ${str(s.headerText)},`);
   if (s.footerText) lines.push(`FooterText = ${str(s.footerText)},`);

@@ -990,6 +990,7 @@ function pdfSettings() {
   const userPassword = settingsField("userPassword").value, ownerPassword = settingsField("ownerPassword").value;
   return {
     scale: settingsNum("scale") ?? 1,
+    shrinkToFit: settingsField("shrinkToFit").checked,
     truncateBandsToWholePoints: settingsField("truncateBandsToWholePoints").checked,
     headerText: settingsText("headerText") ?? "",
     footerText: settingsText("footerText") ?? "",
@@ -1033,6 +1034,7 @@ function optionLines() {
   const f = v => (Number.isInteger(v) ? v : +v.toFixed(4)) + "f";
   const lines = [];
   if (s.scale !== 1) lines.push(`Scale = ${f(s.scale)},`);
+  if (!s.shrinkToFit) lines.push("ShrinkToFit = false,");
   if (s.truncateBandsToWholePoints) lines.push("TruncateBandsToWholePoints = true,");
   if (s.headerText) lines.push(`HeaderText = ${str(s.headerText)},`);
   if (s.footerText) lines.push(`FooterText = ${str(s.footerText)},`);

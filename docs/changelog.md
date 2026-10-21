@@ -4,6 +4,35 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.18.0
+
+Released 21 October 2026.
+
+- [Shrink to fit](/docs/paged-media/#shrink-to-fit): a page whose content sticks out past the right edge (a wide table
+  or image, a long URL, `nowrap` text, a Bootstrap `.row` without a container) is laid out wider and drawn smaller,
+  as Chrome prints it, up to 1.5 times. It is on by default; `ShrinkToFit = false` keeps the 1.17.0 layout. An image
+  wider than the page now shrinks the page instead of being squeezed on its own.
+- [Fallback fonts](/docs/fonts/#missing-fonts-and-characters): characters none of the document's fonts has are drawn
+  with built-in fonts, as browsers use system fonts: Central European, Greek and Cyrillic letters with the bundled
+  Liberation fonts (no more `?` with the standard fonts), and arrows, check marks, stars, dingbats, math and box
+  drawing with PdfPecker Symbols, a DejaVu Sans subset. Documents that need no fallback come out byte-identical.
+- Positioning: absolutely positioned children of flex and grid containers (corner ribbons, sale badges) take no room
+  and are placed by their offsets, a `position: relative` table cell holds its positioned content, and outlines on
+  cells of a collapsed table are drawn.
+- [Logical border properties](/docs/html-and-css/#css-properties) (`border-inline`, `border-block-start` and the rest,
+  and the logical radii), and logical margins, paddings and insets now follow `writing-mode` too.
+- Fractions with `diagonal-fractions` or `font-feature-settings: "frac"` are formed as in Chrome.
+- Fixes, all closer to Chrome: an empty clearfix `div` and `<br clear=all>` clear floats; `vertical-align: top`,
+  `middle` and `text-top` work on smaller inline text; auto margins on inline-blocks count as 0; a flex or grid item
+  keeps its first and last child's margins; percentage columns that crowd out other columns give way and a cell's
+  `max-width` caps its column (with an ellipsis where asked); an image with a percentage width no longer widens a
+  table; a box shadow never adds a blank page; `backdrop-filter` works at every box size; the default `<hr>` has
+  Chrome's lighter shading, `<hr size>`, `color` and `noshade` work, and a margin on a vertical inline-block no
+  longer counts twice.
+- About 10% faster on invoices, feature tours and reports than 1.17.0, with byte-identical output.
+- Pages with content wider than the page area, clearfix divs, floats, tables with percentage columns or capped cells,
+  inline-blocks with auto margins and default `<hr>` rules look different from 1.17.0.
+
 ## 1.17.0
 
 Released 21 October 2026.
