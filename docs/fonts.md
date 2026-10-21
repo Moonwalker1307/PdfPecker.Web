@@ -50,7 +50,7 @@ bold is synthesized as for any other font. The optical size axis (`opsz`) follow
 `font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
 CFF2.
 
-## OpenType features {new 1.8.0}
+## OpenType features {changed 1.18.0}
 
 `font-variant-numeric` and `font-feature-settings` turn on a font's optional glyphs, as in a browser. Tabular figures
 line up amounts in a column:
@@ -62,8 +62,10 @@ td.amount { font-variant-numeric: tabular-nums; }          /* every digit the sa
 ```
 
 Features that swap one glyph for another (`tnum`, `pnum`, `lnum`, `onum`, `zero`, `ss01` to `ss20`, `salt`, `case`
-and the like) are applied; the font must have them. Features that depend on the surrounding characters, such as
-`diagonal-fractions` and `ordinal` in most fonts, are not. Text copied from the PDF keeps the original characters.
+and the like) are applied; the font must have them. Fractions with `font-variant-numeric: diagonal-fractions` or
+`font-feature-settings: "frac"` are formed as Chrome forms them: the font's contextual rules turn `1/2` and `11/16`
+into fractions and leave `a/b` as it is, and `tabular-nums` used with them does not widen the fraction's digits.
+Text copied from the PDF keeps the original characters.
 
 ## Font properties {new 1.17.0}
 
@@ -88,7 +90,7 @@ embed the bundled Liberation fonts in their place instead: they have the same wi
 the text looks the same in every viewer, and any character they cover (Latin, Greek, Cyrillic, ...) works. PDF/A
 always does this. It adds a subset of each font used to the file (typically 10-25 KB per font).
 
-## Missing fonts and characters
+## Missing fonts and characters {changed 1.18.0}
 
 A family that no font provides falls back silently, like in a browser. To notice, set `MissingFont`: it is called
 once per conversion for each family that had to be substituted, and throwing from it fails the conversion. To use the
@@ -100,7 +102,14 @@ options.MissingFont = family => logger.LogWarning("Font {Family} is not availabl
 options.UseSystemFonts = true;   // looks in C:\Windows\Fonts, /Library/Fonts, /usr/share/fonts, ...
 ```
 
-Likewise, a character that no font has is drawn as an empty box (blank space in PDF/A). `MissingCharacter` is called
+A character that none of the document's fonts has falls back to fonts built into PdfPecker, as a browser falls
+back to the system's fonts: Central European, Greek and Cyrillic letters are drawn with the bundled Liberation font
+that matches the standard font (so they no longer turn into `?` when the standard fonts are not embedded), and arrows,
+check marks, stars, dingbats, math and technical symbols, enclosed numbers, box drawing and geometric shapes with
+PdfPecker Symbols, a 1,424-character subset of DejaVu Sans. Only the characters used are embedded, and a document
+that needs no fallback is written exactly as before.
+
+A character that no font has, the built-in ones included, is drawn as an empty box (blank space in PDF/A). `MissingCharacter` is called
 once for each such character before anything is written, so a test can make sure a template's fonts cover its data:
 
 ```csharp

@@ -81,8 +81,8 @@ and footers written in HTML (see [Paged media](/docs/paged-media/)).
 
 ## Speed and memory
 
-On the same 4-core Linux VM, a one-page invoice took 6.3 ms with HtmlRenderer.PdfSharp and 0.86 ms with PdfPecker, a
-30-page report 639 ms and 45 ms, and peak memory was 236 MB and 90 MB. See [Performance](/docs/performance/).
+On the same 4-core Linux VM, a one-page invoice took 4.9 ms with HtmlRenderer.PdfSharp and 0.92 ms with PdfPecker, a
+30-page report 360 ms and 33 ms, and peak memory was 255 MB and 92 MB. See [Performance](/docs/performance/).
 
 ## When HtmlRenderer is still a fine choice
 
