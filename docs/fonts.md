@@ -12,7 +12,7 @@ options.Fonts.AddDirectory(@"C:\Windows\Fonts");               // read once, loa
 byte[] pdf = HtmlToPdf.Convert("<p style=\"font-family: 'Open Sans'\">Łódź, Ελλάδα, Москва</p>", options);
 ```
 
-## @font-face
+## @font-face {changed 1.17.0}
 
 Documents can bring their own fonts with `@font-face` (files, `data:` URIs or `ResourceResolver` URLs; `local()`
 refers to registered fonts):
@@ -24,7 +24,10 @@ refers to registered fonts):
 
 A `FontCollection` can be shared between options and parallel conversions. Formats: `.ttf`, `.otf`, `.ttc`
 collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's built-in Brotli). Fonts are matched like browsers do: by family, then style, then the nearest
-weight; a missing bold or italic face is synthesized. A character that the chosen font lacks is drawn with the next
+weight; a missing bold or italic face is synthesized. With the `font-stretch` descriptor (a keyword, a percentage or a
+range such as `75% 100%`), faces of one family are matched by width first, as in browsers, and a variable font's
+`wdth` axis is kept within the declared range. `font-display` is accepted and ignored, since nothing loads
+progressively. A character that the chosen font lacks is drawn with the next
 font in the `font-family` list that has it, then the standard font, then any other registered font.
 
 ## Variable fonts {new 1.8.0}
@@ -61,6 +64,21 @@ td.amount { font-variant-numeric: tabular-nums; }          /* every digit the sa
 Features that swap one glyph for another (`tnum`, `pnum`, `lnum`, `onum`, `zero`, `ss01` to `ss20`, `salt`, `case`
 and the like) are applied; the font must have them. Features that depend on the surrounding characters, such as
 `diagonal-fractions` and `ordinal` in most fonts, are not. Text copied from the PDF keeps the original characters.
+
+## Font properties {new 1.17.0}
+
+- `font-kerning: none` turns kerning off (so does `font-feature-settings: "kern" 0`), for the standard fonts too.
+- `font-synthesis: none` (or the longhands `font-synthesis-weight`, `-style` and `-small-caps`) stops the made-up bold
+  and italic for an `@font-face` family that has only a regular face, as in Chrome.
+- `font-size-adjust` (a number, `from-font`, or `ex-height`, `cap-height`, `ch-width`, `ic-width` or `ic-height` with a
+  number) draws text in the size that gives the first font of the family that proportion, so a fallback font with
+  small letters does not look smaller; `em` units and `line-height` numbers keep the computed size.
+- `font-variant-position: sub | super` uses the font's own `subs` and `sups` glyphs; a font without them is unchanged,
+  as in Chrome.
+- `font-variant-east-asian` (`jis78` to `jis04`, `simplified`, `traditional`, `full-width`, `proportional-width`,
+  `ruby`) picks the font's alternate CJK glyphs.
+- `font-variant-caps: small-caps` and `all-small-caps` use the font's own `smcp` and `c2sc` glyphs when it has them, and
+  otherwise scaled capitals, unless `font-synthesis` turns that off.
 
 ## Standard fonts
 
