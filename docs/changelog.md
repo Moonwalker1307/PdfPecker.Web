@@ -4,6 +4,49 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.17.0
+
+Released 21 October 2026.
+
+- [PDF to HTML](/docs/pdf-to-html/): `PdfToHtml` turns any PDF into one self-contained HTML page, with the page images,
+  an invisible text layer that can be selected, searched and read aloud, and working links.
+- [Float shapes](/docs/html-and-css/#float-shapes) (`shape-outside`, `shape-margin`, `shape-image-threshold`),
+  [drop caps](/docs/html-and-css/#drop-caps) with `initial-letter`, [masks and `backdrop-filter`](/docs/html-and-css/#masks-and-backdrop-filter)
+  on HTML elements, [`display: contents`](/docs/html-and-css/#display-contents),
+  [3D transforms](/docs/html-and-css/#3d-transforms) drawn flat, and [vertical text](/docs/html-and-css/#vertical-text)
+  with `writing-mode`.
+- [Text wrapping and justification](/docs/html-and-css/#text-wrapping-and-justification): `text-wrap: balance` and
+  `pretty`, and `text-justify`; justified Chinese and Japanese text is spread between characters, as in Chrome.
+- [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) with `text-spacing-trim`. CJK text with
+  adjacent punctuation is narrower than before and can break into lines differently; `text-spacing-trim: space-all`
+  keeps the old spacing.
+- Text: underlines and overlines skip descenders (`text-decoration-skip-ink`), dashed, dotted, double and wavy lines
+  are drawn as Chrome draws them, outlined text with `-webkit-text-stroke` and `paint-order`, nested superscripts, and
+  [font properties](/docs/fonts/#font-properties) `font-kerning`, `font-synthesis`, `font-size-adjust`,
+  `font-variant-position` and `font-variant-east-asian`, with the font's own small capitals and the `@font-face`
+  `font-stretch` descriptor.
+- Units measured from the font (`ex`, `ch`, `cap`, `ic`, `lh` and the root versions), the viewport units `vi`, `vb`,
+  `svh`, `dvh` and the rest, `q`, and the logical `inset-inline`, `inset-block`, `inline-size` and `block-size`.
+- `width: min-content`, `max-content` and `fit-content`, wrapping column flex boxes, `min-width: 0` on flex items,
+  capped grid `fit-content()` tracks, and flex items taller than their row staying in place (Bootstrap progress bars).
+- [Tables](/docs/html-and-css/#tables): CSS tables on any element with anonymous table boxes, `inline-table`, row group
+  and column backgrounds, `caption-side`, `empty-cells`, cell `min-width` and `max-width`, column widths under spanning
+  cells and percentages over 100% shared out as in Chrome, long words widening a table instead of overflowing, and
+  collapsed borders resolved as in Chrome, on rows and row groups too.
+- HTML: `<details>`, `<progress>` and `<meter>`, `list-style-position: inside`, old attributes (`img align`, `hspace`,
+  `table bordercolor` and `rules`, list `type`, `reversed`, `align=center`), and the `html`, `head` and `body`
+  elements a fragment leaves out (an implied body has no default margin, so fragments keep their layout).
+- Images: a missing image prints its alt text, inline images draw their border, padding, background and shadow, take
+  vertical margins in the line, and resolve percentage widths against the containing block, as in Chrome.
+- Selectors and the cascade: `:dir()`, `::placeholder`, the `quotes` property (also `auto` by language), the `all`
+  property and CSS-wide keywords on shorthands; `vertical-align` lengths and percentages.
+- SVG: `use` of a symbol from another inline SVG, symbol `viewBox` fitting, group `opacity`, and `text-decoration` on
+  SVG text. Gradients and background tiles turn and scale with transformed boxes.
+- Despite the new features, warm conversions are within a few percent of 1.16.0's speed. Bounded work for nested columns,
+  tables, generated content and backdrop filters on hostile input.
+- Tables with colspans, percentages, long words or collapsed borders, lines with superscripts, decorated text,
+  inline images and justified CJK text look different from 1.16.0, closer to Chrome.
+
 ## 1.16.0
 
 Released 20 October 2026.

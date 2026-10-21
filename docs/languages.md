@@ -45,7 +45,7 @@ byte[] pdf = HtmlToPdf.Convert("<p lang='hi' style=\"font-family: 'Noto Sans Dev
 Khmer, Myanmar, Sinhala, Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped yet (see
 [Limitations](/docs/limitations/#text-and-fonts)).
 
-## Chinese, Japanese and Korean line breaking {new 1.9.0}
+## Chinese, Japanese and Korean line breaking {changed 1.17.0}
 
 Chinese and Japanese are written without spaces, so a line may break between almost any two characters. PdfPecker
 finds those breaks with the Unicode Line Breaking Algorithm (UAX #14) and the Japanese kinsoku rules, as browsers do:
@@ -75,8 +75,22 @@ CSS `line-break` sets how strict the rules are, as in Chrome:
 
 Korean text breaks between its syllables by default, as in Chrome. `word-break: keep-all` breaks CJK text only at
 spaces and punctuation instead, which suits Korean, written with spaces between words. `word-break: break-all` and `white-space: nowrap` work as for
-any other text. A justified line is stretched only at its spaces, so a Chinese or Japanese line without spaces is not
-justified (see [Limitations](/docs/limitations/#text-and-fonts)).
+any other text. A justified Chinese or Japanese line is spread between its characters and punctuation, as in Chrome,
+and `text-justify` chooses where the space goes (see
+[Text wrapping and justification](/docs/html-and-css/#text-wrapping-and-justification)).
+
+## CJK punctuation trimming {new 1.17.0}
+
+Fullwidth CJK punctuation such as `（`, `」` and `。` is drawn with blank space on one side. `text-spacing-trim` trims
+that blank half where it would look too wide, as Chrome does. The default, `normal`, trims it where two punctuation
+marks meet (`）。`, `：「`, `。」`), and a closing bracket or quote at the end of a line also loses its blank half when
+that lets it fit. `space-first` also trims the opening bracket that starts each wrapped line, `trim-start` the one that
+starts any line, and `space-all` turns trimming off and keeps the spacing of PdfPecker 1.16 and earlier.
+
+Trimming needs a font with the OpenType `halt` feature, which Noto Sans CJK, Source Han and most Chinese and Japanese
+fonts have. The font decides whether dots, colons and quotes count as opening or closing (Simplified Chinese fonts draw
+`，。：` on the left, Traditional Chinese ones centre them), and `font-feature-settings` that set punctuation widths
+themselves (`palt`, `halt`, `pwid` and the like) turn trimming off, as in Chrome.
 
 ## Hyphenation {changed 1.14.1}
 
