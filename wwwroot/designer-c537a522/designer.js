@@ -685,7 +685,7 @@ async function show(pdf) {
   $("empty").hidden = true;
   if (!pdfAsImages) {
     const url = URL.createObjectURL(pdf);
-    $("preview").src = url + "#navpanes=0&view=FitH";
+    $("preview").src = url + "#navpanes=0";
     $("preview").hidden = false;
     if (lastUrl) setTimeout(u => URL.revokeObjectURL(u), 5000, lastUrl);
     lastUrl = url;
