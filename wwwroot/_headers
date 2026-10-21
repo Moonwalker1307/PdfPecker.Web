@@ -7,3 +7,7 @@
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-src blob:; object-src blob:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
   Cross-Origin-Opener-Policy: same-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# The document designer is unlisted: search engines are asked to leave it out.
+/designer-c537a522/*
+  X-Robots-Tag: noindex, nofollow

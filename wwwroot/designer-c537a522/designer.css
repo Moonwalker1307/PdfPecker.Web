@@ -1,0 +1,134 @@
+/* The document designer. It builds on site.css and restyles the GrapesJS panels to match the site. */
+
+.designer-tag { color: var(--on-ink-muted); font-size: 14px; font-weight: 500; }
+.designer .toolbar { padding: 8px 16px; gap: 8px 12px; }
+.designer .toolbar .doc-title input { width: 220px; }
+.tool-group { display: inline-flex; gap: 4px; }
+.tool-group .icon-only { font-size: 17px; line-height: 1; }
+
+/* Drop-down menus in the toolbar. */
+.designer .menu > summary { display: inline-flex; align-items: center; gap: 6px; }
+.designer .menu > summary::after { margin-left: 4px; }
+.menu-body { position: absolute; z-index: 40; top: calc(100% + 6px); left: 0; min-width: 220px; padding: 8px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 2px; }
+.menu.right .menu-body { left: auto; right: 0; }
+.menu-body > button { text-align: left; border-color: transparent; background: transparent; }
+.menu-body > button:hover, .menu-body > button:focus-visible { background: var(--alt); border-color: transparent; }
+.page-settings { width: 300px; gap: 10px; padding: 14px; }
+.toolbar .page-settings label { align-items: stretch; color: var(--text); }
+.page-settings .field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: var(--text); }
+.toolbar .page-settings .check, .page-settings .check, .data-panel .check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text); line-height: 1.4; }
+.page-settings .check input, .data-panel .check input { margin: 2px 0 0; accent-color: var(--accent); width: 16px; height: 16px; flex: none; }
+.page-settings small { color: var(--muted); }
+.page-settings .margins { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; border: 0; padding: 0; margin: 0; }
+.page-settings .margins legend { font-size: 13px; font-weight: 500; padding: 0 0 4px; }
+.page-settings .margins label { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--muted); }
+.page-settings .margins input { width: 100%; }
+.page-settings select, .page-settings input[type=number], .data-panel textarea {
+  font: inherit; font-size: 13px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 6px; background: var(--code-bg); color: var(--text); }
+.page-settings .help { margin: 0; }
+
+/* Layout: tools on the left, the page in the middle, the PDF on the right. On a narrow screen the tabs above choose
+   one of design, code and PDF. */
+.designer-main { flex: 1; min-height: 0; display: grid; grid-template-columns: 270px minmax(0, 1.25fr) minmax(0, 1fr); }
+.sidebar { display: flex; flex-direction: column; min-height: 0; background: var(--panel); border-right: 1px solid var(--border); }
+.work { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.preview-pane { border-left: 1px solid var(--border); }
+.designer[data-view=design] .code-pane, .designer[data-view=code] .design-pane { display: none; }
+.designer[data-view=preview] .code-pane { display: none; }
+
+.side-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.side-tabs button, .view-tabs button { flex: 1; border: 0; border-radius: 0; background: transparent; font-size: 13px; padding: 10px 4px; color: var(--muted);
+  border-bottom: 2px solid transparent; }
+.side-tabs button[aria-selected=true], .view-tabs button[aria-selected=true] { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+.view-tabs { display: flex; padding: 0 12px; background: var(--panel); border-bottom: 1px solid var(--border); }
+.view-tabs button { flex: none; padding: 8px 18px; }
+.view-tabs button[data-view=preview] { display: none; }
+.side-panel { flex: 1; overflow-y: auto; min-height: 0; }
+.side-help { font-size: 12px; color: var(--muted); margin: 10px 12px; line-height: 1.45; }
+.side-help code, .data-panel code { font-size: 11px; }
+.data-panel { display: flex; flex-direction: column; gap: 8px; padding: 0 12px 12px; }
+.data-panel .side-help { margin: 10px 0 2px; }
+.data-panel .field { font-size: 13px; font-weight: 500; }
+.data-panel textarea { flex: 1; min-height: 260px; resize: none; font: 12px/1.45 var(--mono); white-space: pre; tab-size: 2; }
+.data-panel .status { margin: 0; }
+
+.code-pane textarea { flex: 1; resize: none; border: 0; outline: 0; padding: 14px 18px; font: 13px/1.5 var(--mono); background: var(--code-bg);
+  color: var(--text); white-space: pre; tab-size: 2; overflow: auto; }
+.code-pane .status.changed { color: var(--changed); }
+.preview-pane .small-check { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; }
+.preview-pane .small-check input { accent-color: var(--accent); }
+.preview-pane iframe { flex: 1; width: 100%; border: 0; background: #525659; }
+
+/* GrapesJS: the editor fills the middle pane, and its panels are moved into the sidebar. */
+#gjs { flex: 1; min-height: 0; border: 0; }
+.designer .gjs-editor { background: #525659; }
+.designer .gjs-cv-canvas { width: 100%; height: 100%; top: 0; left: 0; background: #525659; }
+.designer .gjs-frame-wrapper { box-shadow: 0 2px 16px rgba(0, 0, 0, .4); }
+.designer .gjs-one-bg { background-color: var(--panel); }
+.designer .gjs-two-color { color: var(--text); }
+.designer .gjs-three-bg { background-color: var(--accent); color: #fff; }
+.designer .gjs-four-color, .designer .gjs-four-color-h:hover { color: var(--accent); }
+.designer .gjs-selected { outline-color: var(--accent) !important; }
+.designer .gjs-block-categories, .designer .gjs-blocks-c { background: var(--panel); }
+.designer .gjs-block-category .gjs-title { background: var(--alt); color: var(--text); border-bottom: 1px solid var(--border); font-size: 12px;
+  letter-spacing: .02em; padding: 8px 12px; }
+.designer .gjs-blocks-c { padding: 4px; }
+.designer .gjs-block { width: calc(50% - 10px); min-height: 74px; margin: 5px; padding: 8px 4px; border-radius: 8px; border: 1px solid var(--border);
+  box-shadow: none; background: var(--panel); color: var(--text); font-size: 12px; font-family: inherit; justify-content: center; }
+.designer .gjs-block:hover { border-color: var(--accent); color: var(--accent); box-shadow: none; }
+.designer .gjs-block svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.designer .gjs-block-label { font-size: 12px; margin-top: 4px; line-height: 1.25; }
+.designer .gjs-layer, .designer .gjs-layers { background: var(--panel); color: var(--text); font-size: 12px; }
+.designer .gjs-layer-item { border-bottom: 1px solid var(--border); background: var(--panel); }
+.designer .gjs-layer.gjs-selected .gjs-layer-item { background: var(--accent-soft); }
+.designer .gjs-sm-sector-title, .designer .gjs-trt-header { background: var(--alt); color: var(--text); border-bottom: 1px solid var(--border); font-size: 12px; }
+.designer .gjs-sm-sectors, .designer .gjs-sm-sector, .designer .gjs-trt-traits, .designer .gjs-clm-tags { background: var(--panel); color: var(--text); font-size: 12px; }
+.designer .gjs-field, .designer .gjs-clm-tags #gjs-clm-new { background: var(--code-bg); color: var(--text); border: 1px solid var(--border); border-radius: 5px; }
+.designer .gjs-field input, .designer .gjs-field select, .designer .gjs-field textarea { color: var(--text); }
+.designer .gjs-field select option { background: var(--panel); color: var(--text); }
+.designer .gjs-sm-label, .designer .gjs-label, .designer .gjs-sm-sector-label, .designer .gjs-trt-trait__wrp-title,
+.designer .gjs-label-wrp, .designer .gjs-clm-header, .designer .gjs-clm-sels-info, .designer .gjs-title { color: var(--text); opacity: 1; }
+.designer .gjs-sm-label, .designer .gjs-label, .designer .gjs-clm-sels-info { color: var(--muted); }
+.designer .gjs-block-category .gjs-title { font-weight: 600; }
+.designer .gjs-sm-sector-title { font-weight: 600; }
+.designer .gjs-sm-property--full, .designer .gjs-sm-property { color: var(--text); }
+.designer .gjs-clm-tag { background: var(--accent); color: #fff; }
+.designer .gjs-trt-trait { padding: 6px 10px; }
+.designer .gjs-mdl-dialog { background: var(--panel); color: var(--text); border-radius: 12px; }
+.designer .gjs-mdl-header { border-bottom: 1px solid var(--border); }
+.designer .gjs-am-file-uploader > form { background: var(--alt); border-color: var(--border); }
+.designer .gjs-am-assets-cont, .designer .gjs-am-file-uploader { background: var(--alt); }
+.designer .gjs-rte-toolbar { background: var(--ink-2); border-radius: 6px; }
+.designer .gjs-rte-action { color: var(--on-ink); border-right-color: #2a2a35; }
+.designer .gjs-toolbar { background: var(--accent); border-radius: 4px; }
+.designer .gjs-badge { background: var(--accent); }
+.designer .gjs-placeholder-int { background: var(--accent); }
+
+@media (max-width: 1300px) {
+  .designer-main { grid-template-columns: 240px minmax(0, 1fr) minmax(0, .8fr); }
+}
+
+/* Narrow screens: one pane at a time, chosen with the tabs. */
+@media (max-width: 1000px) {
+  .view-tabs button { flex: 1; }
+  .view-tabs button[data-view=preview] { display: block; }
+  .designer-main { grid-template-columns: 220px minmax(0, 1fr); }
+  .designer[data-view=design] .preview-pane, .designer[data-view=code] .preview-pane { display: none; }
+  .designer[data-view=code] .sidebar, .designer[data-view=preview] .sidebar, .designer[data-view=preview] .work { display: none; }
+  .designer[data-view=code] .designer-main, .designer[data-view=preview] .designer-main { grid-template-columns: minmax(0, 1fr); }
+  .preview-pane { border-left: 0; }
+}
+@media (max-width: 640px) {
+  .designer .toolbar .doc-title { display: none; }
+  .designer-main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 40%); }
+  .designer[data-view=design] .sidebar { order: 2; border-right: 0; border-top: 1px solid var(--border); }
+  .designer .gjs-block { width: calc(33.3% - 10px); min-height: 64px; }
+  .designer[data-view=code] .designer-main, .designer[data-view=preview] .designer-main { grid-template-rows: minmax(0, 1fr); }
+  .designer .code-pane .hint { display: none; }
+  .designer-tag { display: none; }
+}
+.designer .gjs-sm-label, .designer .gjs-trt-trait .gjs-label { font-size: 12px; font-weight: 500; }
+
+/* The designer always fills the window, also on phones, where the converter pages scroll instead. */
+body.app.designer { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }

@@ -58,6 +58,10 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          # Third-party libraries the site serves as they were released (GrapesJS for the document designer).
+          config: |
+            paths-ignore:
+              - wwwroot/*/vendor/**
 
       # Only the web app is analysed; the docs generator runs in CI, never on the server.
       - if: matrix.language == 'csharp'
