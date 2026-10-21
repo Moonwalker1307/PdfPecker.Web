@@ -18,6 +18,7 @@ const pdfAsImages = isIOS || isSafari || navigator.pdfViewerEnabled === false;
 const PNG_PAGES = 2;
 
 // What the designer keeps outside GrapesJS: the page, the CSS it must not rewrite, and the document's title.
+const VERBATIM_HINT = "/* CSS written here is kept exactly as it is: @font-face, @page :first, margin boxes. */";
 const DEFAULT_MARGIN = 12.7; // PdfOptions' default, used when a document has no @page
 const page = { size: "A4", landscape: false, margins: [20, 20, 20, 20], custom: null, extra: "" };
 let verbatimCss = "";
@@ -390,7 +391,7 @@ function exportDocument() {
 <meta charset="utf-8">
 <title>${escapeText(title)}</title>
 <style>
-${verbatimCss.trim()}
+${verbatimCss.trim() || VERBATIM_HINT}
 </style>
 <style data-designer="page">
 ${pageRule()}
@@ -441,12 +442,13 @@ function importDocument(html) {
   const split = splitAtRules(elements);
   elements = split.keep;
   if (split.verbatim.trim()) verbatim.push(split.verbatim.trim());
-  verbatimCss = verbatim.filter(Boolean).join("\n\n");
+  verbatimCss = verbatim.filter(t => t && t !== VERBATIM_HINT).join("\n\n");
   for (const el of d.querySelectorAll("script, link[rel=stylesheet]")) el.remove();
   $("docTitle").value = d.title || "";
   editor.setComponents(d.body.innerHTML);
   editor.setStyle(elements);
   editor.UndoManager.clear();
+  editor.Layers.setOpen(editor.getWrapper(), true);
   syncPageForm();
   updateCanvas();
 }
