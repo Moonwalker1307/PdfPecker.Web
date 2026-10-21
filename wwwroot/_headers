@@ -9,5 +9,5 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 # The document designer is unlisted: search engines are asked to leave it out.
-/designer-c537a522/*
+/documentdesigner/*
   X-Robots-Tag: noindex, nofollow

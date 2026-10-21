@@ -17,7 +17,7 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
   formatted text) and share links that carry the whole document after the `#`, so nothing is stored on the server.
 
 - `/compare/`: PdfPecker side by side with other HTML to PDF converters for .NET.
-- `/designer-c537a522/`: a document designer, unlisted while it is being tried out (nothing links to it, it is not
+- `/documentdesigner/`: a document designer, unlisted while it is being tried out (nothing links to it, it is not
   in the sitemap, and it sends `noindex`). Blocks for text, tables, images, invoices and page breaks are dragged onto
   a page-sized canvas ([GrapesJS](https://github.com/GrapesJS/grapesjs), BSD-3-Clause, served from `vendor/` so the
   CSP stays `'self'`); a Code tab shows the whole HTML document to edit by hand; and the PDF beside it is remade
