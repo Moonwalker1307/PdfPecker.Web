@@ -58,6 +58,10 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          # Third-party libraries the site serves as they were released (GrapesJS for the document designer).
+          config: |
+            paths-ignore:
+              - wwwroot/*/vendor/**
 
       # Only the web app is analysed; the docs generator runs in CI, never on the server.
       - if: matrix.language == 'csharp'
@@ -71,6 +75,10 @@ jobs:
 
       - name: Fail on findings
         run: |
+          # The document designer parses the visitor's own HTML from its code view on purpose (DOMParser, inert), so
+          # js/xss-through-dom is not counted there; every other query still is.
+          filter='.runs[].results |= map(select((.ruleId == "js/xss-through-dom" and (.locations[0].physicalLocation.artifactLocation.uri | startswith("wwwroot/documentdesigner/"))) | not))'
+          for f in codeql-results/*.sarif; do jq "$filter" "$f" > "$f.tmp" && mv "$f.tmp" "$f"; done
           count=$(jq '[.runs[].results[]] | length' codeql-results/*.sarif)
           # Each finding as a plain line (the log keeps the file and line) and as an annotation on the pull request.
           jq -r '.runs[].results[] | (.locations[0].physicalLocation | "\(.artifactLocation.uri):\(.region.startLine)") as $at

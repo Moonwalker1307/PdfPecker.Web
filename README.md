@@ -17,6 +17,13 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
   formatted text) and share links that carry the whole document after the `#`, so nothing is stored on the server.
 
 - `/compare/`: PdfPecker side by side with other HTML to PDF converters for .NET.
+- `/documentdesigner/`: a document designer, unlisted while it is being tried out (nothing links to it, it is not
+  in the sitemap, and it sends `noindex`). Blocks for text, tables, images, invoices and page breaks are dragged onto
+  a page-sized canvas ([GrapesJS](https://github.com/GrapesJS/grapesjs), BSD-3-Clause, served from `vendor/` so the
+  CSP stays `'self'`); a Code tab shows the whole HTML document to edit by hand; and the PDF beside it is remade
+  through `/api/convert` a moment after each change, one request at a time. `{{placeholders}}` and `data-repeat` are
+  filled from sample JSON for the preview. The page size and margins are written into the HTML as an `@page` rule, so
+  a downloaded template converts the same with `HtmlToPdf.Convert(html)`. The document is kept in the browser only.
 - `/docs/`: the PdfPecker manual, one page per topic. The pages in `wwwroot/docs` are generated from the Markdown in
   `docs/` by `tools/DocsBuilder`, which renders it with PdfPecker's own Markdown converter. Edit the Markdown, then run
   `dotnet run --project tools/DocsBuilder` and commit both; CI fails when they are out of step. The same run writes
