@@ -4,6 +4,36 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.19.0
+
+Released 22 October 2026.
+
+- [PdfPecker.Fluent](/docs/fluent-api/), a fluent C# API in the style of QuestPDF, is on nuget.org. It builds pages,
+  headers, footers, columns, rows, tables, text, images and barcodes in code and renders them with PdfPecker. It is
+  released with every PdfPecker release, with the same version.
+- [A header and footer of their own on the first page](/docs/paged-media/#running-header-and-footer-from-html):
+  `data-sticky-pdf-first-header` and `data-sticky-pdf-first-footer` replace the running bands on page one, or remove
+  them when left empty.
+- [Scale content to fit a box](/docs/html-and-css/#scale-content-to-fit-a-box): `-pdfpecker-scale-to-fit: shrink` draws
+  a box's content smaller until it fits the box's height, for labels, badges and certificates.
+- Faster repeated conversions: documents made from one template reuse their fonts and font subsets, parsed CSS and the
+  PDF writer's buffers, so an invoice converts about 10% faster than with 1.18.0, and documents with web fonts gain
+  the most. The output is byte-identical.
+- [PDF to image](/docs/pdf-to-image/#output-formats) and [PDF to HTML](/docs/pdf-to-html/#options): lossless WebP
+  encodes faster, and its default effort is now 29 instead of 85, which is about 44% faster for files about 1% larger;
+  `Quality = 85` gives the old bytes. Masks finer than their image keep their resolution, the words of Type 3 fonts drawn
+  at their own scale stay whole, and mesh-shaded fills need far less memory.
+- Fixes, all closer to Chrome: positioned boxes paint in document order; an absolutely positioned child of a flex
+  container is aligned by `justify-content` and `align-self`, and one with `grid-row` or `grid-column` is placed in its
+  grid area; `vertical-align: top` and `bottom` move a span's images and inline-blocks with its text; a `<br>` directly
+  in a flex or grid container breaks the line instead of splitting the text into two items; and a word that may break
+  no longer leaves its last letter on a line of its own in a box as wide as its content.
+- Hostile input: deeply nested columns, flex boxes, tables and backdrop filters, and long runs of combining marks, now
+  convert within bounded time and memory.
+- Pages with overlapping positioned boxes, positioned children of flex and grid boxes, `vertical-align: top` or
+  `bottom` spans holding other boxes and `<br>` in flex containers look different from 1.18.0, and WebP images at the
+  default quality have different bytes but the same pixels.
+
 ## 1.18.0
 
 Released 21 October 2026.

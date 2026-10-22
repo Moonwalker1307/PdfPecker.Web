@@ -1,6 +1,6 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 131 features below, PdfPecker supports 80, supports 17 in part and leaves out 34. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 133 features below, PdfPecker supports 82, supports 17 in part and leaves out 34. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
 ## File format and structure
 
@@ -19,7 +19,7 @@ The PDF file itself: versions, cross-reference tables, pages and their boxes.
 | Page boxes (Crop, Bleed, Trim, Art) | ½ Partly | CropBox is read and kept. Bleed, trim and art boxes are not written, and CSS bleed and marks (crop marks) are ignored. |
 | Very large documents | ✓ Yes | Streaming merge and `MaxPages` limits; the readers have resource limits for hostile input. |
 
-## Creating content
+## Creating content {changed 1.19.0}
 
 Ways to produce a new PDF.
 
@@ -28,9 +28,11 @@ Ways to produce a new PDF.
 | HTML and CSS to PDF | ✓ Yes | Own parser, CSS engine and layout: flexbox, grid, tables, floats, multi-column, SVG and more. |
 | Markdown to PDF | ✓ Yes | CommonMark 0.31 and GitHub Flavored Markdown, with footnotes. |
 | Images to PDF | ✓ Yes | PNG, JPEG, GIF, WebP, BMP and TIFF, one per page. |
-| Headers, footers and page numbers | ✓ Yes | Running bands, `@page` margin boxes, `{page}` and `{pages}` tokens. |
+| Fluent C# API | ✓ Yes | [PdfPecker.Fluent](/docs/fluent-api/), in the style of QuestPDF. |
+| Headers, footers and page numbers | ✓ Yes | Running bands, `@page` margin boxes, `{page}` and `{pages}` tokens, and a different or no header and footer on the first page. |
 | Table of contents with page numbers | ✓ Yes | `target-counter()` and `leader()` from CSS Paged Media. |
 | Footnotes | ✓ Yes | CSS `float: footnote`, and Markdown footnotes at the page bottom. |
+| Scale content to fit a box | ✓ Yes | `-pdfpecker-scale-to-fit: shrink` for labels, badges and certificates. |
 | Barcodes and QR codes | ✓ Yes | QR, EPC payment QR, Code 128 and EAN-13, drawn as vectors. |
 | Content rendered by JavaScript | ✕ No | By design: no scripts run. Render the HTML on the server first. |
 | Low-level drawing API | ✕ No | There is no canvas-style API to draw paths and text at coordinates; content comes from HTML, Markdown, images or the fluent API. |

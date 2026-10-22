@@ -77,4 +77,5 @@ own machine and documents.
 - [Options](/docs/options/): page size, margins, headers and footers, document properties and file access.
 - [HTML and CSS support](/docs/html-and-css/) and [Paged media](/docs/paged-media/): what your templates can use.
 - [Fonts](/docs/fonts/): register your own fonts and use any Unicode text.
+- [Fluent C# API](/docs/fluent-api/): build PDFs from C# code instead of HTML, in the style of QuestPDF.
 - [Limitations](/docs/limitations/): what PdfPecker does not do (yet).
