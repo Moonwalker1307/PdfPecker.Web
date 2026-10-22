@@ -308,11 +308,13 @@ on the 26 templates of their production app, on a 22-core development machine af
 for all 26 documents one at a time and PdfPecker 17 ms (about 800 times faster), and with 22 in parallel IronPDF made
 9.2 documents/s and PdfPecker 1,143 (about 125 times). 24 of the 26 documents came out identical; the other two differ
 by less than 0.25 mm.</p>
-<p>To reproduce the table from a clone of the <a href="https://github.com/Moonwalker1307/PdfPecker">PdfPecker repository</a> (needs wkhtmltopdf on <code>PATH</code> and a Chromium at <code>CHROMIUM_PATH</code>):</p>
-<pre><code>dotnet run --project bench/PdfPecker.Comparison -c Release
+<p>To reproduce the table, clone the <a href="https://github.com/Moonwalker1307/PdfPecker.Benchmarks">PdfPecker.Benchmarks repository</a>
+(needs wkhtmltopdf on <code>PATH</code> and a Chromium at <code>CHROMIUM_PATH</code>) and run:</p>
+<pre><code>dotnet run --project src/PdfPecker.Comparison -c Release
 </code></pre>
-<p>The comparison project is not part of <code>PdfPecker.sln</code>, so its third-party packages never reach the library or its
-tests. Your numbers will differ with hardware and documents.</p>
+<p>It measures PdfPecker from nuget.org; <code>-p:PdfPeckerVersion=</code> picks another release. The comparison lives in its own
+repository, so its third-party packages never reach the library or its tests. Your numbers will differ with hardware
+and documents.</p>
 <h2 id="conversion-speed">Conversion speed</h2>
 <p>Measured with <code>bench/PdfPecker.Benchmarks</code> (in the PdfPecker repository) on a 4-core cloud VM (.NET 10, Release, after JIT warm-up):</p>
 <div class="table-scroll"><table>
