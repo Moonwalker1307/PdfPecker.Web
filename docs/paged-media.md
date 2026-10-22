@@ -55,7 +55,7 @@ continues on the next page. Each call links to its note, and tagged PDFs mark th
 <p>Paid on the last banking day<span class="note">Or the day before a holiday.</span>.</p>
 ```
 
-## Running header and footer from HTML
+## Running header and footer from HTML {changed 1.19.0}
 
 An element with the `data-sticky-pdf-header` or `data-sticky-pdf-footer` attribute is
 taken out of the flow and drawn at the top or bottom of every page, and the page content flows in the space between.
@@ -66,6 +66,17 @@ Inside it, `{page}` and `{total-pages}` (or `{pages}`) are replaced with the pag
 <header data-sticky-pdf-header height="17mm">ACME Ltd · Payslip</header>
 <main>...</main>
 <footer data-sticky-pdf-footer height="12mm">Page {page} of {total-pages}</footer>
+```
+
+An element with `data-sticky-pdf-first-header` or `data-sticky-pdf-first-footer` takes the place of the running header
+or footer on the first page only: a letterhead on page one and a slim header after it, or, left empty, no header or
+footer on page one at all. The content on page one uses the space its own bands leave.
+
+```html
+<header data-sticky-pdf-first-header height="40mm"><img src="letterhead.png" alt="ACME Ltd"></header>
+<header data-sticky-pdf-header height="12mm">ACME Ltd · Offer 2041</header>
+<footer data-sticky-pdf-first-footer></footer>
+<footer data-sticky-pdf-footer>Page {page} of {total-pages}</footer>
 ```
 
 ## Shrink to fit {new 1.18.0}

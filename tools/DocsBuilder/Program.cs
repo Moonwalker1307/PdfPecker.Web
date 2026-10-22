@@ -36,6 +36,7 @@ Section[] sections =
         new("html-and-css", "html-and-css", "HTML and CSS", "The HTML elements, CSS selectors and properties, SVG and image formats PdfPecker supports."),
         new("paged-media", "paged-media", "Paged media", "@page rules, margin boxes, named pages, running headers and tables of contents with page numbers."),
         new("markdown", "markdown", "Markdown", "Convert CommonMark and GitHub Flavored Markdown to PDF or HTML."),
+        new("fluent-api", "fluent-api", "Fluent C# API", "PdfPecker.Fluent: build PDFs from C# code in the style of QuestPDF, rendered by PdfPecker with no browser or native binaries."),
         new("images-to-pdf", "images-to-pdf", "Images to PDF", "Put PNG, JPEG, GIF, WebP, BMP or TIFF images into a PDF, one per page, at their own size or fitted to a page."),
         new("fonts", "fonts", "Fonts", "Register TrueType, OpenType, WOFF and WOFF2 fonts, use @font-face, and handle missing fonts."),
         new("languages", "languages", "Right-to-left, CJK and hyphenation", "Arabic and Hebrew text with bidi and shaping, Chinese, Japanese and Korean line breaking, and automatic hyphenation."),

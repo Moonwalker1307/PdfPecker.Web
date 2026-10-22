@@ -39,7 +39,7 @@ byte[][] pages = HtmlToImage.Convert(html, new PdfOptions { PageSize = PageSize.
 byte[][] jpegs = await HtmlToImage.ConvertAsync(html, imageOptions: new ImageOptions { Format = PdfImageFormat.Jpeg });
 ```
 
-## Output formats {changed 1.10.0}
+## Output formats {changed 1.19.0}
 
 Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`Save()` use it too):
 
@@ -51,7 +51,8 @@ Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`
 - **WebP**: always lossless (VP8L), alpha included, decoding to exactly the PNG's pixels and usually 50% to 70%
   smaller. Pages with up to 256 colours use a palette (packed 2, 4 or 8 pixels per byte when small); others use
   subtract-green and per-tile prediction, then LZ77, a colour cache and canonical prefix codes. Here `Quality` is the
-  compression effort: higher spends more time searching for a smaller file and never changes a pixel. Lossy WebP is
+  compression effort (default 29): higher spends more time searching for a smaller file and never changes a pixel;
+  85, the default before 1.19.0, makes files about 1% smaller and takes nearly twice as long. Lossy WebP is
   not written. WebP is limited to 16,384 pixels per side (JPEG to 65,535); larger images throw `NotSupportedException`.
 - **TIFF**: lossless, one page per file with `Format = PdfImageFormat.Tiff` (`.tif` from `ConvertFile`, or
   `RenderedImage.ToTiff()`), or every page in one multi-page file with `ConvertToTiff`, `ConvertToTiffAsync`,
@@ -76,11 +77,11 @@ byte[] archive = PdfToImage.ConvertToTiff(pdfBytes, new ImageOptions
 });
 ```
 
-## Options
+## Options {changed 1.19.0}
 
 `ImageOptions` sets `Dpi` (default 150) or a target `Width`/`Height` in pixels, `BackgroundColor` or `Transparent`,
-`RenderAnnotations`, `Password`, `MaxDegreeOfParallelism`, `PngCompression`, `Format`, `Quality` (an
-`ArgumentOutOfRangeException` outside 1 to 100) and the [TIFF](#tiff) options. A `PdfRenderer` is thread-safe and
+`RenderAnnotations`, `Password`, `MaxDegreeOfParallelism`, `PngCompression`, `Format`, `Quality` (85 for JPEG and 29 for WebP until it
+is set; an `ArgumentOutOfRangeException` outside 1 to 100) and the [TIFF](#tiff) options. A `PdfRenderer` is thread-safe and
 shares decoded fonts and images between pages. Encrypted files open with the user or owner password
 (`PdfPasswordException` otherwise); unreadable files throw `InvalidDataException`, as does a page that needs more than
 20 million drawing operations (nested forms can multiply a few bytes into billions). Pass a cancellation token to

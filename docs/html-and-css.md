@@ -244,6 +244,19 @@ projection has at its centre, so it stays a rectangle or parallelogram where Chr
 edge-on or away from the viewer is not drawn. `transform-style` and `backface-visibility` are accepted and, as in
 Chrome's print output, both faces of a flip card are drawn.
 
+## Scale content to fit a box {new 1.19.0}
+
+`-pdfpecker-scale-to-fit: shrink` on a box with a `height` or `max-height` draws its content smaller until it fits
+the box, for labels, name badges and certificates that have a fixed space for text of any length. The text reflows
+wider into fewer lines before it gets smaller, and the box's own border and background keep their size. Content that
+already fits is not changed, and table cells with a height scale their content too. A scaled box is drawn whole, so
+like a box with `break-inside: avoid` it moves to the next page rather than across a page break. Scaled boxes nest at
+most two levels deep.
+
+```html
+<div style="width: 80mm; height: 25mm; -pdfpecker-scale-to-fit: shrink">Dr. Maximiliane Alexandra von Rosenberg-Hohenstein</div>
+```
+
 ## Pagination {changed 1.18.0}
 
 Lines, images and table rows are never cut in half at a page boundary; table header rows repeat at the top and

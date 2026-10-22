@@ -37,7 +37,7 @@ The pages are drawn by PdfPecker's own [PDF renderer](/docs/pdf-to-image/) and t
 [text extraction](/docs/text-extraction/), so everything those can read works here: any fonts, JPEG 2000, JBIG2 and
 CCITT images, encrypted PDFs, form fields and annotations. Pages are converted in parallel.
 
-## Options
+## Options {changed 1.19.0}
 
 | `PdfHtmlOptions` | Default | |
 | --- | --- | --- |
@@ -45,7 +45,7 @@ CCITT images, encrypted PDFs, form fields and annotations. Pages are converted i
 | `Pages` | every page | The pages to convert, such as `PdfPageRange.Parse("1-3")` |
 | `Dpi` | 150 | The resolution of the page images; higher is sharper on high-density screens and makes larger files |
 | `ImageFormat` | `WebP` | `WebP` (lossless), `Png`, or `Jpeg` (smaller for photos and scans, but lossy) |
-| `Quality` | 85 | The JPEG quality, or the WebP compression effort, from 1 to 100 |
+| `Quality` | 85 for JPEG, 29 for WebP | The JPEG quality, or the WebP compression effort, from 1 to 100; WebP never loses a pixel, and 85 (the default before 1.19.0) makes it about 1% smaller and slower |
 | `IncludeText` | true | Lay the text invisibly over the images |
 | `IncludeLinks` | true | Turn web, mail, phone and page links into links; `javascript:` and file links are always left out |
 | `RenderAnnotations` | true | Draw form fields, stamps and comments, and include their text |
