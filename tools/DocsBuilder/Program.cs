@@ -70,6 +70,7 @@ Section[] sections =
     [
         new("changelog", "changelog", "Changelog", "What changed in each PdfPecker release, from 1.0.0 to the latest."),
         new("limitations", "limitations", "Limitations", "What PdfPecker does not support yet, and what it leaves out by design."),
+        new("pdf-features", "pdf-features", "PDF feature checklist", "Every PDF feature, from encryption and signatures to layers and PDF/X, marked as supported, partly supported or missing in PdfPecker."),
         new("performance", "performance", "Performance", "PdfPecker's speed and memory compared with Chromium, wkhtmltopdf, iText and other .NET converters."),
         new("how-it-works", "how-it-works", "How it works", "PdfPecker's pipeline from HTML parsing through CSS and layout to the PDF writer and renderer."),
     ]),
@@ -135,10 +136,12 @@ return 0;
 
 partial class Program
 {
-    // Wide tables scroll inside their own box on phones, and C# examples get the same colours as the home page.
+    // Wide tables scroll inside their own box on phones, C# examples get the same colours as the home page, and the
+    // marks of the feature checklist (a cell starting with ✓, ½ or ✕) get the compare page's green, amber and grey.
     public static string Polish(string html)
     {
         html = html.Replace("<table>", "<div class=\"table-scroll\"><table>").Replace("</table>", "</table></div>");
+        html = html.Replace("<td>✓ ", "<td class=\"mark y\">✓ ").Replace("<td>½ ", "<td class=\"mark p\">½ ").Replace("<td>✕ ", "<td class=\"mark n\">✕ ");
         html = Regex.Replace(html, "<pre><code class=\"language-(csharp|cs)\">(.*?)</code></pre>",
             m => "<pre class=\"cs\"><code>" + CSharp.Highlight(WebUtility.HtmlDecode(m.Groups[2].Value)) + "</code></pre>",
             RegexOptions.Singleline);

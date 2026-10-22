@@ -2,7 +2,8 @@
 
 PdfPecker is built for fast conversion of HTML templates you control, not for rendering arbitrary web pages. These are
 the known gaps; most are scope choices for speed and size, and they are the first candidates for future work. Anything
-not listed in [What is supported](/docs/html-and-css/) should be assumed missing.
+not listed in [What is supported](/docs/html-and-css/) should be assumed missing. The [PDF feature checklist](/docs/pdf-features/)
+marks every PDF feature as supported, partly supported or missing.
 
 ## By design
 
