@@ -49,14 +49,16 @@ for all 26 documents one at a time and PdfPecker 17 ms (about 800 times faster),
 9.2 documents/s and PdfPecker 1,143 (about 125 times). 24 of the 26 documents came out identical; the other two differ
 by less than 0.25 mm.
 
-To reproduce the table from a clone of the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker) (needs wkhtmltopdf on `PATH` and a Chromium at `CHROMIUM_PATH`):
+To reproduce the table, clone the [PdfPecker.Benchmarks repository](https://github.com/Moonwalker1307/PdfPecker.Benchmarks)
+(needs wkhtmltopdf on `PATH` and a Chromium at `CHROMIUM_PATH`) and run:
 
 ```
-dotnet run --project bench/PdfPecker.Comparison -c Release
+dotnet run --project src/PdfPecker.Comparison -c Release
 ```
 
-The comparison project is not part of `PdfPecker.sln`, so its third-party packages never reach the library or its
-tests. Your numbers will differ with hardware and documents.
+It measures PdfPecker from nuget.org; `-p:PdfPeckerVersion=` picks another release. The comparison lives in its own
+repository, so its third-party packages never reach the library or its tests. Your numbers will differ with hardware
+and documents.
 
 ## Conversion speed
 
