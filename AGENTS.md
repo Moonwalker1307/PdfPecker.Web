@@ -72,8 +72,13 @@ docker build -t pdfpecker-web . && docker run -p 8080:8080 --memory 2g pdfpecker
 - **New PdfPecker release** (one PR): wait until nuget.org lists the version; run
   `dotnet run --project tools/DocsBuilder -- archive` before the bump (the builder refuses the new version until the
   old manual is kept); bump both `PackageReference` lines; mark changed docs headings with `{new X.Y.Z}` or
-  `{changed X.Y.Z}`; add a section to `docs/changelog.md`; then check the limitations page, home page cards, the
-  compare page and the converter settings panel for what the release changes.
+  `{changed X.Y.Z}`; add a section to `docs/changelog.md`; then check the limitations page, the PDF feature checklist
+  (`docs/pdf-features.md`), home page cards, the compare page and the converter settings panel for what the release
+  changes.
+- **PDF feature checklist** (`docs/pdf-features.md`): every row is marked `✓ Yes`, `½ Partly` or `✕ No` for the
+  version the site uses, checked against that version's code rather than its README. When a release adds, extends or
+  removes a PDF feature, change its mark and note, add a row for a feature the list lacks, and update the counts in
+  the opening paragraph.
 - **New docs page**: add it to the page list in `tools/DocsBuilder/Program.cs` and to `wwwroot/sitemap.xml`.
 - **Converter options**: a new `PdfOptions` setting in the settings panel needs the form field and `csharp()` in
   `converter.js`, its handling in `BuildOptions` in `Program.cs`, and a line in the README's API section.

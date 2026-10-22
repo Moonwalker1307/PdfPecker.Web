@@ -594,6 +594,23 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .prose thead th { background: var(--alt); font-size: 13px; color: var(--muted); }
 .prose tbody tr:last-child td { border-bottom: 0; }
 .prose td:first-child { white-space: nowrap; }
+/* The feature checklist's marks, coloured as on the compare page; its feature names wrap so the notes keep room. */
+.prose td.mark { width: 7em; white-space: nowrap; font-weight: 700; }
+.prose td.mark.y { color: var(--ok); }
+.prose td.mark.p { color: #b7791f; }
+.prose td.mark.n { color: var(--muted); font-weight: 600; }
+.prose tr:has(td.mark) td:first-child { white-space: normal; min-width: 10em; font-weight: 600; }
+@media (prefers-color-scheme: dark) { .prose td.mark.p { color: #f6ad55; } }
+@media (max-width: 640px) {
+  /* On phones each checklist row stacks: the feature and its mark on one line, the note under them. */
+  .prose table:has(td.mark) thead { display: none; }
+  .prose tr:has(td.mark) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 14px;
+    border-bottom: 1px solid var(--border); }
+  .prose tbody tr:has(td.mark):last-child { border-bottom: 0; }
+  .prose tr:has(td.mark) td { padding: 0; border: 0; min-width: 0; }
+  .prose tr:has(td.mark) td:nth-child(3) { grid-column: 1 / -1; color: var(--muted); font-size: 14px; }
+  .prose tr:has(td.mark) td:nth-child(3):empty { display: none; }
+}
 /* What is new or changed since the previous PdfPecker version (marked in docs/*.md, see tools/DocsBuilder). Green and
    amber, as in changelogs and diffs, so the marks don't read as errors the way the site's red would. */
 .change { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1px solid var(--changed); border-radius: 999px;
