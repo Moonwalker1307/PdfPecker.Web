@@ -16,7 +16,8 @@ record Manual(string Version, string Source, Section[] Sections, string Base, bo
 
 // Writes the pages and search index of one manual. Every manual uses the same templates, so an old manual keeps the
 // site's current header, footer and styles, and the version picker on every page lists every manual.
-// main, given for the latest manual only, adds the library's unreleased commits to its changelog and home page.
+// main, when the library has unreleased commits, adds them to the latest manual's changelog and home page and puts a
+// "main (unreleased)" entry, which opens that list, at the top of every manual's version picker.
 sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnlyList<Manual> all, string docsOutput, Unreleased? main = null)
 {
     readonly Dictionary<Page, string> titles = [];
@@ -38,7 +39,7 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
             var text = File.ReadAllText(Path.Combine(manual.Source, page.File + ".md")).ReplaceLineEndings("\n");
             if (manual.SinglePage) text = DocsVersions.StripImages(text);
             var released = text;
-            if (main != null && page.File == "changelog") text = DocsMain.InsertInto(text, DocsMain.Markdown(main));
+            if (main != null && manual.Latest && page.File == "changelog") text = DocsMain.InsertInto(text, DocsMain.Markdown(main));
             var (markdown, marks) = DocsChanges.Extract(text, page.File);
             titles[page] = manual.SinglePage ? "Manual"
                 : Regex.Match(markdown, @"^# (.+)$", RegexOptions.Multiline).Groups[1].Value;
@@ -76,7 +77,7 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
         // list is the only note, since a line under the title as well would repeat it.
         var summary = DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage);
         forPdf[0] = (forPdf[0].Page, DocsChanges.InsertAfterTitle(forPdf[0].Body, summary));
-        if (main != null) summary = DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage,
+        if (main != null && manual.Latest) summary = DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage,
             DocsMain.HomeLine(main));
         rendered[0] = (rendered[0].Page, DocsChanges.InsertAfterTitle(rendered[0].Body, summary));
 
@@ -206,7 +207,8 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
 
     // One option per manual, newest first. Choosing one opens the same page in that manual, or its first page when it
     // has no such page (docs-search.js); data-pages lists the pages each manual has.
-    string VersionOptions(string indent) => string.Join("\n", all.Select(m =>
+    string VersionOptions(string indent) => (main == null || main.Groups.Count == 0 ? "" :
+        $"{indent}<option value=\"/docs/changelog/#{DocsMain.Anchor}\">main (unreleased)</option>\n") + string.Join("\n", all.Select(m =>
         $"{indent}<option value=\"{m.Base}\" data-pages=\"{string.Join(' ', m.Pages.Select(p => p.Slug).Where(s => s.Length > 0))}\"" +
         $"{(m == manual ? " selected" : "")}>{m.Version}{(m.Latest ? " (latest)" : "")}</option>"));
 

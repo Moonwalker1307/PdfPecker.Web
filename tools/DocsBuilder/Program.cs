@@ -123,7 +123,7 @@ var main = mainClone == null ? null : DocsMain.Read(mainClone, version);
 List<(Page Page, string Body)> latest = [];
 for (int i = 0; i < manuals.Count; i++)
 {
-    var site = new ManualSite(manuals[i], i + 1 < manuals.Count ? manuals[i + 1].Version : null, manuals, output, i == 0 ? main : null);
+    var site = new ManualSite(manuals[i], i + 1 < manuals.Count ? manuals[i + 1].Version : null, manuals, output, main);
     var rendered = site.Build();
     if (i == 0) latest = rendered;
 }
