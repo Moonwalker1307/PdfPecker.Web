@@ -73,7 +73,7 @@ static partial class DocsChanges
 
     // The list of everything new or changed in this version, for the top of the docs home page.
     public static string Summary(string version, string? previous, IEnumerable<(Page Page, List<(string Href, string Title, bool New)> Changes)> pages,
-        bool singlePage = false)
+        bool singlePage = false, string mainLine = "")
     {
         var sb = new StringBuilder();
         foreach (var (page, changes) in pages)
@@ -82,7 +82,8 @@ static partial class DocsChanges
                 var name = title.Length == 0 ? page.Title : singlePage ? title : $"{page.Title}: {title}";
                 sb.Append($"<li><a href=\"{href}\">{WebUtility.HtmlEncode(name)}</a> <span class=\"change{(isNew ? " new" : "")}\">{(isNew ? "New" : "Changed")}</span></li>\n");
             }
-        var more = "<p class=\"changes-more\"><a href=\"/docs/changelog/\">Every release in the changelog</a></p>";
+        var more = "<p class=\"changes-more\"><a href=\"/docs/changelog/\">Every release in the changelog</a></p>" +
+            (mainLine.Length == 0 ? "" : "\n" + mainLine);
         // A release that changed nothing in the manual (1.1.1 only touched the README's logo) still says so, rather
         // than looking as if its changes were missing.
         if (sb.Length == 0)

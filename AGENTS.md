@@ -22,7 +22,9 @@ Before non-trivial work, read:
 
 - **The site runs the released package.** Library features reach the site only after a NuGet release and a
   `PackageReference` bump, in `PdfPecker.Web.csproj` and `tools/DocsBuilder/DocsBuilder.csproj` together. Never point
-  the site at unreleased library code, and never document a feature the referenced version does not have.
+  the site at unreleased library code, and never document a feature the referenced version does not have. The one
+  exception is the changelog's "Unreleased (main)" section, which the Deploy workflow builds from the library's
+  commits (`tools/DocsBuilder/DocsMain.cs`); at a release the same list becomes that release's changelog section.
 - **Generated docs are checked in.** Edit `docs/*.md`, run `dotnet run --project tools/DocsBuilder`, and commit the
   Markdown with the regenerated `wwwroot/docs`. CI fails when they are out of step.
 - **The API stays a safe public service.** Keep the request limits (5 MB, 15 seconds, 1,000 pages, 120 conversions a
@@ -69,10 +71,11 @@ docker build -t pdfpecker-web . && docker run -p 8080:8080 --memory 2g pdfpecker
 
 ## Change-specific guidance
 
-- **New PdfPecker release** (one PR): wait until nuget.org lists the version; run
-  `dotnet run --project tools/DocsBuilder -- archive` before the bump (the builder refuses the new version until the
-  old manual is kept); bump both `PackageReference` lines; mark changed docs headings with `{new X.Y.Z}` or
-  `{changed X.Y.Z}`; add a section to `docs/changelog.md`; then check the limitations page, the PDF feature checklist
+- **New PdfPecker release** (one PR): wait until nuget.org lists the version; run `dotnet run --project
+  tools/DocsBuilder -- archive` before the bump (the builder refuses the new version until the old manual is kept); bump
+  both `PackageReference` lines; mark changed docs headings with `{new X.Y.Z}` or `{changed X.Y.Z}`; before the bump,
+  run `dotnet run --project tools/DocsBuilder -- release <library clone>`, which turns the "Unreleased (main)" list into
+  the release's section of `docs/changelog.md`; then check the limitations page, the PDF feature checklist
   (`docs/pdf-features.md`), home page cards, the compare page and the converter settings panel for what the release
   changes.
 - **PDF feature checklist** (`docs/pdf-features.md`): every row is marked `✓ Yes`, `½ Partly` or `✕ No` for the

@@ -151,6 +151,8 @@
     var option = select.options[select.selectedIndex];
     var slug = select.getAttribute('data-slug') || '';
     var pages = (option.getAttribute('data-pages') || '').split(' ');
+    // "main (unreleased)" opens the changelog's list of the library's commits since the release the manual describes.
+    if (option.value === '/docs/changelog/#unreleased-main') { location.href = option.value; return; }
     // Only a manual on this site is opened: the value must be /docs/ or /docs/v1.2.3/, and the address is rebuilt from
     // a fixed /docs/ prefix with each part URI-encoded, so nothing read from the page can become a javascript: link.
     var match = /^\/docs\/(?:(v\d+\.\d+\.\d+)\/)?$/.exec(option.value);
