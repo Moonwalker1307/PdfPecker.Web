@@ -16,7 +16,8 @@ record Manual(string Version, string Source, Section[] Sections, string Base, bo
 
 // Writes the pages and search index of one manual. Every manual uses the same templates, so an old manual keeps the
 // site's current header, footer and styles, and the version picker on every page lists every manual.
-sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnlyList<Manual> all, string docsOutput)
+// main, given for the latest manual only, adds the library's unreleased commits to its changelog and home page.
+sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnlyList<Manual> all, string docsOutput, Unreleased? main = null)
 {
     readonly Dictionary<Page, string> titles = [];
     readonly Dictionary<Page, List<(string Href, string Title, bool New)>> changes = [];
@@ -25,15 +26,19 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
 
     string OutputDir => manual.Latest ? docsOutput : Path.Combine(docsOutput, "v" + manual.Version);
 
+    // Returns the pages for the PDF, which is the manual of the released version and so leaves out main's commits.
     public List<(Page Page, string Body)> Build()
     {
         var pages = manual.Pages;
         var plain = new List<(Page Page, string Body)>();
         var rendered = new List<(Page Page, string Body)>();
+        var forPdf = new List<(Page Page, string Body)>();
         foreach (var page in pages)
         {
             var text = File.ReadAllText(Path.Combine(manual.Source, page.File + ".md")).ReplaceLineEndings("\n");
             if (manual.SinglePage) text = DocsVersions.StripImages(text);
+            var released = text;
+            if (main != null && page.File == "changelog") text = DocsMain.InsertInto(text, DocsMain.Markdown(main));
             var (markdown, marks) = DocsChanges.Extract(text, page.File);
             titles[page] = manual.SinglePage ? "Manual"
                 : Regex.Match(markdown, @"^# (.+)$", RegexOptions.Multiline).Groups[1].Value;
@@ -46,6 +51,13 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
             var changed = new List<(string Href, string Title, bool New)>();
             rendered.Add((page, DocsChanges.Apply(body, marks, manual.Version, manual.Href(page), changed, note: !manual.SinglePage)));
             changes[page] = changed;
+            if (released == text) forPdf.Add(rendered[^1]);
+            else
+            {
+                var (releasedMarkdown, releasedMarks) = DocsChanges.Extract(released, page.File);
+                forPdf.Add((page, DocsChanges.Apply(LocalLinks(Program.Polish(MarkdownToHtml.Convert(releasedMarkdown))),
+                    releasedMarks, manual.Version, manual.Href(page), [], note: !manual.SinglePage)));
+            }
             if (manual.SinglePage)
             {
                 var h2s = H2Pattern().Matches(body);
@@ -62,8 +74,11 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
         }
         // The manual's home page lists everything that changed since the version before it. On a one-page manual that
         // list is the only note, since a line under the title as well would repeat it.
-        rendered[0] = (rendered[0].Page, DocsChanges.InsertAfterTitle(rendered[0].Body,
-            DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage)));
+        var summary = DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage);
+        forPdf[0] = (forPdf[0].Page, DocsChanges.InsertAfterTitle(forPdf[0].Body, summary));
+        if (main != null) summary = DocsChanges.Summary(manual.Version, previousVersion, pages.Select(p => (p, changes[p])), manual.SinglePage,
+            DocsMain.HomeLine(main));
+        rendered[0] = (rendered[0].Page, DocsChanges.InsertAfterTitle(rendered[0].Body, summary));
 
         for (int i = 0; i < pages.Length; i++)
         {
@@ -75,7 +90,7 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
         }
         // The search index is built from the pages without the change marks, so "New in" does not match every search.
         File.WriteAllText(Path.Combine(OutputDir, "search.json"), DocsSearch.BuildIndex(plain, manual.Href), new UTF8Encoding(false));
-        return rendered;
+        return forPdf;
     }
 
     // Links between docs pages in an archived manual stay in that manual when it has the page; others go to the latest.

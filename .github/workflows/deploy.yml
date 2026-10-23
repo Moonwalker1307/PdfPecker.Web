@@ -1,5 +1,7 @@
 # Deploys pdfpecker.net to Cloudflare (the Worker in wrangler.jsonc and the container built from the Dockerfile) once
 # the Build workflow has passed for a push to main. Run it by hand to redeploy main.
+# Every hour it also checks whether the library's main branch has a commit the live changelog does not list yet (its
+# "Unreleased (main)" section, see tools/DocsBuilder/DocsMain.cs), and if so redeploys the last main that built.
 # Needs the repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
 name: Deploy
 
@@ -9,6 +11,8 @@ on:
     types: [completed]
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
 
 permissions:
   contents: read
@@ -19,10 +23,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Only for the hourly run: compares the newest library commit the changelog would list with the one the live site
+  # was built with (docs/main.json), and finds the newest main commit the Build workflow passed for.
+  check-main:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+      sha: ${{ steps.build.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Compare the library's main with the live changelog
+        id: compare
+        run: |
+          version=$(sed -n 's/.*Include="PdfPecker" Version="\([^"]*\)".*/\1/p' PdfPecker.Web.csproj)
+          git clone -q --filter=blob:none https://github.com/Moonwalker1307/PdfPecker ../PdfPecker
+          head=$(git -C ../PdfPecker log -1 --format=%H "v$version..origin/main" -- src/ ':(exclude,glob)src/**/*.csproj')
+          live=$(curl -fsS https://pdfpecker.net/docs/main.json | jq -r '.head + "@" + .since' || echo none)
+          echo "Library main: $head (after $version); live: $live" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$live" = "$head@$version" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Find the last main the Build workflow passed
+        id: build
+        if: steps.compare.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow Build --branch main --event push --status success --limit 1 --json headSha --jq '.[0].headSha')
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
   deploy:
+    needs: check-main
     if: >
+      !cancelled() && (
       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') ||
+      (github.event_name == 'schedule' && needs.check-main.outputs.changed == 'true' && needs.check-main.outputs.sha != ''))
     runs-on: ubuntu-latest
     environment:
       name: production
@@ -31,7 +73,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # The commit the Build workflow tested, not whatever main is now.
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.event.workflow_run.head_sha || needs.check-main.outputs.sha || github.sha }}
           persist-credentials: false
 
       # The docs PDF is made here rather than checked in (each build differs: PDFs carry a random file ID).
@@ -44,8 +86,13 @@ jobs:
             PdfPecker.Web.csproj
             tools/DocsBuilder/DocsBuilder.csproj
 
-      - name: Build the docs PDF
-        run: dotnet run --project tools/DocsBuilder -c Release
+      # The library's main branch gives the changelog its "Unreleased (main)" section. The pages in git are built
+      # without it, so they don't change with every library commit.
+      - name: Clone the library
+        run: git clone -q --filter=blob:none https://github.com/Moonwalker1307/PdfPecker ../PdfPecker
+
+      - name: Build the docs PDF and the unreleased changelog
+        run: dotnet run --project tools/DocsBuilder -c Release -- --main ../PdfPecker
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

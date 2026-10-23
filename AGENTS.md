@@ -22,7 +22,9 @@ Before non-trivial work, read:
 
 - **The site runs the released package.** Library features reach the site only after a NuGet release and a
   `PackageReference` bump, in `PdfPecker.Web.csproj` and `tools/DocsBuilder/DocsBuilder.csproj` together. Never point
-  the site at unreleased library code, and never document a feature the referenced version does not have.
+  the site at unreleased library code, and never document a feature the referenced version does not have. The one
+  exception is the changelog's "Unreleased (main)" section, which the Deploy workflow builds from the library's
+  commits (`tools/DocsBuilder/DocsMain.cs`); a release's changelog section sums those commits up as one entry.
 - **Generated docs are checked in.** Edit `docs/*.md`, run `dotnet run --project tools/DocsBuilder`, and commit the
   Markdown with the regenerated `wwwroot/docs`. CI fails when they are out of step.
 - **The API stays a safe public service.** Keep the request limits (5 MB, 15 seconds, 1,000 pages, 120 conversions a
@@ -72,9 +74,9 @@ docker build -t pdfpecker-web . && docker run -p 8080:8080 --memory 2g pdfpecker
 - **New PdfPecker release** (one PR): wait until nuget.org lists the version; run
   `dotnet run --project tools/DocsBuilder -- archive` before the bump (the builder refuses the new version until the
   old manual is kept); bump both `PackageReference` lines; mark changed docs headings with `{new X.Y.Z}` or
-  `{changed X.Y.Z}`; add a section to `docs/changelog.md`; then check the limitations page, the PDF feature checklist
-  (`docs/pdf-features.md`), home page cards, the compare page and the converter settings panel for what the release
-  changes.
+  `{changed X.Y.Z}`; add a section to `docs/changelog.md` that sums up the commits the live "Unreleased (main)"
+  section listed; then check the limitations page, the PDF feature checklist (`docs/pdf-features.md`), home page
+  cards, the compare page and the converter settings panel for what the release changes.
 - **PDF feature checklist** (`docs/pdf-features.md`): every row is marked `✓ Yes`, `½ Partly` or `✕ No` for the
   version the site uses, checked against that version's code rather than its README. When a release adds, extends or
   removes a PDF feature, change its mark and note, add a row for a feature the list lacks, and update the counts in

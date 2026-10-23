@@ -9,6 +9,8 @@ using PdfPecker;
 //   dotnet run --project tools/DocsBuilder                 builds the pages, the search indexes and the PDF
 //   dotnet run --project tools/DocsBuilder -- archive      also keeps this version's manual: its Markdown and page list
 //                                                          in docs/archive/<version> and its PDF in wwwroot/docs/versions
+//   dotnet run --project tools/DocsBuilder -- --main <clone>   also opens the changelog with the commits a clone of the
+//                                                          library has after this version (see DocsMain.cs)
 //
 // The latest manual is at /docs/; every earlier one is built from docs/archive/<version> to /docs/v<version>/, so the
 // version picker can show the manual for the version a reader uses. Versions before 1.7.0 had their manual in the
@@ -23,7 +25,14 @@ if (!Directory.Exists(source)) { Console.Error.WriteLine($"No docs folder in {ro
 // The version of the PdfPecker package the site (and this tool) uses is the version the docs describe.
 var assemblyVersion = typeof(HtmlToPdf).Assembly.GetName().Version!;
 var version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
-if (args.Length > 0 && args is not ["archive"]) { Console.Error.WriteLine($"Unknown arguments: {string.Join(' ', args)}"); return 1; }
+var archive = false;
+string? mainClone = null;
+for (int i = 0; i < args.Length; i++)
+{
+    if (args[i] == "archive") archive = true;
+    else if (args[i] == "--main" && i + 1 < args.Length) mainClone = args[++i];
+    else { Console.Error.WriteLine($"Unknown arguments: {string.Join(' ', args)}"); return 1; }
+}
 
 // The order of the sidebar and of the previous/next links. Slug "" is the docs home page.
 Section[] sections =
@@ -110,15 +119,21 @@ if (Directory.Exists(output))
     foreach (var file in Directory.GetFiles(output)) File.Delete(file);
 }
 
+var main = mainClone == null ? null : DocsMain.Read(mainClone, version);
 List<(Page Page, string Body)> latest = [];
 for (int i = 0; i < manuals.Count; i++)
 {
-    var site = new ManualSite(manuals[i], i + 1 < manuals.Count ? manuals[i + 1].Version : null, manuals, output);
+    var site = new ManualSite(manuals[i], i + 1 < manuals.Count ? manuals[i + 1].Version : null, manuals, output, i == 0 ? main : null);
     var rendered = site.Build();
     if (i == 0) latest = rendered;
 }
 File.WriteAllText(Path.Combine(output, DocsVersions.ListFile), DocsVersions.List(version, older), new UTF8Encoding(false));
 Console.WriteLine($"Wrote {manuals.Count} manuals ({pages.Length} pages for {version}) to {output}");
+if (main != null)
+{
+    File.WriteAllText(Path.Combine(output, DocsMain.FileName), DocsMain.Json(main), new UTF8Encoding(false));
+    Console.WriteLine($"The changelog lists {main.Groups.Sum(g => g.Commits.Count)} library commits after {version}");
+}
 
 // The PDF is not checked in: every PDF gets a random file ID, so it would never match a committed copy. The Deploy
 // workflow runs this program before uploading wwwroot, and it is ignored by git. Archived manuals are the exception:
@@ -126,7 +141,7 @@ Console.WriteLine($"Wrote {manuals.Count} manuals ({pages.Length} pages for {ver
 var pdf = DocsPdf.Build(latest, Path.Combine(root, "wwwroot"), version);
 File.WriteAllBytes(Path.Combine(output, DocsPdf.FileName), pdf);
 Console.WriteLine($"Wrote {DocsPdf.FileName} ({pdf.Length / 1024} KB)");
-if (args is ["archive"])
+if (archive)
 {
     Directory.CreateDirectory(pdfArchive);
     File.WriteAllBytes(Path.Combine(pdfArchive, DocsVersions.FileName(version)), pdf);

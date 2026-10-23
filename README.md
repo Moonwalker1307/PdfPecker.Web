@@ -43,6 +43,14 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
     page). Marks for the version the site uses get a badge, a tag in the sidebar, a line under the page title and a
     place in the list on the docs home page, in the PDF too; older marks are hidden, so only what changed since the
     previous release is highlighted. Each archived manual shows the marks of its own version.
+  - Unreleased changes: while the library's `main` is ahead of the version the site uses, the changelog opens with an
+    "Unreleased (main)" section listing the commits merged since that version's tag (those that change `src/`, with
+    their pull requests linked), and the docs home page links to it. The Deploy workflow clones the library and runs
+    the builder with `--main <clone>`; every hour it checks whether `main` has a newer such commit than the live
+    `/docs/main.json` names and, if so, redeploys the last `main` the Build workflow passed. The checked-in pages are
+    built without `--main`, so they do not change with library commits. When the site moves to the release holding
+    those commits, the section empties by itself and that release's own changelog section sums them up. A release on
+    nuget.org that the site has not moved to yet is listed apart, under its version.
 
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 
