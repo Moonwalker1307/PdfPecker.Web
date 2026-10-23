@@ -45,9 +45,11 @@ jobs:
           version=$(sed -n 's/.*Include="PdfPecker" Version="\([^"]*\)".*/\1/p' PdfPecker.Web.csproj)
           git clone -q --filter=blob:none https://github.com/Moonwalker1307/PdfPecker ../PdfPecker
           head=$(git -C ../PdfPecker log -1 --format=%H "v$version..origin/main" -- src/ ':(exclude,glob)src/**/*.csproj')
-          live=$(curl -fsS https://pdfpecker.net/docs/main.json | jq -r '.head + "@" + .since' || echo none)
-          echo "Library main: $head (after $version); live: $live" >> "$GITHUB_STEP_SUMMARY"
-          if [ "$live" = "$head@$version" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+          # The tag's commit counts too, so moving a tag (after a history rewrite, say) also redeploys.
+          tag=$(git -C ../PdfPecker rev-parse "v$version^{commit}")
+          live=$(curl -fsS https://pdfpecker.net/docs/main.json | jq -r '.head + "@" + .since + "@" + .tag' || echo none)
+          echo "Library main: $head (after $version at $tag); live: $live" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$live" = "$head@$version@$tag" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
 
       - name: Find the last main the Build workflow passed
         id: build

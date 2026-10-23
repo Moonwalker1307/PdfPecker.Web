@@ -34,15 +34,30 @@ static partial class DocsMain
             .Where(v => Version.TryParse(v, out var parsed) && parsed > Version.Parse(siteVersion))
             .OrderBy(Version.Parse).ToList();
         var groups = new List<Group>();
-        var from = $"v{siteVersion}";
+        var from = OnMain(clone, $"v{siteVersion}", head);
         foreach (var tag in newer)
         {
-            groups.Add(new Group(tag, Log(clone, from, $"v{tag}")));
-            from = $"v{tag}";
+            var to = OnMain(clone, $"v{tag}", head);
+            groups.Add(new Group(tag, Log(clone, from, to)));
+            from = to;
         }
         groups.Add(new Group(null, Log(clone, from, head)));
         groups.Reverse();
-        return new Unreleased(siteVersion, groups.Where(g => g.Commits.Count > 0).ToList());
+        Run(clone, ["rev-parse", $"v{siteVersion}^{{commit}}"], out var tagCommit);
+        return new Unreleased(siteVersion, tagCommit.Trim(), groups.Where(g => g.Commits.Count > 0).ToList());
+    }
+
+    // The commit on main that a release tag stands for. When main's history has been rewritten (to change author
+    // addresses, say) and the tag still names the old commit, main..tag would list every commit since the first, so the
+    // release is found on main by its tree instead, which a rewrite that keeps the files leaves alone.
+    static string OnMain(string clone, string tag, string head)
+    {
+        if (Run(clone, ["merge-base", "--is-ancestor", tag, head], out _)) return tag;
+        Run(clone, ["rev-parse", $"{tag}^{{tree}}"], out var tree);
+        Run(clone, ["log", "--format=%H %T", head], out var commits);
+        foreach (var line in commits.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+            if (line[(line.IndexOf(' ') + 1)..] == tree.Trim()) return line[..line.IndexOf(' ')];
+        throw new InvalidOperationException($"{tag} is not on main and no commit on main has its files; fix the tag.");
     }
 
     static List<Commit> Log(string clone, string from, string to)
@@ -123,7 +138,7 @@ static partial class DocsMain
     {
         var head = unreleased.Groups.FirstOrDefault(g => g.Release == null)?.Commits[0].Sha ?? "";
         var count = unreleased.Groups.Sum(g => g.Commits.Count);
-        return $"{{\n  \"since\": \"{unreleased.Since}\",\n  \"head\": \"{head}\",\n  \"commits\": {count.ToString(CultureInfo.InvariantCulture)}\n}}\n";
+        return $"{{\n  \"since\": \"{unreleased.Since}\",\n  \"tag\": \"{unreleased.Tag}\",\n  \"head\": \"{head}\",\n  \"commits\": {count.ToString(CultureInfo.InvariantCulture)}\n}}\n";
     }
 
     static string Entry(Commit commit)
@@ -184,4 +199,5 @@ record Commit(string Sha, DateOnly Date, string Subject);
 // Release is null for the commits on main only, or the version of a release the site does not use yet.
 record Group(string? Release, List<Commit> Commits);
 
-record Unreleased(string Since, List<Group> Groups);
+// Tag is the commit the site version's tag names, as the Deploy workflow's check reads it.
+record Unreleased(string Since, string Tag, List<Group> Groups);
