@@ -49,9 +49,11 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
     the version picker. The Deploy workflow clones the library and runs the builder with `--main <clone>`; every hour it
     checks whether `main` has a newer such commit than the live `/docs/main.json` names and, if so, redeploys the last
     `main` the Build workflow passed. The checked-in pages are built without `--main`, so they do not change with
-    library commits. When the site moves to the release holding those commits, the section empties by itself and that
-    release's own changelog section sums them up. A release on nuget.org that the site has not moved to yet is listed
-    apart, under its version.
+    library commits. A release on nuget.org that the site has not moved to yet is listed apart, under its version. At
+    the release, before the `PackageReference` bump, `dotnet run --project tools/DocsBuilder -- release <clone>` writes
+    those same entries into `docs/changelog.md` as the release's section, under its version and date, so the list
+    simply becomes the release; edit the wording there if you like. After the bump the unreleased section is empty
+    until main moves ahead again.
 
 Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
 

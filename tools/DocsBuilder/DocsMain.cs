@@ -4,11 +4,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 // What the library's main branch has that the version the site uses does not: the commits merged after that
-// version's tag, read from a clone of Moonwalker1307/PdfPecker. The Deploy workflow passes the clone with
-// '--main <folder>', so the changelog on pdfpecker.net opens with an "Unreleased (main)" section while main is ahead
-// and loses it by itself once the site moves to the release that holds those commits, whose own changelog section
-// then sums them up. Builds without '--main' (CI, local runs) leave the section out, so the checked-in pages stay
-// independent of the library's main.
+// version's tag, read from a clone of Moonwalker1307/PdfPecker. The Deploy workflow passes the clone with '--main
+// <folder>', so the changelog on pdfpecker.net opens with an "Unreleased (main)" section while main is ahead and
+// loses it by itself once the site moves to the release that holds those commits; 'release <clone>' first writes the
+// same list into docs/changelog.md as that release's section. Builds without '--main' (CI, local runs) leave the
+// section out, so the checked-in pages stay independent of the library's main.
 static partial class DocsMain
 {
     public const string Repository = "https://github.com/Moonwalker1307/PdfPecker";
@@ -65,8 +65,8 @@ static partial class DocsMain
                 var newest = group.Commits[0].Date.ToString("d MMMM yyyy", CultureInfo.InvariantCulture);
                 sb.Append("## Unreleased (main)\n\n");
                 sb.Append($"Merged into the library's [main branch]({Repository}/commits/main) after {unreleased.Since} and not on ");
-                sb.Append($"NuGet yet, newest first, as of {newest}. The next release's section sums these up as one entry, and the ");
-                sb.Append("manual describes them once that release is out.\n\n");
+                sb.Append($"NuGet yet, newest first, as of {newest}. At the next release this list becomes that release's section, and ");
+                sb.Append("the manual describes them once it is out.\n\n");
             }
             else
             {
@@ -74,6 +74,26 @@ static partial class DocsMain
                 sb.Append($"Released on [NuGet](https://www.nuget.org/packages/PdfPecker/{group.Release}); this site still describes ");
                 sb.Append($"{unreleased.Since}, and these are the commits of the release until its notes are written.\n\n");
             }
+            foreach (var commit in group.Commits) sb.Append("- ").Append(Entry(commit)).Append('\n');
+            sb.Append('\n');
+        }
+        return sb.ToString();
+    }
+
+    // At a release the unreleased list becomes the release's own changelog section: the same entries under the version
+    // and its date instead of "Unreleased (main)". Run with the PackageReference still on the version before, so the
+    // commits are counted from its tag; a release the site skipped gets a section of its own.
+    public static string ReleaseSections(string clone, Unreleased unreleased)
+    {
+        var released = unreleased.Groups.Where(g => g.Release != null).ToList();
+        if (released.Count == 0)
+            throw new InvalidOperationException($"{clone} has no release tag after v{unreleased.Since}; fetch its tags after the release.");
+        var sb = new StringBuilder();
+        foreach (var group in released)
+        {
+            Run(clone, ["log", "-1", "--format=%cs", $"v{group.Release}"], out var tagDate);
+            var date = DateOnly.ParseExact(tagDate.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            sb.Append($"## {group.Release}\n\nReleased {date.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)}.\n\n");
             foreach (var commit in group.Commits) sb.Append("- ").Append(Entry(commit)).Append('\n');
             sb.Append('\n');
         }

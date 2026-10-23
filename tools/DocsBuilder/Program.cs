@@ -11,6 +11,8 @@ using PdfPecker;
 //                                                          in docs/archive/<version> and its PDF in wwwroot/docs/versions
 //   dotnet run --project tools/DocsBuilder -- --main <clone>   also opens the changelog with the commits a clone of the
 //                                                          library has after this version (see DocsMain.cs)
+//   dotnet run --project tools/DocsBuilder -- release <clone>  after a release, before the PackageReference bump: turns
+//                                                          the unreleased list into the release's section of docs/changelog.md
 //
 // The latest manual is at /docs/; every earlier one is built from docs/archive/<version> to /docs/v<version>/, so the
 // version picker can show the manual for the version a reader uses. Versions before 1.7.0 had their manual in the
@@ -27,11 +29,25 @@ var assemblyVersion = typeof(HtmlToPdf).Assembly.GetName().Version!;
 var version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
 var archive = false;
 string? mainClone = null;
+string? releaseClone = null;
 for (int i = 0; i < args.Length; i++)
 {
     if (args[i] == "archive") archive = true;
+    else if (args[i] == "release" && i + 1 < args.Length) releaseClone = args[++i];
     else if (args[i] == "--main" && i + 1 < args.Length) mainClone = args[++i];
     else { Console.Error.WriteLine($"Unknown arguments: {string.Join(' ', args)}"); return 1; }
+}
+
+if (releaseClone != null)
+{
+    var changelog = Path.Combine(source, "changelog.md");
+    var text = File.ReadAllText(changelog).ReplaceLineEndings("\n");
+    string notes;
+    try { notes = DocsMain.ReleaseSections(releaseClone, DocsMain.Read(releaseClone, version)); }
+    catch (InvalidOperationException e) { Console.Error.WriteLine(e.Message); return 1; }
+    File.WriteAllText(changelog, DocsMain.InsertInto(text, notes), new UTF8Encoding(false));
+    Console.WriteLine($"Wrote the release notes after {version} into docs/changelog.md; now archive the {version} manual and bump the PackageReference.");
+    return 0;
 }
 
 // The order of the sidebar and of the previous/next links. Slug "" is the docs home page.
