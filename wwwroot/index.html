@@ -101,14 +101,15 @@
   <section class="section">
     <div class="wrap split">
       <div>
-        <h2>Three lines to your first PDF</h2>
+        <h2>Your first PDF in two lines</h2>
         <p>Every method is static and thread-safe, so you can convert many documents at once. Write the HTML the way you
           already do, with modern CSS, and get a PDF back as bytes, a stream or a file.
           <a href="/docs/html-to-pdf-csharp/">The C# guide</a> walks through invoices, headers and footers and ASP.NET Core.</p>
         <ul class="checks">
           <li>Runs wherever .NET 8 or later runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
-          <li>Pure managed code: a 5.0 MB DLL instead of a 600 MB browser</li>
+          <li>Pure managed code: a 5.1 MB DLL instead of a 600 MB browser</li>
           <li>Never touches the network or your files unless you allow it</li>
+          <li>Rather write C#? <a href="/docs/fluent-api/">PdfPecker.Fluent</a> builds PDFs in code, in the style of QuestPDF</li>
         </ul>
       </div>
       <div class="code-card">
@@ -131,7 +132,7 @@ app.MapGet("/invoice", () =&gt;
       <p class="center sub">Built for invoices, payslips, reports, tickets and statements: the templates you control.</p>
       <div class="features">
         <article class="feature"><span class="icon" aria-hidden="true">🎨</span><h3>Modern CSS</h3>
-          <p>Flexbox, grid and subgrid, multi-column layout, <code>var()</code>, <code>calc()</code>, transforms, conic and other gradients, rounded corners, shadows, opacity, filters, blend modes, <code>clip-path</code>, masks, <code>backdrop-filter</code>, text wrapping round float shapes, drop caps, balanced headings, vertical text, <code>border-image</code>, container queries, <code>:has()</code>, nesting, <code>@layer</code>, <code>@supports</code> and modern and relative colours.</p></article>
+          <p>Flexbox, grid and multi-column layout, <code>var()</code> and <code>calc()</code>, gradients, shadows, transforms, filters and masks, container queries, <code>:has()</code> and nesting, laid out as Chrome lays them out. <a href="/docs/html-and-css/">All of it</a></p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📝</span><h3>Markdown or C# code</h3>
           <p>CommonMark 0.31 with GitHub tables, task lists, strikethrough and footnotes, plus definition lists and front matter. Or build documents in C# with <a href="/docs/fluent-api/">PdfPecker.Fluent</a>, in the style of QuestPDF.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔤</span><h3>Real fonts</h3>
@@ -283,7 +284,7 @@ PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
   <section class="section">
     <div class="wrap">
       <h2 class="center">Try it right here</h2>
-      <p class="center sub">Converted on our server in milliseconds and sent straight back. Nothing is stored.</p>
+      <p class="center sub">Converted on our server in milliseconds and sent straight back. <a href="/privacy/">Nothing is stored.</a></p>
       <div class="tools">
         <a class="tool" href="/html-to-pdf/">
           <span class="icon" aria-hidden="true">🧾</span>
@@ -340,13 +341,14 @@ PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
 
 <footer class="site-footer">
   <div class="wrap">
-    <span>PdfPecker is open source under the MIT license; its bundled fonts keep their own open licenses.</span>
+    <span>© 2026 PdfPecker. Open source under the MIT license; its bundled fonts keep their own open licenses.</span>
     <nav aria-label="Footer">
       <a href="/docs/">Docs</a>
       <a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a>
       <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
       <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
       <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
+      <a href="/privacy/">Privacy</a>
     </nav>
   </div>
 </footer>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy · PdfPecker</title>
+<meta name="description" content="What pdfpecker.net does with the documents you convert on it: they are converted in memory, sent back and never stored or logged.">
+<link rel="canonical" href="https://pdfpecker.net/privacy/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PdfPecker">
+<meta property="og:title" content="Privacy · PdfPecker">
+<meta property="og:description" content="What pdfpecker.net does with the documents you convert on it: they are converted in memory, sent back and never stored or logged.">
+<meta property="og:url" content="https://pdfpecker.net/privacy/">
+<meta property="og:image" content="https://pdfpecker.net/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/site.css">
+<script src="/nav.js" defer></script>
+</head>
+<body class="home">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="PdfPecker home"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><path class="bars" d="M4 7h16M4 12h16M4 17h16"/><path class="cross" d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <nav id="main-nav" aria-label="Main">
+    <a href="/">Home</a>
+    <a href="/html-to-pdf/">HTML to PDF</a>
+    <a href="/markdown/">Markdown</a>
+    <a href="/compare/">Compare</a>
+    <a href="/docs/">Docs</a>
+    <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
+    <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="section page-head">
+    <div class="wrap">
+      <h1 class="center">Privacy</h1>
+      <p class="center sub">What pdfpecker.net does with the documents you convert on it.</p>
+    </div>
+    <div class="wrap prose">
+      <h2>Documents you convert</h2>
+      <p>The HTML to PDF and Markdown converters send your document and settings to this site's server, which converts
+        them in memory and sends the PDF, HTML or images straight back. The document is not stored, logged or kept after
+        the response, and it is never shared with anyone. The server reads no files from its own disk for a conversion
+        and fetches nothing from the network: remote images and stylesheets in your document are not loaded.</p>
+      <p>To keep the service fair, the server counts conversions per address for one minute, in memory only. That count
+        holds no document content and is gone when the minute ends.</p>
+
+      <h2>What stays in your browser</h2>
+      <p>The site sets no cookies and runs no analytics, trackers or third-party scripts. The converters remember a few
+        choices in your browser's local storage, such as whether the settings panel is open, and the Markdown converter
+        keeps your current draft there so it survives a reload. None of it is sent anywhere; clearing the site's data in
+        your browser removes it. A Markdown share link carries the document inside the link itself, so only people you
+        give the link to can see it.</p>
+
+      <h2>Hosting</h2>
+      <p>The site runs on Cloudflare, whose network keeps the usual request records for security and reliability, such
+        as the address, time and page of a request. They never contain the documents you convert.</p>
+
+      <h2>Your own copy</h2>
+      <p>PdfPecker is a library: in your own application, conversion runs in your process and nothing reaches this site.
+        The source of the library and of this site is on <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this page or the library: open an issue on
+        <a href="https://github.com/Moonwalker1307/PdfPecker/issues">GitHub</a>. Security problems: report them privately
+        as described in the <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/SECURITY.md">security policy</a>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 PdfPecker. Open source under the MIT license; its bundled fonts keep their own open licenses.</span>
+    <nav aria-label="Footer">
+      <a href="/docs/">Docs</a>
+      <a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a>
+      <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
+      <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
+      <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
