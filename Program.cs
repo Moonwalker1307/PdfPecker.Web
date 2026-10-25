@@ -347,6 +347,145 @@ app.MapPost("/api/pdf-to-image", async (HttpRequest request, CancellationToken c
     }
 }).RequireRateLimiting("convert").DisableAntiforgery();
 
+// The PDF tools work on PDFs visitors upload: at most 25 MB in a request, 1,000 pages out and 30 seconds of work.
+// POST /api/merge
+//   multipart/form-data: 2 to 20 PDFs in "file" fields, in the order they are merged, and optionally one "pages" field
+//   per file in the same order (a range such as "1-3,5"; empty for every page).
+// Returns the merged PDF, with a bookmark per file when the files have none.
+app.MapPost("/api/merge", async (HttpRequest request, CancellationToken ct) =>
+{
+    var upload = await ReadPdfUploads(request, 20, ct);
+    if (upload.Error is { } error) return error;
+    if (upload.Files.Count < 2) return Results.Problem("Upload at least two PDFs in \"file\" fields.", statusCode: StatusCodes.Status400BadRequest);
+    var pages = upload.Form?["pages"].ToArray() ?? [];
+    if (pages.Length > upload.Files.Count)
+        return Results.Problem("Send at most one \"pages\" field per file.", statusCode: StatusCodes.Status400BadRequest);
+    var inputs = new List<PdfMergeInput>();
+    for (int i = 0; i < upload.Files.Count; i++)
+    {
+        var range = i < pages.Length ? pages[i]?.Trim() : null;
+        if (string.IsNullOrEmpty(range)) inputs.Add(new PdfMergeInput(upload.Files[i].Data));
+        else if (PdfPageRange.TryParse(Limit(range, 2000, "pages"), out var r)) inputs.Add(new PdfMergeInput(upload.Files[i].Data, r));
+        else return Results.Problem($"\"{range}\" is not a page range for file {i + 1}; write ranges like \"1-3,5,8-\".", statusCode: StatusCodes.Status400BadRequest);
+    }
+    var name = Path.GetFileNameWithoutExtension(SafeFileName(upload.Files[0].Name)) + "-merged.pdf";
+    return await RunPdfTool(conversions, queueTimeout, ct, token =>
+        Results.File(PdfMerger.Merge(inputs, new PdfMergeOptions { MaxPages = MaxPages }, token), "application/pdf", name));
+}).RequireRateLimiting("convert").DisableAntiforgery();
+
+// POST /api/pages
+//   multipart/form-data with the PDF in the "file" field, or the raw PDF as the body. Query (or form) options:
+//   pages (required): the pages to keep, in their new order, e.g. "3,1,2,5-" (pages left out are deleted; a page may
+//   repeat); rotate: a comma-separated turn in degrees (0, 90, 180 or 270, clockwise) for each page of the result, or one
+//   turn for all of them; password: for an encrypted PDF.
+// Returns the new PDF (without a password).
+app.MapPost("/api/pages", async (HttpRequest request, CancellationToken ct) =>
+{
+    var upload = await ReadPdfUploads(request, 1, ct);
+    if (upload.Error is { } error) return error;
+    string? Field(string name) => upload.Form != null && upload.Form.TryGetValue(name, out var v) ? v.ToString() : request.Query[name].ToString();
+    var pagesText = Field("pages")?.Trim();
+    if (string.IsNullOrEmpty(pagesText)) return Results.Problem("Say which pages to keep in \"pages\", e.g. \"3,1,2\".", statusCode: StatusCodes.Status400BadRequest);
+    if (pagesText.Length > 20_000 || !PdfPageRange.TryParse(pagesText, out var range))
+        return Results.Problem("\"pages\" is not a page range; write ranges like \"3,1,2,5-\".", statusCode: StatusCodes.Status400BadRequest);
+    var turns = new List<int>();
+    foreach (var t in (Field("rotate") ?? "").Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+    {
+        if (turns.Count >= MaxPages || !int.TryParse(t, System.Globalization.NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var deg) || deg % 90 != 0)
+            return Results.Problem("\"rotate\" lists turns of 0, 90, 180 or 270 degrees, one per page of the result.", statusCode: StatusCodes.Status400BadRequest);
+        turns.Add(((deg % 360) + 360) % 360);
+    }
+    var password = Field("password") is { Length: > 0 } p ? p : null;
+    var file = upload.Files[0];
+    return await RunPdfTool(conversions, queueTimeout, ct, token =>
+    {
+        var options = new PdfPagesOptions { MaxPages = MaxPages, Password = password };
+        var result = PdfPages.Extract(file.Data, range!, options, token);
+        if (turns.Count > 0)
+        {
+            int count = PdfPages.Count(result);
+            if (turns.Count != 1 && turns.Count != count)
+                throw new ArgumentException($"\"rotate\" has {turns.Count} turns, but the result has {count} pages.");
+            // One pass per angle: each page of the result is turned at most once.
+            var noPassword = new PdfPagesOptions { MaxPages = MaxPages };
+            foreach (var deg in new[] { 90, 180, 270 })
+            {
+                var which = Enumerable.Range(1, count).Where(n => turns[turns.Count == 1 ? 0 : n - 1] == deg).ToList();
+                if (which.Count > 0) result = PdfPages.Rotate(result, deg, string.Join(',', which), noPassword, token);
+            }
+        }
+        return Results.File(result, "application/pdf", Path.GetFileNameWithoutExtension(SafeFileName(file.Name)) + "-pages.pdf");
+    });
+}).RequireRateLimiting("convert").DisableAntiforgery();
+
+// POST /api/compress
+//   multipart/form-data with the PDF in the "file" field, or the raw PDF as the body. Query (or form) options:
+//   level: lossless (default; nothing visible changes), balanced (images at most 150 DPI, JPEG quality 80) or strong
+//   (at most 100 DPI, quality 60); removeMetadata: true to drop the title, author and XMP metadata.
+// Returns the smaller PDF, or the original when it cannot be made smaller. Signed and encrypted PDFs are refused (422),
+// as rewriting them would break the signature or need the password.
+app.MapPost("/api/compress", async (HttpRequest request, CancellationToken ct) =>
+{
+    var upload = await ReadPdfUploads(request, 1, ct);
+    if (upload.Error is { } error) return error;
+    string? Field(string name) => upload.Form != null && upload.Form.TryGetValue(name, out var v) ? v.ToString() : request.Query[name].ToString();
+    var options = new PdfCompactOptions { RemoveMetadata = string.Equals(Field("removeMetadata")?.Trim(), "true", StringComparison.OrdinalIgnoreCase) };
+    switch ((Field("level") ?? "").Trim().ToLowerInvariant())
+    {
+        case "" or "lossless": break;
+        case "balanced": options.MaxImageDpi = 150; options.ImageQuality = 80; break;
+        case "strong": options.MaxImageDpi = 100; options.ImageQuality = 60; break;
+        default: return Results.Problem("\"level\" must be lossless, balanced or strong.", statusCode: StatusCodes.Status400BadRequest);
+    }
+    var file = upload.Files[0];
+    return await RunPdfTool(conversions, queueTimeout, ct, token =>
+    {
+        var result = PdfCompactor.Compact(file.Data, options, token);
+        request.HttpContext.Response.Headers["X-Original-Size"] = file.Data.Length.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        return Results.File(result, "application/pdf", Path.GetFileNameWithoutExtension(SafeFileName(file.Name)) + "-compressed.pdf");
+    });
+}).RequireRateLimiting("convert").DisableAntiforgery();
+
+// POST /api/pdf-thumbnails
+//   multipart/form-data with the PDF in the "file" field, or the raw PDF as the body; password (query or form) for an
+//   encrypted PDF.
+// Returns JSON: { "pageCount": 12, "pages": [ { "width": 595, "height": 842, "image": "data:image/jpeg;base64,..." } ] }
+// with a small JPEG of each of the first 300 pages (sizes in points, as the page is shown); "image" is null for a page
+// that cannot be drawn. The page organizer shows these.
+app.MapPost("/api/pdf-thumbnails", async (HttpRequest request, CancellationToken ct) =>
+{
+    const int MaxThumbnails = 300;
+    var upload = await ReadPdfUploads(request, 1, ct);
+    if (upload.Error is { } error) return error;
+    string? Field(string name) => upload.Form != null && upload.Form.TryGetValue(name, out var v) ? v.ToString() : request.Query[name].ToString();
+    var options = new ImageOptions
+    {
+        Width = 240, Height = 240, Format = PdfImageFormat.Jpeg, Quality = 70, MaxDimension = 240, RenderAnnotations = true,
+        Password = Field("password") is { Length: > 0 } p ? p : null,
+    };
+    var data = upload.Files[0].Data;
+    return await RunPdfTool(conversions, queueTimeout, ct, token =>
+    {
+        var renderer = PdfRenderer.Open(data, options.Password);
+        var pages = new List<PageThumbnail>();
+        for (int i = 0; i < Math.Min(renderer.PageCount, MaxThumbnails); i++)
+        {
+            var (w, h) = renderer.GetPageSize(i);
+            string? image = null;
+            try
+            {
+                image = "data:image/jpeg;base64," + Convert.ToBase64String(renderer.RenderPageEncoded(i, options, token));
+            }
+            catch (Exception ex) when (ex is InvalidDataException or NotSupportedException)
+            {
+                // The page is still listed, so it can be moved or deleted; it just has no picture.
+            }
+            pages.Add(new PageThumbnail(Math.Round(w, 1), Math.Round(h, 1), image));
+        }
+        return Results.Json(new ThumbnailsResponse(renderer.PageCount, pages), AppJsonContext.Default.ThumbnailsResponse);
+    });
+}).RequireRateLimiting("convert").DisableAntiforgery();
+
 app.Run();
 
 // Builds the options from the simple fields, then applies the full "options" object when the request has one.
@@ -565,6 +704,79 @@ static async Task<bool> TryStartConversion(SemaphoreSlim conversions, TimeSpan q
     return false;
 }
 
+// Reads the uploaded PDFs: "file" fields of a multipart form, or one PDF as the raw body. At most 25 MB in all.
+static async Task<PdfUpload> ReadPdfUploads(HttpRequest request, int maxFiles, CancellationToken ct)
+{
+    const long MaxPdfBytes = 25 * 1024 * 1024;
+    if (request.HttpContext.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature>() is { IsReadOnly: false } limit)
+        limit.MaxRequestBodySize = MaxPdfBytes;
+    var files = new List<(string? Name, byte[] Data)>();
+    // Only multipart bodies are forms here: a raw PDF posted without a content type is not url-encoded data.
+    if (request.ContentType?.StartsWith("multipart/form-data", StringComparison.OrdinalIgnoreCase) == true)
+    {
+        var form = await request.ReadFormAsync(ct);
+        var uploads = form.Files.GetFiles("file") is { Count: > 0 } named ? named : form.Files;
+        if (uploads.Count > maxFiles)
+            return new PdfUpload(files, form, Results.Problem(maxFiles == 1 ? "Upload one PDF." : $"Upload at most {maxFiles} PDFs.", statusCode: StatusCodes.Status400BadRequest));
+        foreach (var file in uploads)
+        {
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms, ct);
+            files.Add((file.FileName, ms.ToArray()));
+        }
+        if (files.Count == 0)
+            return new PdfUpload(files, form, Results.Problem("Upload a PDF in the \"file\" field.", statusCode: StatusCodes.Status400BadRequest));
+        return new PdfUpload(files, form, null);
+    }
+    using (var ms = new MemoryStream())
+    {
+        await request.Body.CopyToAsync(ms, ct);
+        if (ms.Length == 0) return new PdfUpload(files, null, Results.Problem("Send a PDF as the body or in a \"file\" field.", statusCode: StatusCodes.Status400BadRequest));
+        files.Add((null, ms.ToArray()));
+    }
+    return new PdfUpload(files, null, null);
+}
+
+// Runs a PDF tool off the request thread in a conversion slot, within 30 seconds, and turns the library's documented
+// exceptions for bad input into client errors.
+static async Task<IResult> RunPdfTool(SemaphoreSlim conversions, TimeSpan queueTimeout, CancellationToken ct, Func<CancellationToken, IResult> work)
+{
+    if (!await TryStartConversion(conversions, queueTimeout, ct))
+        return Results.Problem("The server is busy; try again shortly.", statusCode: StatusCodes.Status503ServiceUnavailable);
+    using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+    timeout.CancelAfter(TimeSpan.FromSeconds(30));
+    try
+    {
+        return await Task.Run(() => work(timeout.Token), timeout.Token).WaitAsync(timeout.Token);
+    }
+    catch (PdfPasswordException ex)
+    {
+        return Results.Problem(ex.Message, statusCode: StatusCodes.Status401Unauthorized);
+    }
+    catch (Exception ex) when (ex is ArgumentException or FormatException)
+    {
+        // A page past the end, a range that is not one, or a signed or encrypted PDF the compactor will not rewrite.
+        var message = ex is ArgumentException { ParamName: { } param } ? ex.Message.Replace($" (Parameter '{param}')", "") : ex.Message;
+        return Results.Problem(message, statusCode: ex is ArgumentOutOfRangeException or FormatException ? StatusCodes.Status400BadRequest : StatusCodes.Status422UnprocessableEntity);
+    }
+    catch (Exception ex) when (ex is InvalidDataException or NotSupportedException or PdfLimitException)
+    {
+        return Results.Problem(ex.Message, statusCode: StatusCodes.Status422UnprocessableEntity);
+    }
+    catch (OutOfMemoryException)
+    {
+        return Results.Problem("The document needs more memory than the server can give it.", statusCode: StatusCodes.Status422UnprocessableEntity);
+    }
+    catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+    {
+        return Results.Problem("The document took too long to process.", statusCode: StatusCodes.Status422UnprocessableEntity);
+    }
+    finally
+    {
+        conversions.Release();
+    }
+}
+
 static string SafeFileName(string? name, string extension = ".pdf")
 {
     if (string.IsNullOrWhiteSpace(name)) return "document" + extension;
@@ -674,6 +886,13 @@ public sealed class SecuritySettings
     public string[]? Permissions { get; set; }
 }
 
+internal sealed record PdfUpload(List<(string? Name, byte[] Data)> Files, Microsoft.AspNetCore.Http.IFormCollection? Form, IResult? Error);
+
+public sealed record PageThumbnail(double Width, double Height, string? Image);
+
+public sealed record ThumbnailsResponse(int PageCount, List<PageThumbnail> Pages);
+
 [JsonSerializable(typeof(ConvertRequest))]
-[JsonSourceGenerationOptions(PropertyNameCaseInsensitive = true)]
+[JsonSerializable(typeof(ThumbnailsResponse))]
+[JsonSourceGenerationOptions(PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 internal partial class AppJsonContext : JsonSerializerContext;

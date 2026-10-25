@@ -95,6 +95,8 @@ jobs:
           curl -fsS http://localhost:8080/ -o /dev/null
           curl -fsS http://localhost:8080/html-to-pdf/ -o /dev/null
           curl -fsS http://localhost:8080/markdown/ -o /dev/null
+          curl -fsS http://localhost:8080/pdf-tools/ -o /dev/null
+          curl -fsS http://localhost:8080/pdf-tools/organize/ -o /dev/null
           curl -fsS http://localhost:8080/docs/ -o /dev/null
           curl -fsS http://localhost:8080/docs/options/ -o /dev/null
           curl -fsS http://localhost:8080/docs/search.json -o /dev/null

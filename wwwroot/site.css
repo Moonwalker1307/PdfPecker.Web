@@ -660,3 +660,70 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
   .docs-pager { grid-template-columns: 1fr; }
   .docs-pager .next { grid-column: 1; }
 }
+
+/* ---------- PDF tools (merge, organize, compress) ---------- */
+.tool-page .wrap { max-width: 1000px; }
+.tool-page .sub { margin-bottom: 28px; }
+.tool-switch { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0 0 28px; }
+.tool-switch a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel); }
+.tool-switch a:hover { border-color: var(--accent); color: var(--text); }
+.tool-switch a[aria-current=page] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.dropzone { border: 2px dashed var(--border); border-radius: var(--radius); background: var(--panel); padding: 40px 20px; text-align: center; transition: border-color .15s, background .15s; }
+.dropzone p { margin: 0; }
+.dropzone .hint { margin-top: 12px; }
+.dropzone.over, body.dragging .dropzone { border-color: var(--accent); background: var(--accent-soft); }
+.dropzone.compact { padding: 16px 20px; }
+.dropzone.compact .button.big { font-size: 14px; padding: 8px 14px; }
+.hint { color: var(--muted); font-size: 14px; }
+.tool-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 18px 0 0; }
+.tool-actions .file-name { font-weight: 600; overflow-wrap: anywhere; }
+.tool-status { margin: 14px 0 0; text-align: center; font-size: 15px; min-height: 1.5em; }
+.tool-status a.button { color: var(--accent-text); }
+.tool-status .button { margin-left: 8px; }
+.tool-code a, .tool-help a, .doc-link { color: var(--link); }
+.tool-code { margin-top: 36px; }
+.file-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 8px; }
+.file-list li { display: grid; grid-template-columns: auto 1fr auto auto; grid-template-areas: "grip name range buttons"; align-items: center; gap: 8px 12px;
+  padding: 10px 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; }
+.file-list .grip { grid-area: grip; }
+.file-list .name { grid-area: name; }
+.file-list .range { grid-area: range; }
+.file-list .row-buttons { grid-area: buttons; }
+.file-list li.dragging, .thumbs li.dragging { opacity: .4; }
+.file-list li.drop-before, .thumbs li.drop-before { box-shadow: -3px 0 0 var(--accent); }
+.file-list li.drop-before { box-shadow: 0 -3px 0 var(--accent); }
+.file-list .grip { cursor: grab; color: var(--muted); user-select: none; font-size: 18px; line-height: 1; }
+.file-list .name { min-width: 0; overflow-wrap: anywhere; }
+.file-list .name small { display: block; color: var(--muted); font-size: 13px; }
+.file-list .range { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+.file-list .range input { width: 110px; font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.file-list .range input:invalid { border-color: var(--error); }
+.row-buttons { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+.row-buttons button { padding: 4px 8px; min-width: 32px; }
+.thumbs { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.thumbs li { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; cursor: grab; }
+.thumbs li:focus-within { border-color: var(--accent); }
+.thumbs .frame { display: grid; place-items: center; width: 130px; height: 130px; }
+.thumbs img { max-width: 120px; max-height: 120px; box-shadow: 0 0 0 1px var(--border), 0 2px 6px rgba(0, 0, 0, .12); background: #fff; transition: transform .15s; }
+.thumbs .blank { width: 85px; height: 120px; display: grid; place-items: center; background: var(--alt); color: var(--muted); font-size: 12px; text-align: center; transition: transform .15s; }
+.thumbs .label { font-size: 13px; color: var(--muted); }
+.thumbs .row-buttons button { padding: 3px 6px; min-width: 28px; font-size: 13px; }
+.tool-options { margin: 18px 0 0; padding: 22px; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
+.tool-options .file-name { margin: 0 0 14px; font-weight: 600; overflow-wrap: anywhere; }
+.levels { border: 0; margin: 0 0 14px; padding: 0; display: grid; gap: 10px; }
+.levels legend { font-weight: 600; margin-bottom: 8px; }
+.level { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; }
+.level:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.level input, .tool-options .check input { accent-color: var(--accent); margin-top: 4px; }
+.level b { display: block; }
+.level span { color: var(--muted); font-size: 15px; }
+.level b { color: var(--text); }
+.tool-options .check { display: flex; gap: 8px; align-items: flex-start; }
+@media (max-width: 640px) {
+  .file-list li { grid-template-columns: auto 1fr auto; grid-template-areas: "grip name buttons" ". range range"; }
+  .thumbs { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .thumbs .frame { width: 110px; height: 110px; }
+  .thumbs img { max-width: 100px; max-height: 100px; }
+  .thumbs .blank { width: 70px; height: 100px; }
+  .dropzone { padding: 28px 16px; }
+}
