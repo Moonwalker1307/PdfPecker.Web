@@ -23,6 +23,8 @@ var options = new PdfOptions
     Compress = true,                                  // Flate-compress page content (default)
     AllowFileAccess = false,                          // true: also read files outside BaseDirectory (trusted HTML only)
     MaxPages = 1000,                                  // refuse longer documents with PdfLimitException (default 100,000)
+    Linearize = true,                                 // Fast Web View: the first page shows before the rest has loaded
+    StripImageMetadata = true,                        // drop EXIF (GPS location too), XMP and IPTC from embedded JPEGs
 };
 byte[] pdf = HtmlToPdf.Convert(html, options);
 ```
@@ -47,6 +49,54 @@ loaded through `ResourceResolver`. Only [signing](/docs/signatures/) goes online
 Custom properties are written to the document information dictionary, where Acrobat shows them under Document
 Properties > Custom and `pdfinfo -custom` lists them. For PDF/A they are also written to the XMP metadata (Acrobat's
 `pdfx` namespace, with the extension schema PDF/A requires), alongside Keywords, Creator and Producer.
+
+## Viewer settings and page labels {new 1.20.0}
+
+`Viewer` sets how a PDF viewer opens the document: the start page and zoom, the page layout (one page, a scrolling
+column, or two pages side by side like a book), the panel next to the pages (bookmarks, thumbnails or attachments) or
+full screen, the window (fit, centre, hide the toolbar, menu bar or controls, show the title instead of the file name)
+and the print dialog (100% instead of fit to paper, so forms and labels print at their real size, and duplex).
+`PageLabels` sets the page numbers a viewer shows, such as "i" to "iv" for the front matter and "1" onwards after it,
+or "A-1" for an appendix; they do not change `{page}` or CSS page counters. Every setting's default leaves the choice
+to the viewer, and viewers treat them as suggestions: browsers in particular ignore some of them.
+
+```csharp
+var options = new PdfOptions
+{
+    Viewer = new PdfViewerSettings
+    {
+        PageMode = PdfPageMode.Bookmarks,             // also PagesOnly, Thumbnails, Attachments, FullScreen
+        PageLayout = PdfPageLayout.OneColumn,         // also SinglePage, TwoColumnLeft/Right, TwoPageLeft/Right
+        Zoom = PdfZoom.FitWidth,                      // also FitPage, ActualSize
+        StartPage = 1,
+        DisablePrintScaling = true,
+        Duplex = PdfDuplex.FlipLongEdge,
+    },
+    PageLabels =
+    {
+        new PdfPageLabel(1, PdfPageNumberStyle.LowerRoman),   // pages 1-4: i, ii, iii, iv
+        new PdfPageLabel(5),                                  // from page 5: 1, 2, 3, ...
+        new PdfPageLabel(20, PdfPageNumberStyle.Decimal, prefix: "A-"),
+    },
+};
+```
+
+`PdfMergeOptions` has the same `Viewer` and `PageLabels` for a [merged](/docs/merging/) file. A tagged PDF/UA-2 file
+opens at the first element of its start page, as PDF/UA-2 requires.
+
+## Fast Web View and photo metadata {new 1.20.0}
+
+`Linearize = true` writes a linearized PDF (Fast Web View): the first page and a table of where every later page lies
+come first, so a browser or viewer loading the file over the web shows the first page before the rest has arrived. It
+costs a second pass over the file and adds a little to its size, so it pays off for large documents served over a
+network. It works with `Security`, `Conformance` and `Accessibility`, but not with `Signature`, since a signature is
+added as an incremental update, which ends the linearization. `PdfLinearizer` does the same for any existing PDF, see
+[Compacting](/docs/compacting/#fast-web-view).
+
+JPEG images are embedded byte for byte, so a photo in a template carries its EXIF data into the PDF: the camera, the
+time it was taken and often its GPS location. `StripImageMetadata = true` removes EXIF, XMP, IPTC and comments from each
+JPEG as it is embedded, and keeps the colour profile, so the images look the same. Other image formats are decoded on
+embedding and never keep their metadata.
 
 ## Reproducible output {new 1.12.0}
 

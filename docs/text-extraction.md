@@ -50,3 +50,39 @@ the work, and inputs are handled as untrusted, as with [merging](/docs/merging/)
 Columns side by side are read across, line by line, not one column after the other, and table cells on one row make
 one line. Text drawn only as outlines or images has no characters to extract; a scanned page needs OCR first. See
 [Limitations](/docs/limitations/#reading-and-changing-existing-pdfs).
+
+## Images {new 1.20.0}
+
+`PdfImages` extracts the images the pages of any PDF draw: photos, logos, scans and the pictures inside forms and
+annotations, each once, in the order they are first drawn, with every page and place it is drawn.
+
+```csharp
+foreach (PdfExtractedImage image in PdfImages.Extract(pdfBytes))
+{
+    image.Save($"image-{image.Placements[0].PageNumber}{image.FileExtension}");
+    Console.WriteLine($"{image.Width}x{image.Height}, drawn {image.Placements.Count} times, camera: {image.Exif?.Model}");
+}
+```
+
+A JPEG that a viewer shows as it is comes out as its original bytes, with no loss and with its EXIF data
+(`KeepJpeg = false` decodes it instead); every other image (Flate, JPEG 2000, CCITT, JBIG2 and the rest) is decoded with
+its mask as alpha and written as PNG. Each image has its `Exif` summary (camera, dates, orientation, GPS and the whole
+EXIF block) and the XMP metadata the PDF attaches to it. Placements are in points from the top-left corner, like the
+text's. Images in hidden layers, soft masks, tiling patterns and Type 3 glyphs are not returned. `Pages`, `Password`,
+`IncludeAnnotations`, `MaxImages` and `MaxPages` work as for text.
+
+## Document properties {new 1.20.0}
+
+`PdfDocumentProperties.Read` reads what a PDF says about itself, from its document information or, where that is
+missing or older, its XMP metadata (so PDF/A-4 and PDF 2.0 files without document information read too):
+
+```csharp
+var p = PdfDocumentProperties.ReadFile("received.pdf");
+Console.WriteLine($"{p.Title} by {p.Author}, created {p.CreationDate}, PDF {p.Version}, {p.PageCount} pages");
+Console.WriteLine($"PDF/A: {p.PdfAConformance}, tagged: {p.IsTagged}, linearized: {p.IsLinearized}, encrypted: {p.IsEncrypted}");
+```
+
+It gives the title, author, subject, keywords, creator, producer, dates, custom properties and language, the PDF
+version, every page's displayed size and rotation, encryption and permissions, the PDF/A and PDF/UA conformance the
+metadata claims (a claim, not a check), whether the file is tagged or linearized, and the XMP packet. It also takes a
+`Stream` and a password.

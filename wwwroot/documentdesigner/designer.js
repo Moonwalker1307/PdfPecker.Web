@@ -1023,6 +1023,8 @@ function pdfSettings() {
     bookmarks: settingsField("bookmarks").checked,
     compress: settingsField("compress").checked,
     compressionLevel: settingsField("compressionLevel").value,
+    linearize: settingsField("linearize").checked,
+    stripImageMetadata: settingsField("stripImageMetadata").checked,
     maxPages: settingsNum("maxPages") ?? 1000,
   };
 }
@@ -1071,6 +1073,8 @@ function optionLines() {
   if (!s.bookmarks) lines.push("Bookmarks = false,");
   if (!s.compress) lines.push("Compress = false,");
   if (s.compressionLevel !== "Fastest") lines.push(`CompressionLevel = System.IO.Compression.CompressionLevel.${s.compressionLevel},`);
+  if (s.linearize) lines.push("Linearize = true,");
+  if (s.stripImageMetadata) lines.push("StripImageMetadata = true,");
   if (s.maxPages !== 1000) lines.push(`MaxPages = ${s.maxPages},`);
   return lines;
 }

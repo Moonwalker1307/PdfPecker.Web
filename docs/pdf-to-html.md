@@ -1,8 +1,8 @@
 # PDF to HTML {new 1.17.0}
 
 `PdfToHtml` turns any PDF, not only those PdfPecker made, into one HTML file that looks like the PDF. Each page is an
-image of the page, and the page's text is laid invisibly over it word by word, so it can be selected, copied, found
-with the browser's search and read by screen readers. The PDF's web, mail and phone links and its links between pages
+image of the page, and the page's text is laid invisibly over it line by line, so it can be selected, copied, found
+with the browser's search (whole phrases too) and read by screen readers. The PDF's web, mail and phone links and its links between pages
 keep working. Use it to show statements, invoices or reports in a web page or an e-mail portal without a PDF viewer.
 
 ```csharp
@@ -26,12 +26,13 @@ string first = PdfToHtml.Convert(pdfBytes, new PdfHtmlOptions
 
 `Convert` also takes a `Stream`, and every method takes a `CancellationToken`.
 
-## The HTML
+## The HTML {changed 1.20.0}
 
 The output is one self-contained HTML file with no scripts: the page images, the style sheet and the small web font of
 the text layer are all inside it, so it can be saved, mailed or served as it is. Pages scale to the width of the window,
 down to a phone screen, and print on paper of their own size. Every page is a `div` with the class `pdf-page` and the
-id `page-` followed by its page number, so `report.html#page-3` opens the third page.
+id `page-` followed by its page number, so `report.html#page-3` opens the third page. Each line of the text layer is
+one box with its words inside, so the browser's find matches phrases across words, not only single words.
 
 The pages are drawn by PdfPecker's own [PDF renderer](/docs/pdf-to-image/) and the text comes from
 [text extraction](/docs/text-extraction/), so everything those can read works here: any fonts, JPEG 2000, JBIG2 and

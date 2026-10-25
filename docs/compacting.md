@@ -45,3 +45,20 @@ before signing instead. Encrypted PDFs are refused too, since a rewrite would dr
 `PdfProtector.Decrypt`, compact, and encrypt the result again with `PdfProtector.Encrypt` (see
 [PDF/A, passwords and watermarks](/docs/pdfa-and-passwords/)). A file that is not a readable PDF throws
 `InvalidDataException`.
+
+## Fast Web View {new 1.20.0}
+
+`PdfLinearizer` linearizes any existing PDF, such as a merged one, so a viewer loading it over the web shows the first
+page before the rest has arrived. New documents can be linearized as they are made with
+[`PdfOptions.Linearize`](/docs/options/#fast-web-view-and-photo-metadata).
+
+```csharp
+byte[] web = PdfLinearizer.Linearize(PdfMerger.Merge(invoicePdf, termsPdf));
+PdfLinearizer.Linearize(inputStream, outputStream);
+```
+
+Pages, bookmarks, links, forms, tags, metadata, attachments and PDF/A and PDF/UA conformance are kept, and the same
+input always gives the same bytes. Signed PDFs are refused, because rewriting them breaks the signatures, and so are
+encrypted ones: decrypt them first, or set `Linearize` together with `Security` when converting. A signature added
+later keeps the file valid but ends its linearization, since it is an incremental update. `PdfDocumentProperties.Read`
+says whether a file is linearized (see [Text extraction](/docs/text-extraction/#document-properties)).

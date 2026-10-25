@@ -1,8 +1,8 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 133 features below, PdfPecker supports 82, supports 17 in part and leaves out 34. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 134 features below, PdfPecker supports 89, supports 16 in part and leaves out 29. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
-## File format and structure
+## File format and structure {changed 1.20.0}
 
 The PDF file itself: versions, cross-reference tables, pages and their boxes.
 
@@ -12,7 +12,7 @@ The PDF file itself: versions, cross-reference tables, pages and their boxes.
 | Write PDF 2.0 | ✓ Yes | Used for PDF/A-4 and PDF/UA-2 output. |
 | Compressed object streams and xref streams | ✓ Yes | `PdfCompactor` packs objects into them; `HtmlToPdf` writes a classic xref table. |
 | Incremental updates | ✓ Yes | Signing and long-term validation append to the file, so earlier signatures stay valid. |
-| Linearization (Fast Web View) | ✕ No | Not written; a viewer must load the whole file before showing page 1. |
+| Linearization (Fast Web View) | ✓ Yes | `PdfOptions.Linearize` for new documents, `PdfLinearizer` for existing ones; encrypted, PDF/A and PDF/UA output too. |
 | Open damaged files | ✓ Yes | Rebuilds a broken cross-reference table from the object headers. |
 | Page sizes, orientation and `@page` | ✓ Yes | A4, Letter, Legal, A3, A5, any custom size, landscape, and per-page sizes from CSS `@page`. |
 | Page rotation | ✓ Yes | `PdfPages.Rotate` on existing files; `/Rotate` is honoured when rendering. |
@@ -74,7 +74,7 @@ What can be drawn on a page.
 | Overprint control | ✕ No | Not written, and not simulated when rendering. |
 | Filters and blur | ½ Partly | CSS filter, `backdrop-filter` and blurred shadows; blurs are drawn as 144 dpi images, colour filters stay vectors. |
 
-## Navigation and interactivity
+## Navigation and interactivity {changed 1.20.0}
 
 What a reader can click or open in a viewer.
 
@@ -84,8 +84,8 @@ What a reader can click or open in a viewer.
 | Internal links | ✓ Yes | Links to #ids jump to the right page and position. |
 | External web links | ✓ Yes | URI link annotations. |
 | Named destinations | ½ Partly | Read when rendering and converting to HTML. New files use direct page destinations instead of a /Dests name tree. |
-| Page labels (i, ii, iii, A-1) | ½ Partly | Kept when merging; not written for new documents. |
-| Viewer preferences | ½ Partly | Display title and right-to-left direction are set. Page mode, page layout and an open action (start page or zoom) are not. |
+| Page labels (i, ii, iii, A-1) | ✓ Yes | `PdfOptions.PageLabels` for new documents and `PdfMergeOptions.PageLabels` for merges; kept when merging otherwise. |
+| Viewer preferences | ✓ Yes | `PdfOptions.Viewer`: page mode, page layout, start page and zoom, window settings, print scaling and duplex. |
 | Annotations | ½ Partly | Links and form widgets are written. Notes, highlights, stamps, free text, ink and shapes cannot be created. Existing ones are rendered and their text extracted. |
 | Layers (optional content) | ½ Partly | Not created. Existing layers are kept on merge and their visibility is honoured when rendering. |
 | JavaScript in the PDF | ✕ No | By design: no document or field scripts. |
@@ -125,7 +125,7 @@ Passwords, permissions and protection.
 | Redaction | ✕ No | No way to remove content under a region. |
 | Sanitising | ½ Partly | `PdfCompactor` can drop metadata and application data; there is no full sanitise (scripts, hidden layers). |
 
-## Digital signatures
+## Digital signatures {changed 1.20.0}
 
 Signing and checking signatures.
 
@@ -140,8 +140,8 @@ Signing and checking signatures.
 | Long-term validation | ✓ Yes | DSS and VRI with OCSP and CRL data, PAdES B-LT and B-LTA. |
 | Several signatures | ✓ Yes | Each signature is an incremental update, so earlier ones stay valid. |
 | Verify signatures | ✓ Yes | Byte range, digest, signature, timestamp and certificate chain. |
-| Certification signatures (DocMDP) | ✕ No | Cannot sign as the certifying author with change permissions. |
-| Change analysis | ✕ No | Verification counts updates after a signature but does not judge whether they were allowed. |
+| Certification signatures (DocMDP) | ✓ Yes | Levels 1 to 3; verification checks later changes against the level. |
+| Change analysis | ½ Partly | Changes after a certification signature are judged against its level; after approval signatures, updates are only counted. |
 | Revocation checks during verification | ½ Partly | Uses the platform's online check; the OCSP and CRL data stored in the PDF is not used. |
 
 ## Standards
@@ -162,7 +162,7 @@ ISO and industry profiles.
 | PDF/X (print production) | ✕ No | No PDF/X-1a, X-3 or X-4. |
 | PDF/E and PDF/VT | ✕ No |  |
 
-## Metadata and attachments
+## Metadata and attachments {changed 1.20.0}
 
 Information about the document and files inside it.
 
@@ -175,7 +175,8 @@ Information about the document and files inside it.
 | Reproducible output | ✓ Yes | A fixed `CreationDate` or `SOURCE_DATE_EPOCH` gives byte-identical files. |
 | Embedded files | ✓ Yes | Add, list and extract, with MIME type, description and PDF/A-3 relationship. |
 | File attachment annotations | ✕ No | Files can be attached to the document, not pinned to a spot on a page. |
-| Read document properties | ✕ No | No public API returns the title, author or XMP of an existing PDF. |
+| Read document properties | ✓ Yes | `PdfDocumentProperties`: properties, XMP, version, page sizes, encryption, PDF/A and PDF/UA claims. |
+| Strip photo metadata | ✓ Yes | `PdfOptions.StripImageMetadata` removes EXIF (GPS too), XMP and IPTC from embedded JPEGs. |
 
 ## Editing existing PDFs
 
@@ -196,7 +197,7 @@ Changing files you already have.
 | N-up and imposition | ✕ No |  |
 | Convert an existing PDF to PDF/A | ✕ No | Only new documents are made as PDF/A. |
 
-## Reading, rendering and conversion
+## Reading, rendering and conversion {changed 1.20.0}
 
 Getting things out of existing PDFs.
 
@@ -216,5 +217,5 @@ Getting things out of existing PDFs.
 | OCR | ✕ No | Text in scans and outlines cannot be extracted. |
 | PDF to HTML | ✓ Yes | Page images with a selectable, searchable text layer and working links. |
 | Reflowing PDF to HTML | ✕ No | The HTML keeps the PDF's fixed layout. |
-| Extract images | ✕ No |  |
+| Extract images | ✓ Yes | `PdfImages`: original JPEGs or PNG, with where each is drawn and its EXIF. |
 | PDF to Word, Excel or PowerPoint | ✕ No |  |
