@@ -18,7 +18,12 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
 
 - `/pdf-tools/`: tools for PDFs visitors already have, sharing `pdf-tools.js`: `/pdf-tools/merge/` (put up to 20
   PDFs in order, with a page range for each), `/pdf-tools/organize/` (a thumbnail of every page to drag into a new
-  order, rotate, duplicate or delete) and `/pdf-tools/compress/` (`PdfCompactor`, lossless or with smaller images).
+  order, rotate, duplicate or delete), `/pdf-tools/compress/` (`PdfCompactor`, lossless or with smaller images) and
+  `/pdf-tools/html-folder/` (`html-folder.js`: every `.html` file in a chosen or dropped folder goes through
+  `/api/convert`, one at a time and waiting when the rate limit answers 429, and the PDFs come back as a zip with the
+  folder's layout, built in the browser). The server never reads files, so the page puts the stylesheets, images and
+  fonts the HTML refers to by relative path into it first, as `<style>` and data URLs; each file must stay under the
+  5 MB limit with them.
 - `/compare/`: PdfPecker side by side with other HTML to PDF converters for .NET.
 - `/privacy/`: what the site does with documents converted on it (nothing is stored).
 - `/documentdesigner/`: a document designer, unlisted while it is being tried out (nothing links to it, it is not

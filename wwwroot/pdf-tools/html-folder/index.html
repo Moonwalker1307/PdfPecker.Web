@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Convert a folder of HTML files to PDF online · PdfPecker</title>
+<meta name="description" content="Convert every HTML file in a folder to PDF at once and download them as a zip, with their local images and stylesheets. Free, and nothing is stored.">
+<link rel="canonical" href="https://pdfpecker.net/pdf-tools/html-folder/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PdfPecker">
+<meta property="og:title" content="Convert a folder of HTML files to PDF online · PdfPecker">
+<meta property="og:description" content="Convert every HTML file in a folder to PDF at once and download them as a zip, with their local images and stylesheets. Free, and nothing is stored.">
+<meta property="og:url" content="https://pdfpecker.net/pdf-tools/html-folder/">
+<meta property="og:image" content="https://pdfpecker.net/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/site.css">
+<script src="/nav.js" defer></script>
+<script src="/html-folder.js" defer></script>
+</head>
+<body class="home" data-tool="html-folder">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="PdfPecker home"><img src="/logo.png" alt="" width="32" height="32"><b>Pdf<span>Pecker</span></b></a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Menu"><svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><path class="bars" d="M4 7h16M4 12h16M4 17h16"/><path class="cross" d="M6 6l12 12M18 6 6 18"/></svg></button>
+  <nav id="main-nav" aria-label="Main">
+    <a href="/">Home</a>
+    <a href="/html-to-pdf/">HTML to PDF</a>
+    <a href="/markdown/">Markdown</a>
+    <a href="/pdf-tools/" aria-current="page">PDF tools</a>
+    <a href="/pdf-tools/" aria-current="page">PDF tools</a>
+    <a href="/compare/">Compare</a>
+    <a href="/docs/">Docs</a>
+    <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
+    <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="section page-head tool-page">
+    <div class="wrap">
+      <nav class="tool-switch" aria-label="PDF tools"><a href="/pdf-tools/">All tools</a><a href="/pdf-tools/merge/">Merge</a><a href="/pdf-tools/organize/">Organize pages</a><a href="/pdf-tools/compress/">Compress</a><a href="/pdf-tools/html-folder/" aria-current="page">HTML folder</a></nav>
+      <h1 class="center">HTML folder to PDF</h1>
+      <p class="center sub">Pick a folder and get a zip with a PDF of every <code>.html</code> file in it, in the same folders. Your files are processed in memory and sent straight back; <a href="/privacy/">nothing is stored</a>.</p>
+      <div class="dropzone" id="drop">
+        <div id="pickers">
+          <input type="file" id="folder" webkitdirectory multiple hidden>
+          <input type="file" id="files" accept=".html,.htm,text/html,image/*,.css,.ttf,.otf,.woff,.woff2" multiple hidden>
+          <p class="picker-buttons"><label class="button primary big" for="folder">Choose a folder</label> <label class="button big" for="files">Choose files</label></p>
+          <p class="hint">or drop a folder here · up to 500 HTML files, 5 MB each with their images</p>
+        </div>
+      </div>
+      <div class="tool-options" id="job" hidden>
+        <p class="file-name" id="summary"></p>
+        <div class="tool-actions settings-row">
+          <label>Page size <select id="pageSize"><option>A4</option><option>Letter</option><option>Legal</option><option>A3</option><option>A5</option></select></label>
+          <label class="check"><input type="checkbox" id="landscape"> Landscape</label>
+          <label class="check"><input type="checkbox" id="pageNumbers"> Page numbers</label>
+          <span class="spacer"></span>
+          <button type="button" id="stop" hidden>Stop</button>
+          <button type="button" class="primary" id="run">Convert to PDF</button>
+        </div>
+        <p class="hint">An <code>@page</code> rule in a file's CSS wins over the page size here. Images, stylesheets and fonts the
+          files use by relative path come along; files on the web are not fetched.</p>
+        <progress id="progress" value="0" max="1"></progress>
+        <ol class="batch-list" id="results" aria-label="HTML files"></ol>
+      </div>
+      <p class="status tool-status" id="status" role="status" aria-live="polite"></p>
+      <p class="center note tool-code">In C#: <code>HtmlToPdf.ConvertFile(path, pdfPath)</code> for each file, with <code>BaseDirectory</code> so images and stylesheets load from disk. <a class="doc-link" href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>© 2026 PdfPecker. Open source under the MIT license; its bundled fonts keep their own open licenses.</span>
+    <nav aria-label="Footer">
+      <a href="/docs/">Docs</a>
+      <a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a>
+      <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
+      <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
+      <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
+      <a href="/privacy/">Privacy</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
