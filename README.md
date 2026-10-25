@@ -16,6 +16,9 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
   in the browser, live preview, Editor/Split/Preview views, an outline, a word count, an Export menu (Markdown, HTML,
   formatted text) and share links that carry the whole document after the `#`, so nothing is stored on the server.
 
+- `/pdf-tools/`: tools for PDFs visitors already have, sharing `pdf-tools.js`: `/pdf-tools/merge/` (put up to 20
+  PDFs in order, with a page range for each), `/pdf-tools/organize/` (a thumbnail of every page to drag into a new
+  order, rotate, duplicate or delete) and `/pdf-tools/compress/` (`PdfCompactor`, lossless or with smaller images).
 - `/compare/`: PdfPecker side by side with other HTML to PDF converters for .NET.
 - `/privacy/`: what the site does with documents converted on it (nothing is stored).
 - `/documentdesigner/`: a document designer, unlisted while it is being tried out (nothing links to it, it is not
@@ -56,7 +59,7 @@ The website and HTTP API behind [pdfpecker.net](https://pdfpecker.net): a small 
     simply becomes the release; edit the wording there if you like. After the bump the unreleased section is empty
     until main moves ahead again.
 
-Both converter pages share `converter.js` and `examples.js`; `site.css` styles every page.
+Both converter pages share `converter.js` and `examples.js`, the PDF tools share `pdf-tools.js`; `site.css` styles every page.
 
 ```
 dotnet run -c Release        # then open the URL it prints
@@ -85,6 +88,27 @@ mode `color` names (`color`, `grayscale` or `bw`). Options: `dpi` (10 to 300, de
 curl -X POST "http://localhost:8080/api/pdf-to-image?page=1&dpi=200" --data-binary @report.pdf -o page1.png
 curl -X POST http://localhost:8080/api/pdf-to-image -F "file=@report.pdf" -o pages.zip
 curl -X POST "http://localhost:8080/api/pdf-to-image?format=tiff&color=bw&dpi=200" --data-binary @report.pdf -o report.tif
+```
+
+The PDF tools have an endpoint each. They take the PDF in a `file` form field (several for merging) or, except for
+merging, as the raw body, with options as form fields or in the query string; at most 25 MB a request, 1,000 pages out
+and 30 seconds of work.
+
+- `POST /api/merge`: 2 to 20 PDFs in `file` fields, merged in that order; an optional `pages` field per file (in the
+  same order) takes only those pages, such as `1-3,5` or `4-last`.
+- `POST /api/pages`: `pages` lists the pages to keep in their new order (`3,1,2,5-`; a page left out is deleted, a page
+  listed twice is copied), `rotate` turns each page of the result clockwise (`90,0,180`, or one value for every page)
+  and `password` opens an encrypted PDF. The result has no password.
+- `POST /api/compress`: `level` is `lossless` (the default; nothing visible changes), `balanced` (images at most 150 DPI,
+  JPEG quality 80) or `strong` (100 DPI, quality 60), and `removeMetadata=true` drops the title, author and XMP. The
+  original comes back when nothing can be saved; signed and encrypted PDFs are refused with a 422.
+- `POST /api/pdf-thumbnails`: JSON with the page count and a small JPEG (as a data URL) and the size in points of each
+  of the first 300 pages, for the organizer.
+
+```
+curl -X POST http://localhost:8080/api/merge -F "file=@a.pdf" -F "file=@b.pdf" -F pages= -F pages=2-3 -o merged.pdf
+curl -X POST "http://localhost:8080/api/pages?pages=3,1,2&rotate=90,0,0" --data-binary @report.pdf -o reordered.pdf
+curl -X POST "http://localhost:8080/api/compress?level=balanced" --data-binary @scan.pdf -o smaller.pdf
 ```
 
 `POST /api/convert` also accepts JSON: `{ "html": "...", "pageSize": "A4", "landscape": false, "marginMm": 12.7, "pageNumbers": true }`.

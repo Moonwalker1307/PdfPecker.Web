@@ -44,6 +44,26 @@ expect 422 "PDF to image with a file that is not a PDF" -X POST "$base/api/pdf-t
   -H 'Content-Type: application/pdf' --data-binary 'this is not a PDF'
 expect 400 "PDF to image with no file" -X POST "$base/api/pdf-to-image" -F 'note=nothing'
 
+# The PDF tools: a small PDF made above, then requests that must fail cleanly.
+curl -sS -X POST "$base/api/convert" -H 'Content-Type: application/json' \
+  --data '{"html":"<p>one</p><p style=\"page-break-before:always\">two</p>"}' -o /tmp/check-api-small.pdf
+expect 200 "merge two PDFs" -X POST "$base/api/merge" -F 'file=@/tmp/check-api-small.pdf' -F 'file=@/tmp/check-api-small.pdf' \
+  -F 'pages=' -F 'pages=2,1'
+expect 400 "merge one PDF" -X POST "$base/api/merge" -F 'file=@/tmp/check-api-small.pdf'
+expect 200 "reorder and rotate pages" -X POST "$base/api/pages?pages=2,1&rotate=90,0" -H 'Content-Type: application/pdf' \
+  --data-binary @/tmp/check-api-small.pdf
+expect 400 "page past the end" -X POST "$base/api/pages?pages=9" -H 'Content-Type: application/pdf' --data-binary @/tmp/check-api-small.pdf
+expect 400 "rotate that is not a quarter turn" -X POST "$base/api/pages?pages=1&rotate=45" -H 'Content-Type: application/pdf' \
+  --data-binary @/tmp/check-api-small.pdf
+expect 400 "no pages to keep" -X POST "$base/api/pages" -H 'Content-Type: application/pdf' --data-binary @/tmp/check-api-small.pdf
+expect 200 "compress" -X POST "$base/api/compress?level=balanced" -H 'Content-Type: application/pdf' --data-binary @/tmp/check-api-small.pdf
+expect 400 "unknown compress level" -X POST "$base/api/compress?level=max" -H 'Content-Type: application/pdf' \
+  --data-binary @/tmp/check-api-small.pdf
+expect 422 "compress a file that is not a PDF" -X POST "$base/api/compress" -H 'Content-Type: application/pdf' --data-binary 'not a PDF'
+expect 200 "page thumbnails" -X POST "$base/api/pdf-thumbnails" -F 'file=@/tmp/check-api-small.pdf'
+expect 400 "thumbnails with no file" -X POST "$base/api/pdf-thumbnails" -H 'Content-Type: application/pdf'
+rm -f /tmp/check-api-small.pdf
+
 # The headers that keep the site from being framed or running other sites' scripts.
 headers=$(curl -sS -D - -o /dev/null "$base/")
 for h in Content-Security-Policy X-Content-Type-Options X-Frame-Options Referrer-Policy; do
