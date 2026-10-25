@@ -401,6 +401,8 @@ static void ApplySettings(PdfOptions options, PdfSettings o)
     options.UserStyleSheet = LimitOrNull(o.UserStyleSheet, 100_000, "userStyleSheet");
     if (o.Bookmarks is bool bm) options.Bookmarks = bm;
     if (o.Compress is bool c) options.Compress = c;
+    options.Linearize = o.Linearize;
+    options.StripImageMetadata = o.StripImageMetadata;
     if (o.CompressionLevel != null)
         options.CompressionLevel = Enum.TryParse<System.IO.Compression.CompressionLevel>(o.CompressionLevel, true, out var cl) && Enum.IsDefined(cl) && !char.IsDigit(o.CompressionLevel[0])
             ? cl : throw new ArgumentException("compressionLevel must be Optimal, Fastest, NoCompression or SmallestSize.");
@@ -625,6 +627,8 @@ public sealed class PdfSettings
     public bool? Bookmarks { get; set; }
     public bool? Compress { get; set; }
     public string? CompressionLevel { get; set; }
+    public bool Linearize { get; set; }
+    public bool StripImageMetadata { get; set; }
     public int? MaxPages { get; set; }
     public bool EmbedStandardFonts { get; set; }
     public string? Title { get; set; }

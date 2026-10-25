@@ -4,6 +4,36 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.20.0
+
+Released 25 October 2026.
+
+- Keep-with-next chains move to the next page only within the relayout budget ([#405](https://github.com/Moonwalker1307/PdfPecker/pull/405))
+- Option to strip metadata from embedded JPEGs ([#403](https://github.com/Moonwalker1307/PdfPecker/pull/403))
+- Extract images from existing PDFs ([#402](https://github.com/Moonwalker1307/PdfPecker/pull/402))
+- Isolated soft mask for blurred box shadows ([#401](https://github.com/Moonwalker1307/PdfPecker/pull/401))
+- Browser find matches phrases in the PdfToHtml text layer ([#400](https://github.com/Moonwalker1307/PdfPecker/pull/400))
+- Lay out nested flex rows on the pages a constant number of times ([#399](https://github.com/Moonwalker1307/PdfPecker/pull/399))
+- Cap the pixels of a filter region far longer than it is wide ([#398](https://github.com/Moonwalker1307/PdfPecker/pull/398))
+- Layouts of one document share the base of the relayout budget ([#397](https://github.com/Moonwalker1307/PdfPecker/pull/397))
+- Bound CID width and vertical metric ranges ([#396](https://github.com/Moonwalker1307/PdfPecker/pull/396))
+- Linearized output for Fast Web View ([#386](https://github.com/Moonwalker1307/PdfPecker/pull/386))
+- Bound the layout of running headers and footers with page numbers ([#394](https://github.com/Moonwalker1307/PdfPecker/pull/394))
+- Count boxes beside floats towards the depth keep-with-next chains move to ([#395](https://github.com/Moonwalker1307/PdfPecker/pull/395))
+- Charge the JPEG 2000 budget before building code-blocks ([#393](https://github.com/Moonwalker1307/PdfPecker/pull/393))
+- Charge the SVG drawing budget before the depth limit ([#392](https://github.com/Moonwalker1307/PdfPecker/pull/392))
+- Count background gradients in the work budget of filters ([#391](https://github.com/Moonwalker1307/PdfPecker/pull/391))
+- Charge JBIG2 bitmap rows to the work budget ([#389](https://github.com/Moonwalker1307/PdfPecker/pull/389))
+- Keep surrogate pairs whole when hyphenating a decomposed word ([#387](https://github.com/Moonwalker1307/PdfPecker/pull/387))
+- Fonts of SVG text in deeply nested groups ([#388](https://github.com/Moonwalker1307/PdfPecker/pull/388))
+- Viewer settings and page labels ([#381](https://github.com/Moonwalker1307/PdfPecker/pull/381))
+- Lay out a running header without page numbers once ([#385](https://github.com/Moonwalker1307/PdfPecker/pull/385))
+- Check link schemes before System.Uri parses them ([#384](https://github.com/Moonwalker1307/PdfPecker/pull/384))
+- Certification (DocMDP) signatures ([#383](https://github.com/Moonwalker1307/PdfPecker/pull/383))
+- Read document properties of existing PDFs ([#382](https://github.com/Moonwalker1307/PdfPecker/pull/382))
+- Grid row probes put the anchors they move back ([#378](https://github.com/Moonwalker1307/PdfPecker/pull/378))
+- Columns count as depth dependent only when they lay a box out again ([#377](https://github.com/Moonwalker1307/PdfPecker/pull/377))
+
 ## 1.19.0
 
 Released 22 October 2026.

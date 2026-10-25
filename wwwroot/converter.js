@@ -110,6 +110,8 @@ function settings() {
     bookmarks: field("bookmarks").checked,
     compress: field("compress").checked,
     compressionLevel: field("compressionLevel").value,
+    linearize: field("linearize").checked,
+    stripImageMetadata: field("stripImageMetadata").checked,
     maxPages: num("maxPages") ?? 1000,
   };
 }
@@ -165,6 +167,8 @@ function csharp() {
   if (!s.bookmarks) lines.push("Bookmarks = false,");
   if (!s.compress) lines.push("Compress = false,");
   if (s.compressionLevel !== "Fastest") lines.push(`CompressionLevel = System.IO.Compression.CompressionLevel.${s.compressionLevel},`);
+  if (s.linearize) lines.push("Linearize = true,");
+  if (s.stripImageMetadata) lines.push("StripImageMetadata = true,");
   if (s.maxPages !== 100000) lines.push(`MaxPages = ${s.maxPages},`);
   const convert = mode === "markdown" ? "MarkdownToPdf.Convert(markdown, options)" : "HtmlToPdf.Convert(html, options)";
   return `var options = new PdfOptions\n{\n${lines.map(l => "    " + l).join("\n")}\n};\nbyte[] pdf = ${convert};\n`;

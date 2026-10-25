@@ -74,7 +74,28 @@ callback and the timestamp server instead of blocking a thread; `PdfSigner.Sign`
 with `PdfOptions.Signature` wait for it. Everything else, visible boxes, timestamps and existing fields, works as with a
 certificate's own key.
 
-## Verifying signatures {changed 1.10.0}
+## Certification signatures {new 1.20.0}
+
+The first signature of a document can certify it: it states what may change afterwards, and Acrobat shows a certified
+document with a blue ribbon and flags changes the level does not allow. `PdfCertificationLevel.NoChanges` allows none,
+not even another signature; `FormFilling` allows filling in fields and signing; `FormFillingAndAnnotations` also allows
+adding, changing and deleting comments.
+
+```csharp
+// The issuer certifies the contract; the parties may still fill in its fields and sign.
+byte[] certified = PdfSigner.Sign(contract, new PdfSignatureOptions(issuerCert)
+{
+    Certification = PdfCertificationLevel.FormFilling,
+});
+byte[] signed = PdfSigner.Sign(certified, new PdfSignatureOptions(buyerCert) { FieldName = "Buyer" });
+```
+
+Signing refuses what would break a certification: certifying a document that is already signed, any signature on a
+`NoChanges` document, and a new visible signature box on a certified one (an invisible signature or a field the
+document was certified with is fine). The verifier reports `CertificationLevel` and the `DisallowedChanges` made after
+a certification, and a certification with disallowed changes is not `Valid`.
+
+## Verifying signatures {changed 1.20.0}
 
 `PdfSignatureVerifier` checks the signatures and document timestamps of any PDF, oldest first, and reports what it
 finds rather than throwing for a broken signature:

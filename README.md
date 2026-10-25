@@ -95,7 +95,7 @@ The JSON form also takes an `options` object with the rest of `PdfOptions` that 
 page size (or `pageWidthMm`/`pageHeightMm`), `landscape`, the four `margin*Mm`, `scale`, `shrinkToFit`, `headerText`, `footerText`,
 `userStyleSheet`, `embedStandardFonts`, `watermark` (text or base64 image, font, colour, opacity, angle, ...),
 `security` (passwords and `permissions` by name), `conformance`, `eInvoiceXml`, the document properties,
-`customProperties`, `bookmarks`, `compress`, `compressionLevel` and `maxPages` (at most 1,000). Every value is checked
+`customProperties`, `bookmarks`, `compress`, `compressionLevel`, `linearize`, `stripImageMetadata` and `maxPages` (at most 1,000). Every value is checked
 and anything out of range is refused with a 400. Fonts are always the standard ones: registered fonts, system fonts,
 file access, resource loading and signatures cannot be turned on from a request, and the HTML never runs scripts or
 reaches the network.

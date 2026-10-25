@@ -1,6 +1,6 @@
 # Merging and splitting PDFs
 
-## Merging
+## Merging {changed 1.20.0}
 
 `PdfMerger` combines PDFs into one, any PDFs, not only those PdfPecker made:
 
@@ -65,8 +65,10 @@ The pages keep their content, fonts, images, links, annotations, layers and fill
 bookmarks follow each other. A form field named like one in an earlier input is renamed `name_2`, `name_3` and so on, so
 the copies keep their own values. Document properties come from the first input unless `PdfMergeOptions` sets them. The
 result is never encrypted (pass it to `PdfProtector.Encrypt` to protect it) and has no signatures (merging would break
-them); PDF/A conformance is not carried over. Page labels are kept (pages of an input without them are numbered as in
-that input), and attachments too, with one named like an earlier input's listed as `name (2).ext`. Images, fonts and other resources that are byte-for-byte the same in several inputs, such
+them); PDF/A conformance is not carried over. `PdfMergeOptions.Viewer` and `PageLabels` set the
+[viewer settings and page labels](/docs/options/#viewer-settings-and-page-labels) of the result, and
+[`PdfLinearizer`](/docs/compacting/#fast-web-view) makes it load fast on the web. Without `PageLabels`, the inputs'
+page labels are kept (pages of an input without them are numbered as in that input), and attachments too, with one named like an earlier input's listed as `name (2).ext`. Images, fonts and other resources that are byte-for-byte the same in several inputs, such
 as a logo on every payslip of a run, are written once.
 
 Inputs are handled as untrusted: damaged files are repaired where possible, decoding is limited per input, and

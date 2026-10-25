@@ -136,9 +136,10 @@ marks every PDF feature as supported, partly supported or missing.
 - [Form filling](/docs/forms/#filling-and-flattening-existing-pdfs) does not shape text, so values in Arabic, Hebrew,
   Devanagari and other scripts that need shaping are stored but not drawn correctly. XFA forms are not filled: their
   XFA data is removed and the AcroForm fields are filled instead. Field JavaScript (calculations, formats) is not run.
-- [Signature verification](/docs/signatures/#verifying-signatures) counts the updates made after a signature but does
-  not analyse them against its permissions (no DocMDP or FieldMDP change analysis), so it cannot tell an allowed form
-  fill from a changed page. Revocation is checked only when `RevocationMode` asks the platform to, not from the OCSP
+- [Signature verification](/docs/signatures/#verifying-signatures) checks the changes made after a
+  [certification signature](/docs/signatures/#certification-signatures) against its level, but not field locks
+  (FieldMDP), so after an approval signature it counts the updates but cannot tell an allowed form fill from a changed
+  page. Revocation is checked only when `RevocationMode` asks the platform to, not from the OCSP
   responses and CRLs stored in the PDF.
 
 ## Markdown and the PDF renderer {changed 1.14.1}

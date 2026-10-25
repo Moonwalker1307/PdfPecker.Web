@@ -81,7 +81,7 @@ Section[] sections =
         new("merging", "merging", "Merging and splitting", "Merge any PDFs, stream them as they arrive, and extract, reorder, rotate and split pages."),
         new("stamping", "stamping", "Stamping", "Put a stamp over or letterhead under the pages of any PDF."),
         new("compacting", "compacting", "Compacting", "Make any PDF smaller, losslessly or with images downsampled and recompressed, keeping bookmarks, forms, tags and PDF/A."),
-        new("text-extraction", "text-extraction", "Text extraction", "Extract the text of any PDF in reading order, with the position of every line and word."),
+        new("text-extraction", "text-extraction", "Text extraction", "Extract the text of any PDF in reading order with the position of every line and word, its images and its document properties."),
         new("pdf-to-image", "pdf-to-image", "PDF to image", "Render PDF pages to PNG, JPEG, WebP or TIFF with PdfPecker's own renderer, or HTML straight to images."),
         new("pdf-to-html", "pdf-to-html", "PDF to HTML", "Turn any PDF into one self-contained HTML page: page images with selectable, searchable text and working links."),
     ]),
