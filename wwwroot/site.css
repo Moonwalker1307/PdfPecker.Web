@@ -601,6 +601,18 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .prose td.mark.n { color: var(--muted); font-weight: 600; }
 .prose td.mark.x { color: var(--muted); font-weight: 400; }
 .prose tr:has(td.mark) td:first-child { white-space: normal; min-width: 10em; font-weight: 600; }
+/* Every checklist table gets the same column widths, so the marks line up from one section to the next. Names in code
+   break at their hyphens rather than mid-word, and a linked name is underlined only on hover, so the chip stays clean. */
+@media (min-width: 641px) {
+  .prose table:has(td.mark) { table-layout: fixed; }
+  .prose table:has(td.mark) th:first-child { width: 36%; }
+  .prose table:has(td.mark) th:nth-child(2) { width: 8.5em; }
+  .prose tr:has(td.mark) td { padding-block: 7px; }
+}
+.prose tr:has(td.mark) td:first-child code { overflow-wrap: normal; white-space: normal; }
+.prose tr:has(td.mark) td:first-child a { text-decoration: none; }
+.prose tr:has(td.mark) td:first-child a code { color: var(--link); }
+.prose tr:has(td.mark) td:first-child a:hover code, .prose tr:has(td.mark) td:first-child a:hover { text-decoration: underline; }
 @media (prefers-color-scheme: dark) { .prose td.mark.p { color: #f6ad55; } }
 @media (max-width: 640px) {
   /* On phones each checklist row stacks: the feature and its mark on one line, the note under them. */
