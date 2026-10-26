@@ -599,6 +599,7 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
 .prose td.mark.y { color: var(--ok); }
 .prose td.mark.p { color: #b7791f; }
 .prose td.mark.n { color: var(--muted); font-weight: 600; }
+.prose td.mark.x { color: var(--muted); font-weight: 400; }
 .prose tr:has(td.mark) td:first-child { white-space: normal; min-width: 10em; font-weight: 600; }
 @media (prefers-color-scheme: dark) { .prose td.mark.p { color: #f6ad55; } }
 @media (max-width: 640px) {

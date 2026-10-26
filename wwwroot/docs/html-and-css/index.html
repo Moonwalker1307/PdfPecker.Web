@@ -86,6 +86,7 @@
       <ul>
         <li><a href="/docs/changelog/">Changelog</a></li>
         <li><a href="/docs/limitations/">Limitations</a></li>
+        <li><a href="/docs/css-support/">CSS support</a></li>
         <li><a href="/docs/pdf-features/">PDF feature checklist <span class="change" title="Changed in 1.20.0">Changed</span></a></li>
         <li><a href="/docs/performance/">Performance</a></li>
         <li><a href="/docs/how-it-works/">How it works</a></li>
@@ -137,6 +138,7 @@
       <ul>
         <li><a href="/docs/changelog/">Changelog</a></li>
         <li><a href="/docs/limitations/">Limitations</a></li>
+        <li><a href="/docs/css-support/">CSS support</a></li>
         <li><a href="/docs/pdf-features/">PDF feature checklist <span class="change" title="Changed in 1.20.0">Changed</span></a></li>
         <li><a href="/docs/performance/">Performance</a></li>
         <li><a href="/docs/how-it-works/">How it works</a></li>
@@ -155,7 +157,7 @@
       <div class="docs-download">
         <label class="sr" for="docs-version">PdfPecker version</label>
         <select id="docs-version" class="docs-version" autocomplete="off" data-slug="html-and-css">
-          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown fluent-api images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations pdf-features performance how-it-works" selected>1.20.0 (latest)</option>
+          <option value="/docs/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown fluent-api images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative changelog limitations css-support pdf-features performance how-it-works" selected>1.20.0 (latest)</option>
           <option value="/docs/v1.19.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown fluent-api images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations pdf-features performance how-it-works">1.19.0</option>
           <option value="/docs/v1.18.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations pdf-features performance how-it-works">1.18.0</option>
           <option value="/docs/v1.17.0/" data-pages="html-to-pdf-csharp options html-and-css paged-media markdown images-to-pdf fonts languages pdfa-and-passwords accessibility forms signatures e-invoices barcodes attachments merging stamping compacting text-extraction pdf-to-image pdf-to-html wkhtmltopdf-alternative htmlrenderer-pdfsharp-alternative ironpdf-alternative puppeteer-alternative limitations performance how-it-works">1.17.0</option>
@@ -187,7 +189,8 @@
     <article class="prose">
 <h1 id="html-and-css-support">HTML and CSS support</h1>
 <p>PdfPecker lays out HTML and CSS the way Chrome prints it. Anything not listed here should be assumed missing; the
-known gaps are listed under <a href="/docs/limitations/">Limitations</a>.</p>
+known gaps are listed under <a href="/docs/limitations/">Limitations</a>, and <a href="/docs/css-support/">CSS support</a> marks every CSS
+property, selector and unit as supported or not.</p>
 <h2 id="html">HTML</h2>
 <p>The common document elements: headings, paragraphs, <code>div</code>/<code>section</code>-style blocks, <code>span</code>, <code>a</code> (external links
 and <code>#id</code> links inside the document), <code>b</code>/<code>strong</code>, <code>i</code>/<code>em</code>, <code>u</code>, <code>s</code>, <code>sub</code>, <code>sup</code>, <code>small</code>, <code>big</code>, <code>mark</code>, <code>code</code>,
