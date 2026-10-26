@@ -1,7 +1,8 @@
 # HTML and CSS support
 
 PdfPecker lays out HTML and CSS the way Chrome prints it. Anything not listed here should be assumed missing; the
-known gaps are listed under [Limitations](/docs/limitations/).
+known gaps are listed under [Limitations](/docs/limitations/), and [CSS support](/docs/css-support/) marks every CSS
+property, selector and unit as supported or not.
 
 ## HTML {changed 1.18.0}
 
