@@ -1,6 +1,6 @@
 # CSS support
 
-Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 599 properties below, PdfPecker supports 309, supports 26 in part and leaves out 152. Another 112 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
+Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 599 properties below, PdfPecker supports 318, supports 25 in part and leaves out 145. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
 
 A declaration PdfPecker does not support is dropped like any unknown property: the rest of the rule still applies and the conversion does not fail. The property list is the standards-track properties in MDN's browser compatibility data, grouped by the specification that defines them, plus the paged media properties PdfPecker reads. Property names link to MDN.
 
@@ -11,7 +11,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | Property | PdfPecker | Notes |
 | --- | --- | --- |
 | [`aspect-ratio`](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio) | ✓ Yes |  |
-| [`block-ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/block-ellipsis) | ✕ No | Use the line-clamp shorthand. |
+| [`block-ellipsis`](https://developer.mozilla.org/en-US/docs/Web/CSS/block-ellipsis) | ✓ Yes | auto or a string of your own ends a block cut short by line-clamp. |
 | [`block-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/block-size) | ✓ Yes |  |
 | [`box-sizing`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing) | ✓ Yes |  |
 | [`column-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-width) | ✓ Yes |  |
@@ -174,7 +174,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | Property | PdfPecker | Notes |
 | --- | --- | --- |
 | [`background`](https://developer.mozilla.org/en-US/docs/Web/CSS/background) | ✓ Yes | Several layers, gradients and images. |
-| [`background-attachment`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-attachment) | – No effect | Paper does not scroll; fixed, local and scroll draw the same. |
+| [`background-attachment`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-attachment) | ✓ Yes | fixed images are placed against the paper on every page, as in Chrome; fixed gradients move with their box. |
 | [`background-clip`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-clip) | ✓ Yes | Also text and -webkit-background-clip. |
 | [`background-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color) | ✓ Yes |  |
 | [`background-image`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-image) | ✓ Yes |  |
@@ -186,7 +186,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`background-repeat-x`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat-x) | ✕ No | Use background-repeat. |
 | [`background-repeat-y`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat-y) | ✕ No | Use background-repeat. |
 | [`background-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size) | ✓ Yes |  |
-| [`image-orientation`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-orientation) | ✕ No | EXIF rotation of JPEG images is not applied. |
+| [`image-orientation`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-orientation) | ✓ Yes | from-image (the EXIF orientation) and none. |
 | [`image-rendering`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering) | ✕ No | Images are left to the PDF viewer, which smooths them. |
 | [`object-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) | ✓ Yes |  |
 | [`object-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-position) | ✓ Yes |  |
@@ -426,7 +426,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`text-emphasis-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-style) | ✕ No |  |
 | [`text-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow) | ✓ Yes |  |
 | [`text-underline-offset`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-underline-offset) | ✓ Yes |  |
-| [`text-underline-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-underline-position) | ✕ No |  |
+| [`text-underline-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-underline-position) | ✓ Yes | under and from-font, as in Chrome. |
 
 ### Colour, effects and masks
 
@@ -434,7 +434,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | --- | --- | --- |
 | [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter) | ✓ Yes | The backdrop is a 144 dpi raster; up to 64 per document. Also -webkit-backdrop-filter. |
 | [`background-blend-mode`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-blend-mode) | ✓ Yes |  |
-| [`clip`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip) | ✕ No | Deprecated; use clip-path. |
+| [`clip`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip) | ✓ Yes | rect() on absolutely and fixed positioned boxes. Deprecated; clip-path is the modern form. |
 | [`clip-path`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path) | ✓ Yes | Basic shapes, reference boxes and url(#id). |
 | [`clip-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-rule) | ✓ Yes |  |
 | [`color`](https://developer.mozilla.org/en-US/docs/Web/CSS/color) | ✓ Yes | Every colour syntax; wide-gamut colours are mapped to sRGB. |
@@ -493,12 +493,12 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 
 | Property | PdfPecker | Notes |
 | --- | --- | --- |
-| [`content`](https://developer.mozilla.org/en-US/docs/Web/CSS/content) | ½ Partly | Strings, attr(), counters, quotes, string(), target-counter(), target-text() and leader(). Images in content (url(), gradients) are not drawn. |
+| [`content`](https://developer.mozilla.org/en-US/docs/Web/CSS/content) | ✓ Yes | Strings, attr(), counters, quotes, string(), target-counter(), target-text(), leader(), and url() and gradients as inline images. |
 | [`counter-increment`](https://developer.mozilla.org/en-US/docs/Web/CSS/counter-increment) | ✓ Yes |  |
 | [`counter-reset`](https://developer.mozilla.org/en-US/docs/Web/CSS/counter-reset) | ✓ Yes |  |
 | [`counter-set`](https://developer.mozilla.org/en-US/docs/Web/CSS/counter-set) | ✓ Yes |  |
 | [`list-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style) | ✓ Yes |  |
-| [`list-style-image`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-image) | ✓ Yes |  |
+| [`list-style-image`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-image) | ✓ Yes | Images and gradients; image-set() shows the list-style-type instead. |
 | [`list-style-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-position) | ✓ Yes |  |
 | [`list-style-type`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type) | ✓ Yes | Every Counter Styles 3 style and @counter-style. |
 | [`quotes`](https://developer.mozilla.org/en-US/docs/Web/CSS/quotes) | ✓ Yes | Including auto by lang. |
@@ -517,9 +517,9 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 
 | Property | PdfPecker | Notes |
 | --- | --- | --- |
-| `bookmark-label` | ✕ No | PDF bookmarks come from headings through PdfOptions instead. |
-| `bookmark-level` | ✕ No | PDF bookmarks come from headings through PdfOptions instead. |
-| `bookmark-state` | ✕ No |  |
+| `bookmark-label` | ✓ Yes | content(), strings and attr(). |
+| `bookmark-level` | ✓ Yes | Makes any block a bookmark, or leaves a heading out with none. |
+| `bookmark-state` | ✓ Yes | open or closed. |
 | [`box-decoration-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-decoration-break) | ½ Partly | Only for inline boxes, not for blocks split across pages. |
 | [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) | ✓ Yes |  |
 | [`break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-before) | ✓ Yes |  |
@@ -596,11 +596,13 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | `-moz-tab-size` | ✓ Yes | Read as tab-size. |
 | `-webkit-backdrop-filter` | ✓ Yes | Read as backdrop-filter. |
 | `-webkit-background-clip` | ✓ Yes | Read as background-clip. |
+| `-webkit-box, -webkit-box-orient, -webkit-box-pack, -webkit-box-align, -webkit-box-flex` | ✓ Yes | Read as the old flexbox, as in Chrome. |
 | `-webkit-box-decoration-break` | ✓ Yes | Read as box-decoration-break. |
 | `-webkit-hyphenate-character` | ✓ Yes | Read as hyphenate-character. |
 | `-webkit-hyphens` | ✓ Yes | Read as hyphens. |
 | `-webkit-line-clamp` | ✓ Yes | Read as line-clamp. |
 | `-webkit-mask` | ✓ Yes | Read as mask, and every -webkit-mask-* longhand. |
+| `-webkit-transform, -webkit-border-radius, -webkit-box-shadow and the other -webkit- names Chrome accepts` | ✓ Yes | Read as their standard property. |
 | `-webkit-writing-mode` | ✓ Yes | Read as writing-mode. |
 | [`word-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/word-wrap) | ✓ Yes | Read as overflow-wrap. |
 
@@ -812,9 +814,9 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [var() and custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/var) | ✓ Yes | Anywhere, in shorthands and inside math. |
 | [env()](https://developer.mozilla.org/en-US/docs/Web/CSS/env) | ✕ No |  |
 | [attr()](https://developer.mozilla.org/en-US/docs/Web/CSS/attr) | ½ Partly | In content only; no typed attr() in other properties. |
-| [url()](https://developer.mozilla.org/en-US/docs/Web/CSS/url_value) | ✓ Yes | Data URIs, local files and, through your ResourceResolver, remote files. Not drawn in content. |
-| [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings. |
-| [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✕ No | Not drawn as a background; use url(). |
+| [url()](https://developer.mozilla.org/en-US/docs/Web/CSS/url_value) | ✓ Yes | Data URIs, local files and, through your ResourceResolver, remote files. Stylesheets in data: URLs too. |
+| [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings, with colour interpolation methods such as in oklch. Also the old -webkit-gradient() syntax. |
+| [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✕ No | Not drawn; use url(). For HTML images, srcset and picture work. |
 | [cross-fade(), element(), paint()](https://developer.mozilla.org/en-US/docs/Web/CSS/cross-fade) | ✕ No |  |
 | [counter(), counters(), symbols()](https://developer.mozilla.org/en-US/docs/Web/CSS/counter) | ✓ Yes |  |
 | string(), content(), target-counter(), target-text(), leader() | ✓ Yes | Paged media functions. |

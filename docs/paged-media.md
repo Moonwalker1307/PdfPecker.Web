@@ -55,7 +55,7 @@ continues on the next page. Each call links to its note, and tagged PDFs mark th
 <p>Paid on the last banking day<span class="note">Or the day before a holiday.</span>.</p>
 ```
 
-## Running header and footer from HTML {changed 1.19.0}
+## Running header and footer from HTML {changed 1.21.0}
 
 An element with the `data-sticky-pdf-header` or `data-sticky-pdf-footer` attribute is
 taken out of the flow and drawn at the top or bottom of every page, and the page content flows in the space between.
@@ -77,6 +77,21 @@ footer on page one at all. The content on page one uses the space its own bands 
 <header data-sticky-pdf-header height="12mm">ACME Ltd · Offer 2041</header>
 <footer data-sticky-pdf-first-footer></footer>
 <footer data-sticky-pdf-footer>Page {page} of {total-pages}</footer>
+```
+
+A band with `data-sticky-pdf-page="name"` is the header or footer of the pages of that [named page](#page-rules-and-margin-boxes)
+instead of the document's bands, and a first-page band with it shows on the first page of each run of that page.
+Pages without bands of their own keep the document's. One HTML document can so hold a cover, a portrait letter and a
+landscape appendix, each with its own size, margins, header and footer, while page numbers run on through the whole
+document.
+
+```html
+<style>
+  @page appendix { size: A4 landscape }
+  .appendix { page: appendix }
+</style>
+<footer data-sticky-pdf-footer>Page {page} of {total-pages}</footer>
+<footer data-sticky-pdf-footer data-sticky-pdf-page="appendix">Appendix · page {page}</footer>
 ```
 
 ## Shrink to fit {new 1.18.0}

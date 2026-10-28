@@ -44,13 +44,21 @@ Document.Create(container =>
 .GeneratePdf("hello.pdf");
 ```
 
-## What it covers
+## What it covers {changed 1.21.0}
 
 - **Layout**: `Column`, `Row`, `Table` (row and column spans, header and footer rows repeated on every page), padding,
   borders, corner radius, background, sizes, alignment, page breaks, `Layers`, `Inlined`, `MultiColumn`, `EnsureSpace`,
-  `Decoration`, lists and transforms.
+  `Decoration`, lists, transforms and `ScaleToFit`, which draws content smaller until it fits a box of fixed size,
+  for badges and labels.
 - **Text**: spans with font, size, weight, colour, decoration, spacing, superscript and subscript, OpenType features,
   justified text, `ClampLines`, headings that become bookmarks, links, and page numbers in the header and footer.
+- **Pages**: size, margins, colour, and a header and footer on every page with page numbers. `ShowOnce` and `SkipOnce`
+  in the header or footer give the first page a band of its own, such as a letterhead followed by a slim header.
+  Several `Page` calls give page sets with their own size, margins, header and footer in one document, and page
+  numbers, links, PDF/A, PDF/UA and signatures work across all of them.
+- **Form fields and footnotes**, which QuestPDF does not have: `TextField` (one line, multiline or password),
+  `CheckBox`, `RadioButton`, `ComboBox` and `ListBox` become fillable PDF fields, and `text.Footnote("...")` numbers a
+  note and sets it at the bottom of its page.
 - **Images and graphics**: PNG, JPEG, WebP, BMP, TIFF, GIF and SVG images, lines, and QR, EPC payment QR, Code 128 and
   EAN-13 barcodes.
 - **Accessibility**: QuestPDF's `Semantic*` calls write the HTML PdfPecker tags a PDF/UA document from.
@@ -63,12 +71,12 @@ Text, links, colours and names you pass are encoded, so caller data never turns 
 the exception: they insert trusted HTML and CSS as they are, for anything the fluent calls don't cover yet, so never
 pass user input to them.
 
-## Coming from QuestPDF
+## Coming from QuestPDF {changed 1.21.0}
 
 Most QuestPDF code ports by changing the `using` lines: `Document.Create`, `Page`, `Header`, `Content`, `Footer`,
 `Column`, `Row`, `Table`, `Text`, `Padding`, `Border`, `Background`, `Align*`, `Width`, `Height` and `GeneratePdf` have
-the same names. Not available yet: `Dynamic`, `Canvas`, `StopPaging`, `ShowOnce`, `SkipOnce`, `RepeatContent`,
-`ScaleToFit` and some section page numbers. The package's
+the same names. `ScaleToFit`, `ShowOnce` and `SkipOnce` work too. Not available
+yet: `Dynamic`, `Canvas`, `StopPaging`, `RepeatContent`, `ExtendLastCellsToTableBottom` and some section page numbers. The package's
 [README](https://github.com/Moonwalker1307/PdfPecker/tree/main/src/PdfPecker.Fluent) lists every difference.
 
 The fluent layer adds well under a millisecond to a typical document. On the same invoice, built call for call, it is

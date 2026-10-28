@@ -11,11 +11,11 @@ marks every PDF feature as supported, partly supported or missing.
 - No JavaScript. Scripts are never run, so content must be in the HTML before conversion (render it server-side first).
 - No network access: `http:`/`https:` stylesheets and images are not downloaded. Supply them through your
   `ResourceResolver`, as files under `BaseDirectory`, or as `data:` URIs.
-- `<canvas>`, `<iframe>`, `<video>`, `<audio>`, `<object>` and `<embed>` are not drawn, nor are file, range, colour and
-  image inputs. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
+- `<canvas>`, `<iframe>`, `<video>` and `<audio>` are not drawn, `<object>` and `<embed>` show only pictures, and file,
+  range, colour and image inputs are not drawn. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.18.0}
+## Text and fonts {changed 1.21.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages) plus what the [built-in fallback fonts](/docs/fonts/#missing-fonts-and-characters)
@@ -26,8 +26,8 @@ marks every PDF feature as supported, partly supported or missing.
   Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped, so their vowel signs and conjuncts come out wrong.
   Thai and Lao text breaks only at spaces, since there is no dictionary for word breaks.
 - [Vertical text](/docs/html-and-css/#vertical-text) is drawn as turned horizontal text: Chinese and Japanese characters
-  are turned rather than upright (`text-orientation` and `text-combine-upright` are not supported), `vertical-lr`
-  stacks several lines right to left, a box nested inside a vertical box takes its width as its height, and a vertical
+  are turned rather than upright (`text-orientation` and `text-combine-upright` are not supported), tables and images
+  inside vertical text are turned with it (Chrome keeps images upright and lays tables out vertically), and a vertical
   `html` or `body` is laid out horizontally. `vi` and `vb` stay the page width and height in vertical boxes (Chrome
   swaps them), and `initial-letter` makes no drop cap in a vertical box.
 - [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) does not use the vertical `vhal` feature, and the
@@ -35,8 +35,8 @@ marks every PDF feature as supported, partly supported or missing.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
   glyph for another (see [OpenType features](/docs/fonts/#opentype-features)) and fractions; contextual alternates
   (`calt`) and ordinals are not applied, and `small-caps` is synthesized from scaled
-  capitals when the font has no small capitals of its own. `font-variant-alternates` and `font-palette` (colour font
-  palettes) are not supported.
+  capitals when the font has no small capitals of its own. `font-variant-alternates` and `font-palette` are not supported, so
+  [colour fonts](/docs/fonts/#colour-fonts) use their default palette.
 - Solid underlines, overlines and line-throughs are a little thinner than Chrome's (about 1.5 px for 20 px text where
   Chrome draws 2 px), and a solid overline sits about a pixel lower; dashed, dotted, double and wavy lines match Chrome.
   `text-decoration` on SVG text is always a solid line in the text's fill, and is not drawn on `textPath` text.
@@ -46,7 +46,7 @@ marks every PDF feature as supported, partly supported or missing.
 - SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS {changed 1.18.0}
+## CSS {changed 1.21.0}
 
 - Container queries: no `scroll-state()` queries, `style()` works only on custom properties, and style containment
   (counter scoping) and the `contain` property are not implemented. A document with container queries takes about two
@@ -72,8 +72,9 @@ marks every PDF feature as supported, partly supported or missing.
   that has only a `min-height`, against a table row's height on its own or a rowspanning cell, and in footnotes and
   running headers and footers. When pages differ in size, a box resolves its percentage height against the page it
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
-- `background-attachment: fixed` scrolls with the box, since paper has no scrolling viewport.
-- Not supported: `contain`, `content-visibility`, `cross-fade()`, `element()`, `paint()`, `env()`, `anchor()`, `attr()`
+- `background-attachment: fixed` places images against the paper, as Chrome prints them, but gradients still move with
+  their box.
+- Not supported: `contain`, `content-visibility`, `image-set()`, `cross-fade()`, `element()`, `paint()`, `env()`, `anchor()`, `attr()`
   outside `content`, `::selection` and `:nth-col()`. In `@page` margins and media queries, `ex`, `ch` and the other
   font units use the initial 16 px font.
 - [3D transforms](/docs/html-and-css/#3d-transforms) are drawn flat, since a PDF page has only flat transforms: a box with
@@ -91,8 +92,9 @@ marks every PDF feature as supported, partly supported or missing.
   left out; its children are tagged.
 - Gradient stops that fade to transparent are mixed in unpremultiplied colours, so the middle of such a gradient is a
   little greyer than in Chrome.
-- A document without a doctype is laid out in standards mode; Chrome uses quirks mode for it, which, among other things,
-  ignores the first paragraph's top margin in the body.
+- A document without a doctype reads lengths without a unit as pixels, as quirks mode does, but is otherwise laid out
+  in standards mode; Chrome's quirks mode also, among other things, ignores the first paragraph's top margin in the
+  body.
 
 ## Backgrounds and transparency {changed 1.16.0}
 
@@ -103,7 +105,7 @@ marks every PDF feature as supported, partly supported or missing.
 - A translucent box shadow without blur is blended onto white rather than truly see-through. Blurs are drawn as
   bands, so very wide blurs may show faint steps when zoomed in.
 
-## Layout {changed 1.17.0}
+## Layout {changed 1.21.0}
 
 - [Subgrid](/docs/html-and-css/#subgrid): percentage gaps, margins and padding on a subgrid resolve against the parent
   grid's width rather than the subgrid's area; subgrid items are not baseline-aligned with the parent's items; and only
@@ -115,8 +117,9 @@ marks every PDF feature as supported, partly supported or missing.
   multi-column box with `overflow: hidden` is clipped from view but stays in the PDF's text.
 - Overflow: a positioned child with a `z-index` inside a clipping box stays stacked within that box.
 - Collapsed table borders on `col` and `colgroup` are not drawn; borders on cells, rows, row groups and the table are.
+- A table row with a cell that spans rows moves to the next page whole rather than breaking inside, as other rows do.
 
-## Images and SVG {changed 1.17.0}
+## Images and SVG {changed 1.21.0}
 
 - No AVIF images: decoding them needs an AV1 video decoder, which is not planned. Convert them to WebP, PNG or JPEG.
 - SVG filters are applied in pixels at 144 dpi, so filtered shapes become an image (text keeps an invisible,
@@ -124,16 +127,21 @@ marks every PDF feature as supported, partly supported or missing.
 - A missing image with alt text shows the text without Chrome's small broken-image icon, and a missing image without
   alt text or a size has no box rather than Chrome's 16 px icon box.
 - An SVG `symbol` is not clipped to its viewport, and its `preserveAspectRatio` is always the default (`xMidYMid meet`).
+- A `foreignObject` inside an SVG group with a clip, mask or filter is drawn over the drawing without those effects, and
+  a `use` element's own `fill` and `stroke` reach the content it draws only through `context-fill` and
+  `context-stroke`.
 
-## Reading and changing existing PDFs {changed 1.17.0}
+## Reading and changing existing PDFs {changed 1.21.0}
 
 - [Text extraction](/docs/text-extraction/) reads columns that sit side by side across, line by line, rather than one
   column after the other, and it does not use the structure tree of a tagged PDF to find the reading order. Text drawn
   only as outlines or images is not extracted; there is no OCR. Indic vowel signs drawn before their consonant come
   out in that visual order unless the PDF carries `/ActualText`.
-- [PDF to HTML](/docs/pdf-to-html/) keeps the PDF's layout: the page is an image and the text an invisible layer over
-  it, so the HTML does not reflow into paragraphs and tables, text zooms as an image does, and what text extraction
-  cannot read (outlines, scans) cannot be selected either.
+- [PDF to HTML](/docs/pdf-to-html/) in its visual mode keeps the PDF's layout: the page is an image and the text an
+  invisible layer over it, so text zooms as an image does, and what text extraction cannot read (outlines, scans)
+  cannot be selected either. The [structured mode](/docs/pdf-to-html/#structured-html) reads an untagged PDF's
+  structure from its layout, so unusual layouts, floats and charts can come out as plain paragraphs, and text of cards
+  side by side in one row can run together.
 - [Form filling](/docs/forms/#filling-and-flattening-existing-pdfs) does not shape text, so values in Arabic, Hebrew,
   Devanagari and other scripts that need shaping are stored but not drawn correctly. XFA forms are not filled: their
   XFA data is removed and the AcroForm fields are filled instead. Field JavaScript (calculations, formats) is not run.

@@ -1,6 +1,6 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 134 features below, PdfPecker supports 89, supports 16 in part and leaves out 29. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 134 features below, PdfPecker supports 90, supports 17 in part and leaves out 27. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
 ## File format and structure {changed 1.20.0}
 
@@ -37,7 +37,7 @@ Ways to produce a new PDF.
 | Content rendered by JavaScript | ✕ No | By design: no scripts run. Render the HTML on the server first. |
 | Low-level drawing API | ✕ No | There is no canvas-style API to draw paths and text at coordinates; content comes from HTML, Markdown, images or the fluent API. |
 
-## Text and fonts
+## Text and fonts {changed 1.21.0}
 
 How text is stored, so it looks right and stays searchable.
 
@@ -52,7 +52,7 @@ How text is stored, so it looks right and stays searchable.
 | Complex scripts | ½ Partly | Arabic, Hebrew, nine Indic scripts, Thai and Lao are shaped. Khmer, Myanmar, Sinhala, Tibetan and others are not. |
 | Vertical text | ½ Partly | Drawn as turned horizontal text; CJK characters are not set upright. |
 | Fallback fonts | ✓ Yes | Bundled fonts for Central European, Greek, Cyrillic and symbols when your fonts lack a character. |
-| Colour fonts and emoji | ✕ No | COLR/CPAL, SVG and bitmap colour glyphs are not drawn. |
+| Colour fonts and emoji | ½ Partly | COLR colour fonts, versions 0 and 1 (such as Noto Color Emoji), print in colour as text; SVG and bitmap colour glyphs are not drawn. |
 | Outlined and stroked text | ✓ Yes | `-webkit-text-stroke` and `paint-order`, written as PDF text render modes. |
 
 ## Graphics, images and colour
@@ -74,13 +74,13 @@ What can be drawn on a page.
 | Overprint control | ✕ No | Not written, and not simulated when rendering. |
 | Filters and blur | ½ Partly | CSS filter, `backdrop-filter` and blurred shadows; blurs are drawn as 144 dpi images, colour filters stay vectors. |
 
-## Navigation and interactivity {changed 1.20.0}
+## Navigation and interactivity {changed 1.21.0}
 
 What a reader can click or open in a viewer.
 
 | Feature | PdfPecker | Notes |
 | --- | --- | --- |
-| Bookmarks (outlines) | ✓ Yes | Built from h1 to h6; kept and nested when merging. |
+| Bookmarks (outlines) | ✓ Yes | Built from h1 to h6 or from CSS `bookmark-level`, `bookmark-label` and `bookmark-state`; kept and nested when merging. |
 | Internal links | ✓ Yes | Links to #ids jump to the right page and position. |
 | External web links | ✓ Yes | URI link annotations. |
 | Named destinations | ½ Partly | Read when rendering and converting to HTML. New files use direct page destinations instead of a /Dests name tree. |
@@ -197,7 +197,7 @@ Changing files you already have.
 | N-up and imposition | ✕ No |  |
 | Convert an existing PDF to PDF/A | ✕ No | Only new documents are made as PDF/A. |
 
-## Reading, rendering and conversion {changed 1.20.0}
+## Reading, rendering and conversion {changed 1.21.0}
 
 Getting things out of existing PDFs.
 
@@ -213,9 +213,9 @@ Getting things out of existing PDFs.
 | Transparency groups, blend modes, soft masks | ✓ Yes |  |
 | Annotation appearances | ✓ Yes | Can be switched off. |
 | Text extraction with positions | ✓ Yes | Pages, lines and words with coordinates, font and size. |
-| Reading order | ½ Partly | Columns side by side are read across; the structure tree is not used. |
+| Reading order | ½ Partly | Text extraction reads columns side by side across; structured PDF to HTML follows a tagged PDF's structure tree. |
 | OCR | ✕ No | Text in scans and outlines cannot be extracted. |
 | PDF to HTML | ✓ Yes | Page images with a selectable, searchable text layer and working links. |
-| Reflowing PDF to HTML | ✕ No | The HTML keeps the PDF's fixed layout. |
+| Reflowing PDF to HTML | ✓ Yes | `PdfHtmlMode.Structured`: headings, paragraphs, lists and tables in reading order, from a tagged PDF's tags or else from the layout, optionally with styles and pictures. |
 | Extract images | ✓ Yes | `PdfImages`: original JPEGs or PNG, with where each is drawn and its EXIF. |
 | PDF to Word, Excel or PowerPoint | ✕ No |  |

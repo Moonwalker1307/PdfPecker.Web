@@ -67,6 +67,21 @@ and the like) are applied; the font must have them. Fractions with `font-variant
 into fractions and leave `a/b` as it is, and `tabular-nums` used with them does not widen the fraction's digits.
 Text copied from the PDF keeps the original characters.
 
+## Colour fonts {new 1.21.0}
+
+Text in a COLR colour font, version 0 or 1, such as Noto Color Emoji or Nabla, prints in colour the way Chrome prints
+it: layers, gradients (also sweep gradients), blend and composite modes, clip boxes and variable colour fonts at the
+font's instance, with the palette's colours and the text colour where the font asks for it. The text stays text, so it
+can be selected, searched and copied, and colour fonts pass every PDF/A and PDF/UA profile. Emoji sequences join as in
+Chrome: skin tones, flags, zero width joiner sequences and subdivision flags. When `unicode-range` splits a font into
+parts, as Google Fonts serves Noto Color Emoji, each emoji is drawn with the part that has all of it.
+
+```csharp
+var options = new PdfOptions();
+options.Fonts.AddFile("fonts/NotoColorEmoji-Regular.ttf");     // family "Noto Color Emoji"
+var pdf = HtmlToPdf.Convert("<p style='font-family: sans-serif, \"Noto Color Emoji\"'>Ready 🚀 👍🏽</p>", options);
+```
+
 ## Font properties {new 1.17.0}
 
 - `font-kerning: none` turns kerning off (so does `font-feature-settings: "kern" 0`), for the standard fonts too.
