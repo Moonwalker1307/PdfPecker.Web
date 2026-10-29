@@ -22,3 +22,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Each wrangler release asks for a recent @cloudflare/workers-types as a peer, so separate bumps fail `npm ci`.
+    groups:
+      cloudflare:
+        patterns: ["wrangler", "@cloudflare/*"]
