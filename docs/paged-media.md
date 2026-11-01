@@ -1,6 +1,6 @@
 # Paged media
 
-## Page rules and margin boxes {changed 1.9.0}
+## Page rules and margin boxes {changed 1.22.0}
 
 `@page` rules set the page size, margins and background, and their margin boxes (`@top-left`, `@top-center`,
 `@bottom-right` and the other thirteen) print headers and footers with `counter(page)` and `counter(pages)`, chosen
@@ -8,7 +8,9 @@ per page with `:first`, `:left` and `:right`. Those three can also change the pa
 `@page :first { margin-top: 70mm }` leaves room for a letterhead on page 1 only, and mirrored `:left` and `:right`
 margins give a bound booklet a wider inner margin, and each page is laid out at its own content width. The first page
 is a right page; in a right-to-left document (`dir="rtl"` on `<html>`) it is a left page, and PDF viewers are told the
-pages run right to left. On top of that:
+pages run right to left. A border and padding on the `@page` box are drawn inside the margins, with the content inside
+them, and the page's background images cover the whole sheet, as Chrome prints them (the images are positioned in the
+page box, as CSS Paged Media 3 says). On top of that:
 
 - **Named pages**: `page: wide` puts an element on pages styled by `@page wide { ... }`, with their own size,
   orientation, margins, background and margin boxes. Content on another named page starts a new page, so a landscape
@@ -19,6 +21,12 @@ pages run right to left. On top of that:
 - **Tables of contents**: `target-counter(attr(href), page)` shows the page number of the element a link points to,
   and `leader(dotted)` (or `solid`, `space`, or a string) fills the space before it. `target-text()` shows the
   linked element's text. The document is laid out again with the numbers it finds, so they are always right.
+- **Page count in the content**: `counter(pages)` works anywhere, not only in margin boxes, as in Prince: "This report
+  has 12 pages" on its first page.
+- **Sections**: `-pdfpecker-target-pages(attr(href), first | last | count | current)` gives the first or last page of
+  the element a link points to, how many pages it covers, or the page counted from its first (with an optional counter
+  style, as `target-counter()` takes): "Chapter 3, pages 12–17" in a table of contents, or "page 2 of 6" within a
+  section. In a sticky header or footer, `{section-page:id}` (the id percent-encoded) is the page within that section.
 
 ```css
 @page { size: A4; margin: 20mm;
@@ -32,7 +40,8 @@ h2 { string-set: chapter content(); break-before: page }
 nav a::after { content: leader(dotted) target-counter(attr(href), page) }
 ```
 
-Chrome supports named pages and margin boxes, but not running strings, `target-counter()` or `leader()`.
+Chrome supports named pages and margin boxes, but not running strings, `target-counter()`, `leader()`, the page count
+in the content or section page numbers; `-pdfpecker-target-pages()` is PdfPecker's own.
 
 ## Footnotes {new 1.9.0}
 

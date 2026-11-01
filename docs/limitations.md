@@ -15,7 +15,7 @@ marks every PDF feature as supported, partly supported or missing.
   range, colour and image inputs are not drawn. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.21.0}
+## Text and fonts {changed 1.22.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages) plus what the [built-in fallback fonts](/docs/fonts/#missing-fonts-and-characters)
@@ -31,7 +31,7 @@ marks every PDF feature as supported, partly supported or missing.
   `html` or `body` is laid out horizontally. `vi` and `vb` stay the page width and height in vertical boxes (Chrome
   swaps them), and `initial-letter` makes no drop cap in a vertical box.
 - [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) does not use the vertical `vhal` feature, and the
-  `text-spacing` shorthand is not read. `text-emphasis` marks and `hanging-punctuation` are not supported.
+  `text-spacing` shorthand is not read. `hanging-punctuation` is not supported.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
   glyph for another (see [OpenType features](/docs/fonts/#opentype-features)) and fractions; contextual alternates
   (`calt`) and ordinals are not applied, and `small-caps` is synthesized from scaled
@@ -46,7 +46,7 @@ marks every PDF feature as supported, partly supported or missing.
 - SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS {changed 1.21.0}
+## CSS {changed 1.22.0}
 
 - Container queries: no `scroll-state()` queries, `style()` works only on custom properties, and style containment
   (counter scoping) and the `contain` property are not implemented. A document with container queries takes about two
@@ -66,15 +66,17 @@ marks every PDF feature as supported, partly supported or missing.
   rather than between them and their own underline. `filter: blur()` and `drop-shadow()` draw the box as an image;
   its text stays selectable, and the colour filters keep everything as vectors.
 - `text-overflow` applies only at the end of the line, as in the spec and Chrome.
+- Background images on the `@page` box are positioned in the page box, as CSS Paged Media 3 says; Chrome sizes that
+  area like the root element, so `right`, `bottom` and percentage positions can land elsewhere than in Chrome.
 - `inline-size`, `block-size` and their `min-` and `max-` forms always mean width and height, also in vertical
   writing modes; the logical margins, paddings, insets and borders do follow `writing-mode`.
 - [Percentage heights](/docs/html-and-css/#percentage-heights) still count as `auto` in a flexed item of a container
-  that has only a `min-height`, against a table row's height on its own or a rowspanning cell, and in footnotes and
+  that has only a `min-height`, against a table row's height on its own, and in footnotes and
   running headers and footers. When pages differ in size, a box resolves its percentage height against the page it
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` places images against the paper, as Chrome prints them, but gradients still move with
   their box.
-- Not supported: `contain`, `content-visibility`, `image-set()`, `cross-fade()`, `element()`, `paint()`, `env()`, `anchor()`, `attr()`
+- Not supported: `contain`, `content-visibility`, `cross-fade()`, `element()`, `paint()`, `env()`, `anchor()`, `attr()`
   outside `content`, `::selection` and `:nth-col()`. In `@page` margins and media queries, `ex`, `ch` and the other
   font units use the initial 16 px font.
 - [3D transforms](/docs/html-and-css/#3d-transforms) are drawn flat, since a PDF page has only flat transforms: a box with
@@ -92,8 +94,8 @@ marks every PDF feature as supported, partly supported or missing.
   left out; its children are tagged.
 - Gradient stops that fade to transparent are mixed in unpremultiplied colours, so the middle of such a gradient is a
   little greyer than in Chrome.
-- A document without a doctype reads lengths without a unit as pixels, as quirks mode does, but is otherwise laid out
-  in standards mode; Chrome's quirks mode also, among other things, ignores the first paragraph's top margin in the
+- A document without a doctype reads lengths without a unit as pixels and takes Chrome's quirks-mode line heights, but
+  is otherwise laid out in standards mode; Chrome's quirks mode also, among other things, ignores the first paragraph's top margin in the
   body.
 
 ## Backgrounds and transparency {changed 1.16.0}

@@ -44,14 +44,17 @@ Document.Create(container =>
 .GeneratePdf("hello.pdf");
 ```
 
-## What it covers {changed 1.21.0}
+## What it covers {changed 1.22.0}
 
-- **Layout**: `Column`, `Row`, `Table` (row and column spans, header and footer rows repeated on every page), padding,
+- **Layout**: `Column`, `Row`, `Table` (row and column spans, header and footer rows repeated on every page, cell backgrounds and borders that fill the
+  row in any call order, as in QuestPDF), padding,
   borders, corner radius, background, sizes, alignment, page breaks, `Layers`, `Inlined`, `MultiColumn`, `EnsureSpace`,
   `Decoration`, lists, transforms and `ScaleToFit`, which draws content smaller until it fits a box of fixed size,
   for badges and labels.
 - **Text**: spans with font, size, weight, colour, decoration, spacing, superscript and subscript, OpenType features,
-  justified text, `ClampLines`, headings that become bookmarks, links, and page numbers in the header and footer.
+  justified text, `ClampLines`, headings that become bookmarks, links, and page numbers and the page count anywhere: in the header, the footer
+  and the content. Section page numbers: `BeginPageNumberOfSection`, `EndPageNumberOfSection`,
+  `TotalPagesWithinSection` and `PageNumberWithinSection`.
 - **Pages**: size, margins, colour, and a header and footer on every page with page numbers. `ShowOnce` and `SkipOnce`
   in the header or footer give the first page a band of its own, such as a letterhead followed by a slim header.
   Several `Page` calls give page sets with their own size, margins, header and footer in one document, and page
@@ -71,12 +74,12 @@ Text, links, colours and names you pass are encoded, so caller data never turns 
 the exception: they insert trusted HTML and CSS as they are, for anything the fluent calls don't cover yet, so never
 pass user input to them.
 
-## Coming from QuestPDF {changed 1.21.0}
+## Coming from QuestPDF {changed 1.22.0}
 
 Most QuestPDF code ports by changing the `using` lines: `Document.Create`, `Page`, `Header`, `Content`, `Footer`,
 `Column`, `Row`, `Table`, `Text`, `Padding`, `Border`, `Background`, `Align*`, `Width`, `Height` and `GeneratePdf` have
-the same names. `ScaleToFit`, `ShowOnce` and `SkipOnce` work too. Not available
-yet: `Dynamic`, `Canvas`, `StopPaging`, `RepeatContent`, `ExtendLastCellsToTableBottom` and some section page numbers. The package's
+the same names. `ScaleToFit`, `ShowOnce`, `SkipOnce`, page numbers in the content and every section page number work
+too. Not available yet: `Dynamic`, `Canvas`, `StopPaging`, `RepeatContent` and `ExtendLastCellsToTableBottom`. The package's
 [README](https://github.com/Moonwalker1307/PdfPecker/tree/main/src/PdfPecker.Fluent) lists every difference.
 
 The fluent layer adds well under a millisecond to a typical document. On the same invoice, built call for call, it is

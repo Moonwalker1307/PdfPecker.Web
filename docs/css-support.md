@@ -1,6 +1,6 @@
 # CSS support
 
-Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 599 properties below, PdfPecker supports 318, supports 25 in part and leaves out 145. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
+Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 599 properties below, PdfPecker supports 345, supports 25 in part and leaves out 118. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
 
 A declaration PdfPecker does not support is dropped like any unknown property: the rest of the rule still applies and the conversion does not fail. The property list is the standards-track properties in MDN's browser compatibility data, grouped by the specification that defines them, plus the paged media properties PdfPecker reads. Property names link to MDN.
 
@@ -54,7 +54,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`order`](https://developer.mozilla.org/en-US/docs/Web/CSS/order) | ✓ Yes |  |
 | [`overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow) | ✓ Yes | auto and scroll clip like hidden, since paper cannot scroll. |
 | [`overflow-block`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-block) | ✕ No | Only the media feature of that name is answered. |
-| [`overflow-clip-margin`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-clip-margin) | ✕ No |  |
+| [`overflow-clip-margin`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-clip-margin) | ✓ Yes | padding-box, border-box or content-box, grown or pulled in by a length, for overflow: clip. |
 | [`overflow-inline`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-inline) | ✕ No | Only the media feature of that name is answered. |
 | [`overflow-x`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x) | ✓ Yes | As overflow. |
 | [`overflow-y`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-y) | ✓ Yes | As overflow. |
@@ -79,7 +79,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`size`](https://developer.mozilla.org/en-US/docs/Web/CSS/size) | ✓ Yes | The @page descriptor: A4, Letter, landscape or any length. |
 | [`text-overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow) | ✓ Yes | ellipsis, clip and strings. |
 | [`visibility`](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility) | ✓ Yes |  |
-| [`width`](https://developer.mozilla.org/en-US/docs/Web/CSS/width) | ✓ Yes | Also min-content, max-content and fit-content. |
+| [`width`](https://developer.mozilla.org/en-US/docs/Web/CSS/width) | ✓ Yes | Also min-content, max-content, fit-content, stretch and -webkit-fill-available. |
 
 ### Borders, outlines and shadows
 
@@ -146,23 +146,23 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`border-top-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-width) | ✓ Yes |  |
 | [`border-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/border-width) | ✓ Yes |  |
 | [`box-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow) | ✓ Yes | Inset shadows on inline elements are not drawn. |
-| [`corner-block-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-block-end-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-block-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-block-start-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-bottom-left-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-bottom-left-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-bottom-right-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-bottom-right-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-bottom-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-bottom-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-end-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-end-end-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-end-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-end-start-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-inline-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-inline-end-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-inline-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-inline-start-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-left-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-left-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-right-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-right-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-start-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-start-end-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-start-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-start-start-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-top-left-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-top-left-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-top-right-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-top-right-shape) | ✕ No | corner-shape is not supported; border-radius is. |
-| [`corner-top-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-top-shape) | ✕ No | corner-shape is not supported; border-radius is. |
+| [`corner-block-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-block-end-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-block-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-block-start-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-bottom-left-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-bottom-left-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-bottom-right-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-bottom-right-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-bottom-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-bottom-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-end-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-end-end-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-end-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-end-start-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-inline-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-inline-end-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-inline-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-inline-start-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-left-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-left-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-right-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-right-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-start-end-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-start-end-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-start-start-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-start-start-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-top-left-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-top-left-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-top-right-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-top-right-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
+| [`corner-top-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/corner-top-shape) | ✓ Yes | Shapes the border-radius corners, as Chrome draws them. |
 | [`outline`](https://developer.mozilla.org/en-US/docs/Web/CSS/outline) | ✓ Yes |  |
 | [`outline-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/outline-color) | ✓ Yes |  |
 | [`outline-offset`](https://developer.mozilla.org/en-US/docs/Web/CSS/outline-offset) | ✓ Yes |  |
@@ -240,7 +240,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`flex-line-count`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-line-count) | ✕ No |  |
 | [`flex-shrink`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink) | ✓ Yes |  |
 | [`flex-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap) | ✓ Yes |  |
-| [`grid`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid) | ✕ No | The grid shorthand is not expanded; use grid-template and grid-auto-flow. @supports wrongly reports it as supported. |
+| [`grid`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid) | ✓ Yes | Template forms and auto-flow forms. |
 | [`grid-area`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-area) | ✓ Yes |  |
 | [`grid-auto-columns`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-columns) | ✓ Yes |  |
 | [`grid-auto-flow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow) | ✓ Yes | Including dense. |
@@ -348,7 +348,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`font-variant-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-position) | ✓ Yes |  |
 | [`font-variation-settings`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variation-settings) | ✓ Yes |  |
 | [`font-weight`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight) | ✓ Yes |  |
-| [`font-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-width) | ✕ No | New name for font-stretch, which works. |
+| [`font-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-width) | ✓ Yes | The new name of font-stretch. |
 
 ### Text, lines and writing modes
 
@@ -380,9 +380,9 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align) | ✓ Yes | Right-to-left and bidi lines justify at spaces only. |
 | [`text-align-last`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align-last) | ✓ Yes |  |
 | [`text-autospace`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-autospace) | ✕ No |  |
-| [`text-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box) | ✕ No |  |
-| [`text-box-edge`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-edge) | ✕ No |  |
-| [`text-box-trim`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-trim) | ✕ No |  |
+| [`text-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box) | ✓ Yes | Trims block lines as Chrome does; inline boxes are not trimmed, as in Chrome. |
+| [`text-box-edge`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-edge) | ✓ Yes |  |
+| [`text-box-trim`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-trim) | ✓ Yes |  |
 | [`text-combine-upright`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-combine-upright) | ✕ No |  |
 | [`text-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-fit) | ✕ No |  |
 | [`text-indent`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-indent) | ✓ Yes |  |
@@ -420,10 +420,10 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`text-decoration-skip-spaces`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-skip-spaces) | ✕ No |  |
 | [`text-decoration-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-style) | ✓ Yes | Wavy and dashed lines differ a little from Chrome. |
 | [`text-decoration-thickness`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-thickness) | ✓ Yes |  |
-| [`text-emphasis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis) | ✕ No |  |
-| [`text-emphasis-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-color) | ✕ No |  |
-| [`text-emphasis-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-position) | ✕ No |  |
-| [`text-emphasis-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-style) | ✕ No |  |
+| [`text-emphasis`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis) | ✓ Yes | Marks drawn as Chrome draws them. |
+| [`text-emphasis-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-color) | ✓ Yes |  |
+| [`text-emphasis-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-position) | ✓ Yes |  |
+| [`text-emphasis-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-emphasis-style) | ✓ Yes |  |
 | [`text-shadow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow) | ✓ Yes |  |
 | [`text-underline-offset`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-underline-offset) | ✓ Yes |  |
 | [`text-underline-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-underline-position) | ✓ Yes | under and from-font, as in Chrome. |
@@ -435,7 +435,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`backdrop-filter`](https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter) | ✓ Yes | The backdrop is a 144 dpi raster; up to 64 per document. Also -webkit-backdrop-filter. |
 | [`background-blend-mode`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-blend-mode) | ✓ Yes |  |
 | [`clip`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip) | ✓ Yes | rect() on absolutely and fixed positioned boxes. Deprecated; clip-path is the modern form. |
-| [`clip-path`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path) | ✓ Yes | Basic shapes, reference boxes and url(#id). |
+| [`clip-path`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path) | ✓ Yes | Basic shapes (also rect() and xywh()), reference boxes and url(#id). |
 | [`clip-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-rule) | ✓ Yes |  |
 | [`color`](https://developer.mozilla.org/en-US/docs/Web/CSS/color) | ✓ Yes | Every colour syntax; wide-gamut colours are mapped to sRGB. |
 | [`color-adjust`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-adjust) | – No effect | Backgrounds always print, as with exact. |
@@ -498,7 +498,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`counter-reset`](https://developer.mozilla.org/en-US/docs/Web/CSS/counter-reset) | ✓ Yes |  |
 | [`counter-set`](https://developer.mozilla.org/en-US/docs/Web/CSS/counter-set) | ✓ Yes |  |
 | [`list-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style) | ✓ Yes |  |
-| [`list-style-image`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-image) | ✓ Yes | Images and gradients; image-set() shows the list-style-type instead. |
+| [`list-style-image`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-image) | ✓ Yes | Images, image-set() and gradients. |
 | [`list-style-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-position) | ✓ Yes |  |
 | [`list-style-type`](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type) | ✓ Yes | Every Counter Styles 3 style and @counter-style. |
 | [`quotes`](https://developer.mozilla.org/en-US/docs/Web/CSS/quotes) | ✓ Yes | Including auto by lang. |
@@ -723,7 +723,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | ✓ Yes | syntax, inherits and initial-value. |
 | [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) | ½ Partly | src (url(), local(), format()), font-weight and font-stretch ranges, font-style, unicode-range. font-display is accepted; size-adjust and the metric overrides are ignored. |
 | [`@counter-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@counter-style) | ✓ Yes | Every system and descriptor. |
-| [`@page`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page) | ✓ Yes | size, margins, backgrounds, :first, :left, :right, :blank, named pages and all 16 margin boxes. marks, bleed and page-orientation are ignored. |
+| [`@page`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page) | ✓ Yes | size, margins, borders, padding, backgrounds and background images, :first, :left, :right, :blank, named pages and all 16 margin boxes. marks, bleed and page-orientation are ignored. |
 | [`@footnote`](https://developer.mozilla.org/en-US/docs/Web/CSS/@footnote) | ✓ Yes | The footnote area inside @page. |
 | [`@namespace`](https://developer.mozilla.org/en-US/docs/Web/CSS/@namespace) | ½ Partly | Accepted and ignored; HTML needs no namespaces. |
 | [`CSS nesting (&)`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting) | ✓ Yes |  |
@@ -772,9 +772,9 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [`::placeholder`](https://developer.mozilla.org/en-US/docs/Web/CSS/::placeholder) | ✓ Yes | On text fields and textareas. |
 | `::footnote-call`, `::footnote-marker` | ✓ Yes | From CSS Generated Content for Paged Media. |
 | [`@page :first`, `:left`, `:right`, `:blank`](https://developer.mozilla.org/en-US/docs/Web/CSS/:first) | ✓ Yes |  |
-| [`:valid`, `:invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:valid) | ✕ No | Rules with them are skipped. |
+| [`:valid`, `:invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:valid) | ✓ Yes | As Chrome matches them before anyone types: required, pattern, min, max, step, email and url. |
 | [`:in-range`, `:out-of-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/:in-range) | ✕ No | Rules with them are skipped. |
-| [`:open`](https://developer.mozilla.org/en-US/docs/Web/CSS/:open) | ✕ No | Use [open] for details elements. |
+| [`:open`](https://developer.mozilla.org/en-US/docs/Web/CSS/:open) | ✓ Yes | details and dialog with the open attribute. |
 | `:heading`, `:heading()` | ✕ No |  |
 | [`:state()`, `:host`, `:host()`, `:host-context()`, `::part()`, `::slotted()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) | ✕ No | No shadow DOM: scripts do not run. |
 | [`::details-content`](https://developer.mozilla.org/en-US/docs/Web/CSS/::details-content) | ✕ No |  |
@@ -816,14 +816,15 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [attr()](https://developer.mozilla.org/en-US/docs/Web/CSS/attr) | ½ Partly | In content only; no typed attr() in other properties. |
 | [url()](https://developer.mozilla.org/en-US/docs/Web/CSS/url_value) | ✓ Yes | Data URIs, local files and, through your ResourceResolver, remote files. Stylesheets in data: URLs too. |
 | [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings, with colour interpolation methods such as in oklch. Also the old -webkit-gradient() syntax. |
-| [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✕ No | Not drawn; use url(). For HTML images, srcset and picture work. |
+| [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✓ Yes | In backgrounds, list markers and generated content, chosen as Chrome chooses when it prints. |
 | [cross-fade(), element(), paint()](https://developer.mozilla.org/en-US/docs/Web/CSS/cross-fade) | ✕ No |  |
 | [counter(), counters(), symbols()](https://developer.mozilla.org/en-US/docs/Web/CSS/counter) | ✓ Yes |  |
 | string(), content(), target-counter(), target-text(), leader() | ✓ Yes | Paged media functions. |
 | target-counters() | ✕ No |  |
 | [anchor(), anchor-size()](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor) | ✕ No |  |
 | [Basic shapes: inset(), circle(), ellipse(), polygon(), path()](https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape) | ✓ Yes | In clip-path and shape-outside. |
-| xywh(), rect(), shape(), ray(), superellipse() | ✕ No |  |
+| xywh(), rect(), superellipse() | ✓ Yes | rect() and xywh() in clip-path and shape-outside; superellipse() in corner-shape. |
+| shape(), ray() | ✕ No |  |
 | [repeat(), minmax(), fit-content()](https://developer.mozilla.org/en-US/docs/Web/CSS/repeat) | ✓ Yes | In grid tracks. |
 | [Transform functions: translate, scale, rotate, skew, matrix](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function) | ✓ Yes |  |
 | [3D transform functions and perspective()](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function) | ½ Partly | Flattened, because PDF is affine. |
