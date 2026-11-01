@@ -120,6 +120,18 @@ writes a file (`ConvertFile`, `StampFile`, `SignFile`, `MergeFiles`, ...) writes
 replaces the target only when it succeeds, so a failure leaves an existing file untouched. Methods that read or write
 PDFs take a `CancellationToken` and have `Stream` overloads, and `ConvertAsync` can write straight to a `Stream`.
 
+## Copying options {new 1.22.0}
+
+`Clone()` copies a `PdfOptions`, so shared settings can stay in one place while a single conversion changes one of
+them. The copy is shallow: `Fonts`, `Attachments`, `CustomProperties` and the other settings that hold
+objects refer to the same objects in both, so replace such a setting on the copy rather than changing what it holds.
+
+```csharp
+var draft = options.Clone();
+draft.HeaderText = "Draft";
+byte[] draftLetter = HtmlToPdf.Convert(html, draft);
+```
+
 ## More options
 
 The other options have pages of their own: [`Fonts`, `EmbedStandardFonts`, `MissingFont` and `MissingCharacter`](/docs/fonts/),

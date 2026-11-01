@@ -131,11 +131,12 @@ once for each such character before anything is written, so a test can make sure
 options.MissingCharacter = ch => throw new InvalidOperationException($"No font has U+{char.ConvertToUtf32(ch, 0):X4}");
 ```
 
-## How fonts are embedded
+## How fonts are embedded {changed 1.22.0}
 
 Registered and `@font-face` TrueType/OpenType fonts are embedded as subsets (Type0/CIDFontType2 for
 TrueType outlines, CIDFontType0 with an OpenType program for CFF outlines) with a ToUnicode map, so text can be
-searched and copied. Without them, the PDF standard fonts are used: `font-family` maps to Helvetica (sans-serif,
+searched and copied. A font's Unicode characters are read from any of its cmap tables (formats 0, 2, 4, 6, 10, 12 and
+13), so a font whose only Unicode cmap is format 10 or 13, as last-resort fonts have, works too. Without them, the PDF standard fonts are used: `font-family` maps to Helvetica (sans-serif,
 Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consolas, ...), each in regular, bold,
 italic and bold italic. With `EmbedStandardFonts` or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.

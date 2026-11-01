@@ -74,7 +74,7 @@ callback and the timestamp server instead of blocking a thread; `PdfSigner.Sign`
 with `PdfOptions.Signature` wait for it. Everything else, visible boxes, timestamps and existing fields, works as with a
 certificate's own key.
 
-## Certification signatures {new 1.20.0}
+## Certification signatures {changed 1.22.0}
 
 The first signature of a document can certify it: it states what may change afterwards, and Acrobat shows a certified
 document with a blue ribbon and flags changes the level does not allow. `PdfCertificationLevel.NoChanges` allows none,
@@ -93,9 +93,12 @@ byte[] signed = PdfSigner.Sign(certified, new PdfSignatureOptions(buyerCert) { F
 Signing refuses what would break a certification: certifying a document that is already signed, any signature on a
 `NoChanges` document, and a new visible signature box on a certified one (an invisible signature or a field the
 document was certified with is fine). The verifier reports `CertificationLevel` and the `DisallowedChanges` made after
-a certification, and a certification with disallowed changes is not `Valid`.
+a certification, and a certification with disallowed changes is not `Valid`. Changes that hide in the cross-reference
+table count too: an update that only points an object back at an older body still in the signed bytes (the "hide and
+replace" shadow attack), deleted objects, a table that had to be rebuilt (viewers follow the table and can show a
+different document), and an update that drops `/Perms` to turn the certification into an ordinary signature.
 
-## Verifying signatures {changed 1.20.0}
+## Verifying signatures {changed 1.22.0}
 
 `PdfSignatureVerifier` checks the signatures and document timestamps of any PDF, oldest first, and reports what it
 finds rather than throwing for a broken signature:
@@ -123,6 +126,11 @@ saying why not). Chains are built from the certificates in the
 signature, the PDF's Document Security Store and `ExtraCertificates`. Verification is offline by default:
 `RevocationMode` is `NoCheck` unless you set it, and `VerificationTime` checks the chain at another time.
 
+A signature that hashes with SHA-1 (as its digest, in its signature algorithm, or in the old `adbe.pkcs7.sha1` format)
+is not `Valid`: SHA-1 collisions can be computed, so a document someone was led to sign can be swapped for another
+with the same hash. `UsesSha1` says so and `Problems` lists it, and a SHA-1 timestamp is not trusted. Set
+`AllowSha1` in `PdfSignatureVerificationOptions` to accept them, for an old archive say. Signing refuses SHA-1.
+
 ### Trusted timestamps {new 1.10.0}
 
 The chain is checked at the time of the signature's timestamp only when `TimestampTrusted` is true: the timestamp
@@ -139,7 +147,7 @@ change is not analysed (see [Limitations](/docs/limitations/#reading-and-changin
 `CoversWholeDocument` on the last signature when nothing may follow it. PAdES, `adbe.pkcs7.detached`,
 `adbe.pkcs7.sha1` and document timestamps (`ETSI.RFC3161`, `IsDocumentTimestamp`) are read, from PDFs made by any tool.
 
-## Long-term validation {changed 1.12.0}
+## Long-term validation {changed 1.22.0}
 
 A signature can normally be checked only while its certificates are valid and their CA answers. `PdfSigner.AddValidationData`
 makes it checkable for years: it adds a Document Security Store with every certificate in the chains of the PDF's
@@ -166,8 +174,11 @@ byte[] offline = PdfSigner.AddValidationData(signed, new PdfLtvOptions
 
 Without `FetchRevocationData` or `TimestampUrl` nothing goes over the network; OCSP and CRL requests use only the
 http and https addresses in the certificates, through `HttpClient` if you set one. Those addresses come from the
-PDF, so set `UrlFilter` to keep requests away from internal hosts: it is asked about every URL, redirect
-targets included, and returning false skips it.
+PDF, which may be hostile. Without a `UrlFilter`, URLs that name `localhost` or an internal address are skipped,
+redirects included, and the default client checks the addresses a host name resolves to when it connects, so a
+certificate cannot make your server call its own network. With a `UrlFilter`, the filter alone decides: it is asked
+about every URL, redirect targets included, and returning false skips it, so internal OCSP or CRL servers can be
+allowed.
 
 ```csharp
 var options = new PdfLtvOptions

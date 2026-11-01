@@ -1,0 +1,219 @@
+[
+  {
+    "title": "Basics",
+    "pages": [
+      {
+        "slug": "",
+        "file": "index",
+        "title": "Getting started",
+        "description": "Install PdfPecker and convert your first HTML to PDF in .NET, with the system requirements."
+      },
+      {
+        "slug": "html-to-pdf-csharp",
+        "file": "html-to-pdf-csharp",
+        "title": "HTML to PDF in C#",
+        "description": "How to convert HTML to PDF in C# and ASP.NET Core with PdfPecker: invoices from templates, headers and footers, fonts and images."
+      },
+      {
+        "slug": "options",
+        "file": "options",
+        "title": "Options",
+        "description": "PdfOptions: page size, margins, headers and footers, document properties, file access and limits."
+      },
+      {
+        "slug": "html-and-css",
+        "file": "html-and-css",
+        "title": "HTML and CSS",
+        "description": "The HTML elements, CSS selectors and properties, SVG and image formats PdfPecker supports."
+      },
+      {
+        "slug": "paged-media",
+        "file": "paged-media",
+        "title": "Paged media",
+        "description": "@page rules, margin boxes, named pages, running headers and tables of contents with page numbers."
+      },
+      {
+        "slug": "markdown",
+        "file": "markdown",
+        "title": "Markdown",
+        "description": "Convert CommonMark and GitHub Flavored Markdown to PDF or HTML."
+      },
+      {
+        "slug": "fluent-api",
+        "file": "fluent-api",
+        "title": "Fluent C# API",
+        "description": "PdfPecker.Fluent: build PDFs from C# code in the style of QuestPDF, rendered by PdfPecker with no browser or native binaries."
+      },
+      {
+        "slug": "images-to-pdf",
+        "file": "images-to-pdf",
+        "title": "Images to PDF",
+        "description": "Put PNG, JPEG, GIF, WebP, BMP or TIFF images into a PDF, one per page, at their own size or fitted to a page."
+      },
+      {
+        "slug": "fonts",
+        "file": "fonts",
+        "title": "Fonts",
+        "description": "Register TrueType, OpenType, WOFF and WOFF2 fonts, use @font-face, and handle missing fonts."
+      },
+      {
+        "slug": "languages",
+        "file": "languages",
+        "title": "Right-to-left, CJK and hyphenation",
+        "description": "Arabic and Hebrew text with bidi and shaping, Chinese, Japanese and Korean line breaking, and automatic hyphenation."
+      }
+    ]
+  },
+  {
+    "title": "PDF features",
+    "pages": [
+      {
+        "slug": "pdfa-and-passwords",
+        "file": "pdfa-and-passwords",
+        "title": "PDF/A, passwords and watermarks",
+        "description": "PDF/A-2, 3 and 4 for archiving, AES-256 passwords and permissions, and watermarks."
+      },
+      {
+        "slug": "accessibility",
+        "file": "accessibility",
+        "title": "Accessibility",
+        "description": "Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML."
+      },
+      {
+        "slug": "forms",
+        "file": "forms",
+        "title": "Fillable forms",
+        "description": "HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields, and filling and flattening the forms of existing PDFs."
+      },
+      {
+        "slug": "signatures",
+        "file": "signatures",
+        "title": "Digital signatures",
+        "description": "Sign PDFs with PAdES signatures, visible boxes, timestamps, existing fields and external signers, verify signatures, and add long-term validation data."
+      },
+      {
+        "slug": "e-invoices",
+        "file": "e-invoices",
+        "title": "E-invoices",
+        "description": "Factur-X, ZUGFeRD, XRechnung and Peppol invoice XML from invoice data, a ready-made invoice template, Factur-X PDF/A-3 e-invoices, and PDFs in UBL invoices."
+      },
+      {
+        "slug": "barcodes",
+        "file": "barcodes",
+        "title": "Barcodes",
+        "description": "QR codes, EPC payment QR codes (GiroCode), Code 128 and EAN-13 barcodes as vector SVG for your templates."
+      },
+      {
+        "slug": "attachments",
+        "file": "attachments",
+        "title": "Attachments",
+        "description": "Embed files in a PDF, read them back, or attach them to an existing PDF."
+      }
+    ]
+  },
+  {
+    "title": "Existing PDFs",
+    "pages": [
+      {
+        "slug": "merging",
+        "file": "merging",
+        "title": "Merging and splitting",
+        "description": "Merge any PDFs, stream them as they arrive, and extract, reorder, rotate and split pages."
+      },
+      {
+        "slug": "stamping",
+        "file": "stamping",
+        "title": "Stamping",
+        "description": "Put a stamp over or letterhead under the pages of any PDF."
+      },
+      {
+        "slug": "compacting",
+        "file": "compacting",
+        "title": "Compacting",
+        "description": "Make any PDF smaller, losslessly or with images downsampled and recompressed, keeping bookmarks, forms, tags and PDF/A."
+      },
+      {
+        "slug": "text-extraction",
+        "file": "text-extraction",
+        "title": "Text extraction",
+        "description": "Extract the text of any PDF in reading order with the position of every line and word, its images and its document properties."
+      },
+      {
+        "slug": "pdf-to-image",
+        "file": "pdf-to-image",
+        "title": "PDF to image",
+        "description": "Render PDF pages to PNG, JPEG, WebP or TIFF with PdfPecker\u0027s own renderer, or HTML straight to images."
+      },
+      {
+        "slug": "pdf-to-html",
+        "file": "pdf-to-html",
+        "title": "PDF to HTML",
+        "description": "Turn any PDF into one self-contained HTML page: page images with selectable, searchable text and working links."
+      }
+    ]
+  },
+  {
+    "title": "Switching",
+    "pages": [
+      {
+        "slug": "wkhtmltopdf-alternative",
+        "file": "wkhtmltopdf-alternative",
+        "title": "From wkhtmltopdf",
+        "description": "A wkhtmltopdf alternative for .NET: replace DinkToPdf, Rotativa or the wkhtmltopdf command line with PdfPecker, option by option."
+      },
+      {
+        "slug": "htmlrenderer-pdfsharp-alternative",
+        "file": "htmlrenderer-pdfsharp-alternative",
+        "title": "From HtmlRenderer.PdfSharp",
+        "description": "An HtmlRenderer.PdfSharp alternative now that PDFsharp 6.5 is AGPL: MIT-licensed, managed HTML to PDF with modern CSS."
+      },
+      {
+        "slug": "ironpdf-alternative",
+        "file": "ironpdf-alternative",
+        "title": "From IronPDF",
+        "description": "A free, MIT-licensed IronPDF alternative without Chrome: replace ChromePdfRenderer with PdfPecker and match its output."
+      },
+      {
+        "slug": "puppeteer-alternative",
+        "file": "puppeteer-alternative",
+        "title": "From PuppeteerSharp or Playwright",
+        "description": "Make PDFs from HTML in .NET without Chrome: replace PuppeteerSharp or Playwright page.pdf() with PdfPecker."
+      }
+    ]
+  },
+  {
+    "title": "Reference",
+    "pages": [
+      {
+        "slug": "limitations",
+        "file": "limitations",
+        "title": "Limitations",
+        "description": "What PdfPecker does not support yet, and what it leaves out by design."
+      },
+      {
+        "slug": "css-support",
+        "file": "css-support",
+        "title": "CSS support",
+        "description": "Every CSS property, at-rule, selector and unit, marked as supported, partly supported, missing or without effect on paper in PdfPecker."
+      },
+      {
+        "slug": "pdf-features",
+        "file": "pdf-features",
+        "title": "PDF feature checklist",
+        "description": "Every PDF feature, from encryption and signatures to layers and PDF/X, marked as supported, partly supported or missing in PdfPecker."
+      },
+      {
+        "slug": "performance",
+        "file": "performance",
+        "title": "Performance",
+        "description": "PdfPecker\u0027s speed and memory compared with Chromium, wkhtmltopdf, iText and other .NET converters."
+      },
+      {
+        "slug": "how-it-works",
+        "file": "how-it-works",
+        "title": "How it works",
+        "description": "PdfPecker\u0027s pipeline from HTML parsing through CSS and layout to the PDF writer and renderer."
+      }
+    ]
+  }
+]

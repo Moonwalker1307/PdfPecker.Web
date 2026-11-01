@@ -1,6 +1,6 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 134 features below, PdfPecker supports 90, supports 17 in part and leaves out 27. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 135 features below, PdfPecker supports 91, supports 17 in part and leaves out 27. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
 ## File format and structure {changed 1.20.0}
 
@@ -74,7 +74,7 @@ What can be drawn on a page.
 | Overprint control | ✕ No | Not written, and not simulated when rendering. |
 | Filters and blur | ½ Partly | CSS filter, `backdrop-filter` and blurred shadows; blurs are drawn as 144 dpi images, colour filters stay vectors. |
 
-## Navigation and interactivity {changed 1.21.0}
+## Navigation and interactivity {changed 1.22.0}
 
 What a reader can click or open in a viewer.
 
@@ -88,7 +88,7 @@ What a reader can click or open in a viewer.
 | Viewer preferences | ✓ Yes | `PdfOptions.Viewer`: page mode, page layout, start page and zoom, window settings, print scaling and duplex. |
 | Annotations | ½ Partly | Links and form widgets are written. Notes, highlights, stamps, free text, ink and shapes cannot be created. Existing ones are rendered and their text extracted. |
 | Layers (optional content) | ½ Partly | Not created. Existing layers are kept on merge and their visibility is honoured when rendering. |
-| JavaScript in the PDF | ✕ No | By design: no document or field scripts. |
+| JavaScript in the PDF | ✕ No | By design: no document or field scripts are written or run; `PdfSanitizer` removes them from PDFs you receive. |
 | Page transitions and presentation mode | ✕ No |  |
 | Multimedia, 3D and rich media | ✕ No | Sound, video, 3D models and RichMedia annotations. |
 | PDF portfolios (collections) | ✕ No |  |
@@ -109,7 +109,7 @@ Fillable fields.
 | XFA forms | ✕ No | XFA data is removed when filling; the AcroForm fields are filled instead. |
 | Fill in complex scripts | ½ Partly | Arabic, Hebrew and Indic values are stored but not shaped in the appearance. |
 
-## Security and encryption
+## Security and encryption {changed 1.22.0}
 
 Passwords, permissions and protection.
 
@@ -123,9 +123,10 @@ Passwords, permissions and protection.
 | Write RC4 or AES-128 | ✕ No | Only the current AES-256 is written, on purpose. |
 | Certificate (public-key) encryption | ✕ No | The Adobe.PubSec handler is not supported. |
 | Redaction | ✕ No | No way to remove content under a region. |
-| Sanitising | ½ Partly | `PdfCompactor` can drop metadata and application data; there is no full sanitise (scripts, hidden layers). |
+| Remove JavaScript and active content | ✓ Yes | `PdfSanitizer` takes out scripts, launch, submit and media actions, XFA, media and 3D annotations, and optionally attachments. |
+| Sanitising | ½ Partly | `PdfSanitizer` removes active content and `PdfCompactor` metadata and application data; hidden layers and hidden text stay. |
 
-## Digital signatures {changed 1.20.0}
+## Digital signatures {changed 1.22.0}
 
 Signing and checking signatures.
 
@@ -139,8 +140,8 @@ Signing and checking signatures.
 | Document timestamps | ✓ Yes |  |
 | Long-term validation | ✓ Yes | DSS and VRI with OCSP and CRL data, PAdES B-LT and B-LTA. |
 | Several signatures | ✓ Yes | Each signature is an incremental update, so earlier ones stay valid. |
-| Verify signatures | ✓ Yes | Byte range, digest, signature, timestamp and certificate chain. |
-| Certification signatures (DocMDP) | ✓ Yes | Levels 1 to 3; verification checks later changes against the level. |
+| Verify signatures | ✓ Yes | Byte range, digest, signature, timestamp and certificate chain; SHA-1 signatures are not valid unless allowed. |
+| Certification signatures (DocMDP) | ✓ Yes | Levels 1 to 3; verification checks later changes against the level, shadow attacks and a dropped `/Perms` included. |
 | Change analysis | ½ Partly | Changes after a certification signature are judged against its level; after approval signatures, updates are only counted. |
 | Revocation checks during verification | ½ Partly | Uses the platform's online check; the OCSP and CRL data stored in the PDF is not used. |
 
