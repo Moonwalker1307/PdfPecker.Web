@@ -82,6 +82,7 @@ Section[] sections =
         new("stamping", "stamping", "Stamping", "Put a stamp over or letterhead under the pages of any PDF."),
         new("compacting", "compacting", "Compacting", "Make any PDF smaller, losslessly or with images downsampled and recompressed, keeping bookmarks, forms, tags and PDF/A."),
         new("removing-active-content", "removing-active-content", "Removing active content", "Take JavaScript, launch and submit actions, XFA and media out of PDFs from others before passing them on."),
+        new("pdf-to-pdfa", "pdf-to-pdfa", "PDF to PDF/A", "Convert any existing PDF to PDF/A-2 or PDF/A-3 for archiving, with a report of what changed and what could not be fixed."),
         new("text-extraction", "text-extraction", "Text extraction", "Extract the text of any PDF in reading order with the position of every line and word, its images and its document properties."),
         new("pdf-to-image", "pdf-to-image", "PDF to image", "Render PDF pages to PNG, JPEG, WebP or TIFF with PdfPecker's own renderer, or HTML straight to images."),
         new("pdf-to-html", "pdf-to-html", "PDF to HTML", "Turn any PDF into one self-contained HTML page: page images with selectable, searchable text and working links."),

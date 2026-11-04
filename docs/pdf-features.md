@@ -1,6 +1,6 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 135 features below, PdfPecker supports 91, supports 17 in part and leaves out 27. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 135 features below, PdfPecker supports 92, supports 17 in part and leaves out 26. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
 ## File format and structure {changed 1.20.0}
 
@@ -179,7 +179,7 @@ Information about the document and files inside it.
 | Read document properties | ✓ Yes | `PdfDocumentProperties`: properties, XMP, version, page sizes, encryption, PDF/A and PDF/UA claims. |
 | Strip photo metadata | ✓ Yes | `PdfOptions.StripImageMetadata` removes EXIF (GPS too), XMP and IPTC from embedded JPEGs. |
 
-## Editing existing PDFs
+## Editing existing PDFs {changed 1.23.0}
 
 Changing files you already have.
 
@@ -196,7 +196,7 @@ Changing files you already have.
 | Edit existing text and content | ✕ No | No find-and-replace or content editing. |
 | Insert blank pages, crop or resize pages | ✕ No |  |
 | N-up and imposition | ✕ No |  |
-| Convert an existing PDF to PDF/A | ✕ No | Only new documents are made as PDF/A. |
+| Convert an existing PDF to PDF/A | ✓ Yes | `PdfToPdfA`: PDF/A-2b, 2u, 3b or 3u from any PDF, with what it changed and what it could not fix. |
 
 ## Reading, rendering and conversion {changed 1.21.0}
 
