@@ -14,7 +14,7 @@ dotnet add package PdfPecker
 
 ## Replace the wkhtmltopdf call
 
-### From the command line or a Process
+### From the command line or a Process {changed 1.23.0}
 
 ```csharp
 // Before: one wkhtmltopdf process per document
@@ -31,6 +31,14 @@ HtmlToPdf.ConvertFile("invoice.html", "invoice.pdf", new PdfOptions
     PageSize = PageSize.A4,
     Margins = PageMargins.FromMillimeters(20, 10, 20, 10),
 });
+```
+
+Scripts and build pipelines that call wkhtmltopdf itself can call the [`pdfpecker` tool](/docs/command-line/) instead,
+which reads wkhtmltopdf's options, header and footer texts included:
+
+```
+dotnet tool install -g PdfPecker.Cli
+pdfpecker --page-size A4 -T 20mm -B 20mm invoice.html invoice.pdf
 ```
 
 ### From DinkToPdf or WkHtmlToPdf-DotNet
@@ -96,7 +104,7 @@ app.MapGet("/invoice/{id}", (int id) =>
 ## Speed and size
 
 On the same 4-core Linux VM, a one-page invoice took 282 ms with wkhtmltopdf and 0.92 ms with PdfPecker, and a
-30-page report 600 ms and 33 ms. Deployment drops from about 90 MB of native files to one 5.6 MB DLL. The full
+30-page report 600 ms and 33 ms. Deployment drops from about 90 MB of native files to one 5.8 MB DLL. The full
 comparison is on the [Performance](/docs/performance/) page.
 
 ## Next steps

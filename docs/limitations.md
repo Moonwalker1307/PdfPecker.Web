@@ -46,7 +46,7 @@ marks every PDF feature as supported, partly supported or missing.
 - SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS {changed 1.22.0}
+## CSS {changed 1.23.0}
 
 - Container queries: no `scroll-state()` queries, `style()` works only on custom properties, and style containment
   (counter scoping) and the `contain` property are not implemented. A document with container queries takes about two
@@ -76,8 +76,8 @@ marks every PDF feature as supported, partly supported or missing.
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` places images against the paper, as Chrome prints them, but gradients still move with
   their box.
-- Not supported: `contain`, `content-visibility`, `cross-fade()`, `element()`, `paint()`, `env()`, `anchor()`, `attr()`
-  outside `content`, `::selection` and `:nth-col()`. In `@page` margins and media queries, `ex`, `ch` and the other
+- Not supported: `contain`, `content-visibility`, `cross-fade()`, `element()` outside page-margin boxes, `paint()`,
+  `env()`, `anchor()`, `::selection` and `:nth-col()`. In `@page` margins and media queries, `ex`, `ch` and the other
   font units use the initial 16 px font.
 - [3D transforms](/docs/html-and-css/#3d-transforms) are drawn flat, since a PDF page has only flat transforms: a box with
   a perspective stays a rectangle or parallelogram where Chrome draws a trapezoid, only the parent's `perspective`
@@ -98,10 +98,9 @@ marks every PDF feature as supported, partly supported or missing.
   is otherwise laid out in standards mode; Chrome's quirks mode also, among other things, ignores the first paragraph's top margin in the
   body.
 
-## Backgrounds and transparency {changed 1.16.0}
+## Backgrounds and transparency {changed 1.23.0}
 
 - Inset box shadows of inline elements (`<span>`) are not drawn.
-  `box-decoration-break` applies to inline elements, not to blocks split across pages or columns.
 - Inline boxes nested more than 16 deep are not decorated, and one layout paints at most 50,000 inline box fragments
   with a shared budget for their layers, shadows and outlines; past it, fragments show only their background colour.
 - A translucent box shadow without blur is blended onto white rather than truly see-through. Blurs are drawn as
@@ -121,7 +120,7 @@ marks every PDF feature as supported, partly supported or missing.
 - Collapsed table borders on `col` and `colgroup` are not drawn; borders on cells, rows, row groups and the table are.
 - A table row with a cell that spans rows moves to the next page whole rather than breaking inside, as other rows do.
 
-## Images and SVG {changed 1.21.0}
+## Images and SVG {changed 1.23.0}
 
 - No AVIF images: decoding them needs an AV1 video decoder, which is not planned. Convert them to WebP, PNG or JPEG.
 - SVG filters are applied in pixels at 144 dpi, so filtered shapes become an image (text keeps an invisible,
@@ -130,8 +129,8 @@ marks every PDF feature as supported, partly supported or missing.
   alt text or a size has no box rather than Chrome's 16 px icon box.
 - An SVG `symbol` is not clipped to its viewport, and its `preserveAspectRatio` is always the default (`xMidYMid meet`).
 - A `foreignObject` inside an SVG group with a clip, mask or filter is drawn over the drawing without those effects, and
-  a `use` element's own `fill` and `stroke` reach the content it draws only through `context-fill` and
-  `context-stroke`.
+  one inside a pattern, mask or filter image is left out.
+- With `vector-effect: non-scaling-stroke`, markers still scale with the drawing, where Chrome keeps them at their size.
 
 ## Reading and changing existing PDFs {changed 1.21.0}
 

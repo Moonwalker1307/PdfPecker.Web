@@ -36,9 +36,14 @@ lists state their numbering and form fields describe themselves, and the XMP say
 with `PdfA4`. PDF/UA-1 and PDF/A-2 and 3 are based on PDF 1.7, PDF/UA-2 and PDF/A-4 on PDF 2.0, so `PdfUA2` with
 `PdfA2b` (or any PDF/A-2 or 3 level) and `PdfUA1` with `PdfA4` throw `ArgumentException`.
 
-## What your HTML needs
+## What your HTML needs {changed 1.23.0}
 
 What the tags can't fix is up to the HTML: give images an `alt` (an image without `alt`, `aria-label` or `title`, or an
 `<svg>` without a `<title>`, counts as decorative), use real headings, lists and `th` cells, and mark purely visual
 content `aria-hidden="true"`. Heading levels that skip one (`h1` then `h3`) are tagged one level below the previous
 heading, as PDF/UA does not allow gaps.
+
+Some PDF/UA structure types have no HTML element, so they come from ARIA roles: `role="math"` makes a Formula, with its
+`aria-label` as the alternative text, `role="doc-index"` an Index, and `role="doc-toc"` on a `nav` a table of contents
+whose list items are TOC entries. In a list laid out by hand, such as a number in a flex row beside the text,
+`data-pdf-list-label` marks the item's label, and the rest of the item becomes its body.

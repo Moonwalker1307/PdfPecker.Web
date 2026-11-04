@@ -1,4 +1,4 @@
-# Barcodes {new 1.13.0}
+# Barcodes {changed 1.23.0}
 
 `Barcode` draws QR codes, EPC payment QR codes, Code 128 and EAN-13 barcodes as SVG markup for your HTML template.
 The SVG stays vector graphics in the PDF, so the code scans at any print size. Like the rest of PdfPecker it needs no
@@ -46,6 +46,37 @@ payer enter it), a four-letter `Purpose` code, and either a structured creditor 
 `Text` of up to 140 characters, not both. `Information` is a note shown to the payer. A field that is missing, too
 long or invalid throws `ArgumentException`. The code always uses error correction level M, as the guideline requires.
 `ToPayload()` returns the text the code holds.
+
+## Swiss QR-bills {new 1.23.0}
+
+`Barcode.SwissQrCode` draws the QR code of a Swiss QR-bill, with the Swiss cross in the middle, from a `SwissQrBill`:
+the CH or LI IBAN of the creditor, structured addresses, the amount and currency (CHF or EUR), and a QR reference with
+its check digit for a QR-IBAN, or an ISO 11649 creditor reference or none for an ordinary IBAN. Every field is checked
+against the standard (guidelines version 2.3), and a wrong one throws `ArgumentException`; `ToPayload()` gives the text
+inside the code.
+
+```csharp
+string qr = Barcode.SwissQrCode(new SwissQrBill
+{
+    Account = "CH58 0079 1123 0008 8901 2",
+    Creditor = new SwissQrAddress { Name = "Robert Schneider AG", Street = "Rue du Lac", HouseNumber = "1268",
+                                    PostalCode = "2501", Town = "Biel" },
+    Amount = 1949.75m,
+    Reference = "RF18539007547034",
+});
+```
+
+[PdfPecker.Fluent](/docs/fluent-api/) lays out the whole payment part with its receipt with `SwissQrBill`.
+
+## Data Matrix {new 1.23.0}
+
+`Barcode.DataMatrix` draws an ECC 200 Data Matrix code in the smallest of the 24 square sizes that holds the text, the
+usual code for small labels, where a QR code of the same data is larger. `Barcode.Gs1DataMatrix` takes a GS1 element
+string with the application identifiers in parentheses, as shipping and pharmaceutical labels use:
+
+```csharp
+string label = Barcode.Gs1DataMatrix("(01)09501101530003(17)261231(10)AB-123");
+```
 
 ## Code 128 and EAN-13
 

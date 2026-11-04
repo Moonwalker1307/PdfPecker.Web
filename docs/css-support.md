@@ -1,6 +1,6 @@
 # CSS support
 
-Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 599 properties below, PdfPecker supports 345, supports 25 in part and leaves out 118. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
+Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 602 properties below, PdfPecker supports 406, supports 15 in part and leaves out 70. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
 
 A declaration PdfPecker does not support is dropped like any unknown property: the rest of the rule still applies and the conversion does not fail. The property list is the standards-track properties in MDN's browser compatibility data, grouped by the specification that defines them, plus the paged media properties PdfPecker reads. Property names link to MDN.
 
@@ -22,7 +22,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`contain-intrinsic-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/contain-intrinsic-size) | ✕ No | Only matters with content-visibility. |
 | [`contain-intrinsic-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/contain-intrinsic-width) | ✕ No | Only matters with content-visibility. |
 | [`content-visibility`](https://developer.mozilla.org/en-US/docs/Web/CSS/content-visibility) | ✕ No | Content is drawn even when set to hidden. |
-| [`continue`](https://developer.mozilla.org/en-US/docs/Web/CSS/continue) | ✕ No | Use the line-clamp shorthand. |
+| [`continue`](https://developer.mozilla.org/en-US/docs/Web/CSS/continue) | ✓ Yes | auto and discard, which keeps a box to its first fragment. |
 | [`display`](https://developer.mozilla.org/en-US/docs/Web/CSS/display) | ✓ Yes | block, inline, inline-block, flow-root, flex, grid, list-item, contents, none, every table value, two-value forms and -webkit-box. |
 | [`frame-sizing`](https://developer.mozilla.org/en-US/docs/Web/CSS/frame-sizing) | ✕ No | Iframes are not loaded. |
 | [`height`](https://developer.mozilla.org/en-US/docs/Web/CSS/height) | ✓ Yes |  |
@@ -187,7 +187,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`background-repeat-y`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat-y) | ✕ No | Use background-repeat. |
 | [`background-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size) | ✓ Yes |  |
 | [`image-orientation`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-orientation) | ✓ Yes | from-image (the EXIF orientation) and none. |
-| [`image-rendering`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering) | ✕ No | Images are left to the PDF viewer, which smooths them. |
+| [`image-rendering`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering) | ✓ Yes | pixelated and crisp-edges write enlarged images with their pixels repeated, so every viewer shows them sharp. |
 | [`object-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) | ✓ Yes |  |
 | [`object-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-position) | ✓ Yes |  |
 | [`object-view-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-view-box) | ✕ No |  |
@@ -270,53 +270,53 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`column-fill`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-fill) | ✓ Yes |  |
 | [`column-gap`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-gap) | ✓ Yes |  |
 | [`column-height`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-height) | ✕ No |  |
-| [`column-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule) | ✓ Yes | Between columns of a multi-column box. |
-| [`column-rule-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-break) | ✕ No | Gap decorations beyond column-rule are not supported. |
+| [`column-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule) | ✓ Yes | Between the columns of multi-column, grid and flex containers. |
+| [`column-rule-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-break) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
 | [`column-rule-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-color) | ✓ Yes |  |
-| [`column-rule-inset`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-cap`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-cap) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-cap-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-cap-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-cap-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-cap-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-junction`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-junction) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-junction-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-junction-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-junction-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-junction-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`column-rule-inset-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
+| [`column-rule-inset`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-cap`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-cap) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-cap-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-cap-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-cap-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-cap-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-junction`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-junction) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-junction-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-junction-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-junction-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-junction-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`column-rule-inset-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-inset-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
 | [`column-rule-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-style) | ✓ Yes |  |
-| [`column-rule-visibility-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-visibility-items) | ✕ No | Gap decorations beyond column-rule are not supported. |
+| [`column-rule-visibility-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-visibility-items) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
 | [`column-rule-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-rule-width) | ✓ Yes |  |
 | [`column-span`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-span) | ✓ Yes | all works on direct children of the multi-column box. |
 | [`column-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/column-wrap) | ✕ No |  |
 | [`columns`](https://developer.mozilla.org/en-US/docs/Web/CSS/columns) | ✓ Yes |  |
 | [`gap`](https://developer.mozilla.org/en-US/docs/Web/CSS/gap) | ✓ Yes |  |
 | [`row-gap`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-gap) | ✓ Yes |  |
-| [`row-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-break) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-color) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-cap`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-cap) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-cap-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-cap-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-cap-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-cap-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-junction`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-junction) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-junction-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-junction-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-junction-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-junction-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-inset-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-style) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-visibility-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-visibility-items) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`row-rule-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-width) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-break) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-color) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-inset`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-inset-cap`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-cap) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-inset-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-end) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-inset-junction`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-junction) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-inset-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-start) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-overlap`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-overlap) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-style) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-visibility-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-visibility-items) | ✕ No | Gap decorations beyond column-rule are not supported. |
-| [`rule-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-width) | ✕ No | Gap decorations beyond column-rule are not supported. |
+| [`row-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-break) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-color) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-cap`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-cap) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-cap-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-cap-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-cap-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-cap-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-junction`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-junction) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-junction-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-junction-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-junction-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-junction-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-inset-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-inset-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-style) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-visibility-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-visibility-items) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`row-rule-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/row-rule-width) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-break) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-color) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-inset`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-inset-cap`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-cap) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-inset-end`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-end) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-inset-junction`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-junction) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-inset-start`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-inset-start) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-overlap`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-overlap) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-style) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-visibility-items`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-visibility-items) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
+| [`rule-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/rule-width) | ✓ Yes | Gap decorations in grid, flex and multi-column containers, as Chromium draws them. |
 
 ### Fonts
 
@@ -324,7 +324,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | --- | --- | --- |
 | [`font`](https://developer.mozilla.org/en-US/docs/Web/CSS/font) | ✓ Yes |  |
 | [`font-family`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-family) | ✓ Yes | Bundled fonts, @font-face and fonts you register. |
-| [`font-feature-settings`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-feature-settings) | ½ Partly | Contextual GSUB lookups are skipped. |
+| [`font-feature-settings`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-feature-settings) | ✓ Yes | Contextual lookups too, through the shaper, for the features you turn on. |
 | [`font-kerning`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-kerning) | ✓ Yes |  |
 | [`font-language-override`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-language-override) | ✕ No |  |
 | [`font-optical-sizing`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-optical-sizing) | ✓ Yes |  |
@@ -338,12 +338,12 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`font-synthesis-small-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-small-caps) | ✓ Yes |  |
 | [`font-synthesis-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-style) | ✓ Yes |  |
 | [`font-synthesis-weight`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-weight) | ✓ Yes |  |
-| [`font-variant`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant) | ½ Partly | Contextual OpenType substitutions are skipped; small caps are synthesized when the font lacks them. |
+| [`font-variant`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant) | ½ Partly | Contextual alternates (calt) are not on by default as in browsers; small caps are synthesized when the font lacks them. |
 | [`font-variant-alternates`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-alternates) | ✕ No |  |
 | [`font-variant-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-caps) | ½ Partly | Small caps synthesized when the font has no smcp feature. |
 | [`font-variant-east-asian`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-east-asian) | ✓ Yes |  |
 | [`font-variant-emoji`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-emoji) | ✕ No |  |
-| [`font-variant-ligatures`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-ligatures) | ½ Partly | Contextual alternates are skipped. |
+| [`font-variant-ligatures`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-ligatures) | ½ Partly | Contextual alternates (calt) are not on by default as in browsers. |
 | [`font-variant-numeric`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric) | ✓ Yes |  |
 | [`font-variant-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-position) | ✓ Yes |  |
 | [`font-variation-settings`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variation-settings) | ✓ Yes |  |
@@ -363,7 +363,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`hanging-punctuation`](https://developer.mozilla.org/en-US/docs/Web/CSS/hanging-punctuation) | ✕ No |  |
 | [`hyphenate-character`](https://developer.mozilla.org/en-US/docs/Web/CSS/hyphenate-character) | ✓ Yes |  |
 | [`hyphenate-limit-chars`](https://developer.mozilla.org/en-US/docs/Web/CSS/hyphenate-limit-chars) | ✓ Yes |  |
-| [`hyphenate-limit-lines`](https://developer.mozilla.org/en-US/docs/Web/CSS/hyphenate-limit-lines) | ✕ No |  |
+| [`hyphenate-limit-lines`](https://developer.mozilla.org/en-US/docs/Web/CSS/hyphenate-limit-lines) | ✓ Yes |  |
 | [`hyphens`](https://developer.mozilla.org/en-US/docs/Web/CSS/hyphens) | ✓ Yes | Built-in dictionaries for many languages, chosen by lang. |
 | [`initial-letter`](https://developer.mozilla.org/en-US/docs/Web/CSS/initial-letter) | ✓ Yes | On ::first-letter, as in Chrome; not in vertical writing modes. |
 | [`letter-spacing`](https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing) | ✓ Yes |  |
@@ -400,7 +400,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`-webkit-text-stroke-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-text-stroke-color) | ✓ Yes |  |
 | [`-webkit-text-stroke-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-text-stroke-width) | ✓ Yes |  |
 | [`white-space`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space) | ✓ Yes |  |
-| [`white-space-collapse`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space-collapse) | ✕ No | Use white-space. |
+| [`white-space-collapse`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space-collapse) | ✓ Yes | break-spaces acts as preserve. |
 | [`white-space-trim`](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space-trim) | ✕ No |  |
 | [`word-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/word-break) | ✓ Yes |  |
 | [`word-spacing`](https://developer.mozilla.org/en-US/docs/Web/CSS/word-spacing) | ✓ Yes |  |
@@ -484,7 +484,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`rotate`](https://developer.mozilla.org/en-US/docs/Web/CSS/rotate) | ✓ Yes | 3D axes are flattened. |
 | [`scale`](https://developer.mozilla.org/en-US/docs/Web/CSS/scale) | ✓ Yes |  |
 | [`transform`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform) | ½ Partly | 2D is exact; 3D functions are flattened because PDF is affine. |
-| [`transform-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-box) | ✕ No |  |
+| [`transform-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-box) | ✓ Yes | On SVG elements and HTML boxes. |
 | [`transform-origin`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin) | ✓ Yes |  |
 | [`transform-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-style) | ½ Partly | preserve-3d is flattened. |
 | [`translate`](https://developer.mozilla.org/en-US/docs/Web/CSS/translate) | ✓ Yes |  |
@@ -520,7 +520,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | `bookmark-label` | ✓ Yes | content(), strings and attr(). |
 | `bookmark-level` | ✓ Yes | Makes any block a bookmark, or leaves a heading out with none. |
 | `bookmark-state` | ✓ Yes | open or closed. |
-| [`box-decoration-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-decoration-break) | ½ Partly | Only for inline boxes, not for blocks split across pages. |
+| [`box-decoration-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/box-decoration-break) | ✓ Yes | clone and slice, on inline boxes and on blocks split across pages, as Chrome prints them. |
 | [`break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-after) | ✓ Yes |  |
 | [`break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-before) | ✓ Yes |  |
 | [`break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside) | ✓ Yes |  |
@@ -531,8 +531,11 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`page-break-after`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-after) | ✓ Yes |  |
 | [`page-break-before`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before) | ✓ Yes |  |
 | [`page-break-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-inside) | ✓ Yes |  |
+| `-pdfpecker-image-max-resolution` | ✓ Yes | PdfPecker’s own property: downsamples images drawn denser than a resolution. |
+| `-pdfpecker-image-quality` | ✓ Yes | PdfPecker’s own property: writes images as JPEGs at a quality, when that makes them smaller. |
+| `-pdfpecker-repeat` | ✓ Yes | PdfPecker’s own property: each-page draws a box again on its parent’s later pages. |
 | `-pdfpecker-scale-to-fit` | ✓ Yes | PdfPecker’s own property: shrink fits text of any length into a fixed-size box. |
-| `position: running()` | ✕ No | Use string-set or the sticky header and footer instead. |
+| `position: running()` | ✓ Yes | Running elements, placed with element() in the page-margin boxes. |
 | `string-set` | ✓ Yes | Running headers with string(). |
 | [`widows`](https://developer.mozilla.org/en-US/docs/Web/CSS/widows) | ✓ Yes |  |
 
@@ -541,9 +544,9 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | Property | PdfPecker | Notes |
 | --- | --- | --- |
 | [`color-interpolation`](https://developer.mozilla.org/en-US/docs/Web/CSS/color-interpolation) | ✕ No |  |
-| [`cx`](https://developer.mozilla.org/en-US/docs/Web/CSS/cx) | ½ Partly | Read from the SVG attribute, not from CSS. |
-| [`cy`](https://developer.mozilla.org/en-US/docs/Web/CSS/cy) | ½ Partly | Read from the SVG attribute, not from CSS. |
-| [`d`](https://developer.mozilla.org/en-US/docs/Web/CSS/d) | ½ Partly | Read from the SVG attribute, not from CSS. |
+| [`cx`](https://developer.mozilla.org/en-US/docs/Web/CSS/cx) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
+| [`cy`](https://developer.mozilla.org/en-US/docs/Web/CSS/cy) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
+| [`d`](https://developer.mozilla.org/en-US/docs/Web/CSS/d) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
 | [`fill`](https://developer.mozilla.org/en-US/docs/Web/CSS/fill) | ✓ Yes |  |
 | [`fill-opacity`](https://developer.mozilla.org/en-US/docs/Web/CSS/fill-opacity) | ✓ Yes |  |
 | [`fill-rule`](https://developer.mozilla.org/en-US/docs/Web/CSS/fill-rule) | ✓ Yes |  |
@@ -554,12 +557,12 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`paint-order`](https://developer.mozilla.org/en-US/docs/Web/CSS/paint-order) | ✓ Yes | On SVG and on HTML text with -webkit-text-stroke. |
 | [`path-length`](https://developer.mozilla.org/en-US/docs/Web/CSS/path-length) | ✕ No |  |
 | [`pointer-events`](https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events) | – No effect |  |
-| [`r`](https://developer.mozilla.org/en-US/docs/Web/CSS/r) | ½ Partly | Read from the SVG attribute, not from CSS. |
-| [`rx`](https://developer.mozilla.org/en-US/docs/Web/CSS/rx) | ½ Partly | Read from the SVG attribute, not from CSS. |
-| [`ry`](https://developer.mozilla.org/en-US/docs/Web/CSS/ry) | ½ Partly | Read from the SVG attribute, not from CSS. |
+| [`r`](https://developer.mozilla.org/en-US/docs/Web/CSS/r) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
+| [`rx`](https://developer.mozilla.org/en-US/docs/Web/CSS/rx) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
+| [`ry`](https://developer.mozilla.org/en-US/docs/Web/CSS/ry) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
 | [`shape-rendering`](https://developer.mozilla.org/en-US/docs/Web/CSS/shape-rendering) | – No effect |  |
-| [`stop-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/stop-color) | ½ Partly | From the attribute or the stop’s style attribute, not from style sheets. |
-| [`stop-opacity`](https://developer.mozilla.org/en-US/docs/Web/CSS/stop-opacity) | ½ Partly | From the attribute or the stop’s style attribute, not from style sheets. |
+| [`stop-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/stop-color) | ✓ Yes | From style sheets too, as in Chrome. |
+| [`stop-opacity`](https://developer.mozilla.org/en-US/docs/Web/CSS/stop-opacity) | ✓ Yes | From style sheets too, as in Chrome. |
 | [`stroke`](https://developer.mozilla.org/en-US/docs/Web/CSS/stroke) | ✓ Yes |  |
 | [`stroke-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-color) | ✕ No | Use stroke. |
 | [`stroke-dasharray`](https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-dasharray) | ✓ Yes |  |
@@ -571,9 +574,9 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`stroke-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/stroke-width) | ✓ Yes |  |
 | [`text-anchor`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-anchor) | ✓ Yes | In SVG text. |
 | [`text-rendering`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-rendering) | – No effect | Kerning and ligatures follow font-kerning and font-variant. |
-| [`vector-effect`](https://developer.mozilla.org/en-US/docs/Web/CSS/vector-effect) | ✕ No |  |
-| [`x`](https://developer.mozilla.org/en-US/docs/Web/CSS/x) | ½ Partly | Read from the SVG attribute, not from CSS. |
-| [`y`](https://developer.mozilla.org/en-US/docs/Web/CSS/y) | ½ Partly | Read from the SVG attribute, not from CSS. |
+| [`vector-effect`](https://developer.mozilla.org/en-US/docs/Web/CSS/vector-effect) | ✓ Yes | non-scaling-stroke; markers still scale. |
+| [`x`](https://developer.mozilla.org/en-US/docs/Web/CSS/x) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
+| [`y`](https://developer.mozilla.org/en-US/docs/Web/CSS/y) | ✓ Yes | From style sheets too, winning over the attribute, as in Chrome. |
 
 ### Cascade, variables and containers
 
@@ -610,7 +613,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 
 | Property | PdfPecker | Notes |
 | --- | --- | --- |
-| [`accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color) | ✕ No | Checkboxes and radio buttons keep their default colours. |
+| [`accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color) | ½ Partly | Check boxes and radio buttons; progress bars and range sliders keep their default colours. |
 | [`animation`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) | – No effect |  |
 | [`animation-composition`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-composition) | – No effect |  |
 | [`animation-delay`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-delay) | – No effect |  |
@@ -626,7 +629,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`animation-timeline`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline) | – No effect |  |
 | [`animation-timing-function`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timing-function) | – No effect |  |
 | [`animation-trigger`](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-trigger) | – No effect |  |
-| [`appearance`](https://developer.mozilla.org/en-US/docs/Web/CSS/appearance) | ✕ No | Form controls always keep their default look. |
+| [`appearance`](https://developer.mozilla.org/en-US/docs/Web/CSS/appearance) | ½ Partly | none turns check boxes and radio buttons into plain boxes you style; other controls keep their look. |
 | [`caret-animation`](https://developer.mozilla.org/en-US/docs/Web/CSS/caret-animation) | – No effect |  |
 | [`caret-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/caret-color) | – No effect |  |
 | [`caret-shape`](https://developer.mozilla.org/en-US/docs/Web/CSS/caret-shape) | – No effect |  |
@@ -708,7 +711,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`view-transition-scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/view-transition-scope) | – No effect |  |
 | [`will-change`](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change) | – No effect |  |
 | [`window-drag`](https://developer.mozilla.org/en-US/docs/Web/CSS/window-drag) | – No effect |  |
-| [`zoom`](https://developer.mozilla.org/en-US/docs/Web/CSS/zoom) | ✕ No |  |
+| [`zoom`](https://developer.mozilla.org/en-US/docs/Web/CSS/zoom) | ✓ Yes | Scales a box and its content as Chrome does. |
 
 ## At-rules
 
@@ -721,13 +724,13 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`@layer`](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) | ✓ Yes | Including the !important reversal. |
 | [`@container`](https://developer.mozilla.org/en-US/docs/Web/CSS/@container) | ½ Partly | Size queries and style(--custom); no scroll-state(). |
 | [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | ✓ Yes | syntax, inherits and initial-value. |
-| [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) | ½ Partly | src (url(), local(), format()), font-weight and font-stretch ranges, font-style, unicode-range. font-display is accepted; size-adjust and the metric overrides are ignored. |
+| [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) | ✓ Yes | src (url(), local(), format()), font-weight and font-stretch ranges, font-style, unicode-range. font-display is accepted. size-adjust, ascent-override, descent-override and line-gap-override as in Chrome. |
 | [`@counter-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@counter-style) | ✓ Yes | Every system and descriptor. |
 | [`@page`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page) | ✓ Yes | size, margins, borders, padding, backgrounds and background images, :first, :left, :right, :blank, named pages and all 16 margin boxes. marks, bleed and page-orientation are ignored. |
 | [`@footnote`](https://developer.mozilla.org/en-US/docs/Web/CSS/@footnote) | ✓ Yes | The footnote area inside @page. |
 | [`@namespace`](https://developer.mozilla.org/en-US/docs/Web/CSS/@namespace) | ½ Partly | Accepted and ignored; HTML needs no namespaces. |
 | [`CSS nesting (&)`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting) | ✓ Yes |  |
-| [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | ✕ No | Rules inside are skipped. |
+| [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | ✓ Yes | Scope roots, limits and proximity, as in Chrome. |
 | [`@font-feature-values`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-feature-values) | ✕ No |  |
 | [`@font-palette-values`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-palette-values) | ✕ No |  |
 | [`@custom-media`](https://developer.mozilla.org/en-US/docs/Web/CSS/@custom-media) | ✕ No |  |
@@ -773,7 +776,7 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | `::footnote-call`, `::footnote-marker` | ✓ Yes | From CSS Generated Content for Paged Media. |
 | [`@page :first`, `:left`, `:right`, `:blank`](https://developer.mozilla.org/en-US/docs/Web/CSS/:first) | ✓ Yes |  |
 | [`:valid`, `:invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:valid) | ✓ Yes | As Chrome matches them before anyone types: required, pattern, min, max, step, email and url. |
-| [`:in-range`, `:out-of-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/:in-range) | ✕ No | Rules with them are skipped. |
+| [`:in-range`, `:out-of-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/:in-range) | ✓ Yes | As Chrome matches a page nobody has typed into. |
 | [`:open`](https://developer.mozilla.org/en-US/docs/Web/CSS/:open) | ✓ Yes | details and dialog with the open attribute. |
 | `:heading`, `:heading()` | ✕ No |  |
 | [`:state()`, `:host`, `:host()`, `:host-context()`, `::part()`, `::slotted()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) | ✕ No | No shadow DOM: scripts do not run. |
@@ -813,14 +816,14 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | calc-size(), progress(), random(), sibling-index(), sibling-count(), if() | ✕ No |  |
 | [var() and custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/var) | ✓ Yes | Anywhere, in shorthands and inside math. |
 | [env()](https://developer.mozilla.org/en-US/docs/Web/CSS/env) | ✕ No |  |
-| [attr()](https://developer.mozilla.org/en-US/docs/Web/CSS/attr) | ½ Partly | In content only; no typed attr() in other properties. |
+| [attr()](https://developer.mozilla.org/en-US/docs/Web/CSS/attr) | ✓ Yes | Typed attr() in any property, as in Chrome 133; never in url() or other resource functions. |
 | [url()](https://developer.mozilla.org/en-US/docs/Web/CSS/url_value) | ✓ Yes | Data URIs, local files and, through your ResourceResolver, remote files. Stylesheets in data: URLs too. |
 | [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings, with colour interpolation methods such as in oklch. Also the old -webkit-gradient() syntax. |
 | [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✓ Yes | In backgrounds, list markers and generated content, chosen as Chrome chooses when it prints. |
 | [cross-fade(), element(), paint()](https://developer.mozilla.org/en-US/docs/Web/CSS/cross-fade) | ✕ No |  |
 | [counter(), counters(), symbols()](https://developer.mozilla.org/en-US/docs/Web/CSS/counter) | ✓ Yes |  |
 | string(), content(), target-counter(), target-text(), leader() | ✓ Yes | Paged media functions. |
-| target-counters() | ✕ No |  |
+| target-counters() | ✓ Yes | Every level of a nested counter at the linked element. |
 | [anchor(), anchor-size()](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor) | ✕ No |  |
 | [Basic shapes: inset(), circle(), ellipse(), polygon(), path()](https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape) | ✓ Yes | In clip-path and shape-outside. |
 | xywh(), rect(), superellipse() | ✓ Yes | rect() and xywh() in clip-path and shape-outside; superellipse() in corner-shape. |

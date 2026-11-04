@@ -19,7 +19,7 @@ var options = new PdfOptions
 };
 ```
 
-## PDF/A {changed 1.7.0}
+## PDF/A {changed 1.23.0}
 
 For archiving, set `Conformance = PdfConformance.PdfA2b` (or another level below): the PDF gets XMP metadata, an sRGB
 output intent and a file ID, and CMYK JPEGs are converted to RGB. All fonts are embedded: text without a registered font
@@ -43,6 +43,8 @@ properties in its XMP metadata, since PDF 2.0 deprecates the information diction
 PDF/UA, passes veraPDF 1.28 (flavours 2b, 2u, 3b, 3u, 4 and 4f) on documents with text, tables, lists, images, links,
 form fields, SVG and Markdown. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.
+
+To make a PDF you already have into PDF/A, whichever tool made it, see [PDF to PDF/A](/docs/pdf-to-pdfa/).
 
 ## Passwords on existing PDFs {new 1.7.0}
 
