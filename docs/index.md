@@ -30,6 +30,9 @@ Four more packages are released with PdfPecker under the same version:
 | `PdfPecker.Cli` | The `pdfpecker` [command-line tool](/docs/command-line/) (`dotnet tool install -g PdfPecker.Cli`) |
 | `PdfPecker.Testing` | [Snapshot tests](/docs/snapshot-testing/) for PDFs |
 
+From Python, `pip install pdfpecker` installs the same library from [PyPI](https://pypi.org/project/pdfpecker/), with
+an MCP server for AI agents; see [Python](/docs/python/).
+
 ## Usage
 
 ```csharp

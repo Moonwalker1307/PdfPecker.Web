@@ -82,6 +82,8 @@ button:disabled { opacity: .6; cursor: progress; }
 .install code { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .install code::before { content: "$ "; color: #ff3b42; }
 .install .copy { background: #262631; color: var(--on-ink); border-color: #34343f; font-size: 13px; padding: 5px 12px; flex: none; }
+.install-alt { margin: 12px 0 0; font-size: 14px; color: var(--on-ink-muted); }
+.install-alt a { color: var(--on-ink); }
 .hero-art { display: flex; justify-content: center; }
 /* The logo is split into four layers (document, wordmark, bird, impact marks) so the woodpecker can hammer the PDF.
    At rest the layers line up exactly as in the single-file logo, so with motion off it is the original picture. */
