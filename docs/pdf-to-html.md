@@ -64,6 +64,8 @@ such as a logo, as JPEG or PNG images where they sit in the flow; a picture that
 text), image masks, turned pictures and pictures too small to see are left out. The image options of the table below
 do not apply to structured HTML.
 
+The same structure can also be written as GitHub Flavored Markdown with [PDF to Markdown](/docs/pdf-to-markdown/).
+
 ## Options {changed 1.21.0}
 
 | `PdfHtmlOptions` | Default | |

@@ -27,11 +27,19 @@ byte[] signed = PdfSigner.Sign(File.ReadAllBytes("in.pdf"), new PdfSignatureOpti
 byte[] countersigned = PdfSigner.Sign(contract, new PdfSignatureOptions(cert) { FieldName = "Buyer" });
 ```
 
-## Signing into an existing field
+## Signing into an existing field {changed 1.23.0}
 
 When `FieldName` names an empty signature field the PDF already has (`"Parties.Buyer"` for a nested one), the signature
 goes into it and the box fills the field's rectangle; signing a field of another type or one that is already signed
 throws `PdfSignatureException`. Any other name adds a new field.
+
+A template can make the empty field itself: an element with `data-pdf-signature="Buyer"` becomes an empty signature
+field over its border box, which `PdfSigner` signs later with `FieldName = "Buyer"`. The element is drawn as usual,
+such as a box with a line and a caption, and in a tagged PDF the field is tagged as PDF/UA asks.
+
+```html
+<div data-pdf-signature="Buyer" style="width: 60mm; height: 20mm; border-bottom: 1px solid">Buyer</div>
+```
 
 ## Formats and compatibility
 

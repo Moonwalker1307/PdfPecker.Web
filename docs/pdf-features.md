@@ -1,6 +1,6 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 135 features below, PdfPecker supports 91, supports 17 in part and leaves out 27. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 137 features below, PdfPecker supports 94, supports 17 in part and leaves out 26. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
 ## File format and structure {changed 1.20.0}
 
@@ -19,7 +19,7 @@ The PDF file itself: versions, cross-reference tables, pages and their boxes.
 | Page boxes (Crop, Bleed, Trim, Art) | ½ Partly | CropBox is read and kept. Bleed, trim and art boxes are not written, and CSS bleed and marks (crop marks) are ignored. |
 | Very large documents | ✓ Yes | Streaming merge and `MaxPages` limits; the readers have resource limits for hostile input. |
 
-## Creating content {changed 1.19.0}
+## Creating content {changed 1.23.0}
 
 Ways to produce a new PDF.
 
@@ -33,7 +33,7 @@ Ways to produce a new PDF.
 | Table of contents with page numbers | ✓ Yes | `target-counter()` and `leader()` from CSS Paged Media. |
 | Footnotes | ✓ Yes | CSS `float: footnote`, and Markdown footnotes at the page bottom. |
 | Scale content to fit a box | ✓ Yes | `-pdfpecker-scale-to-fit: shrink` for labels, badges and certificates. |
-| Barcodes and QR codes | ✓ Yes | QR, EPC payment QR, Code 128 and EAN-13, drawn as vectors. |
+| Barcodes and QR codes | ✓ Yes | QR, EPC payment QR, Swiss QR-bill, Code 128, EAN-13, Data Matrix and GS1 Data Matrix, drawn as vectors. |
 | Content rendered by JavaScript | ✕ No | By design: no scripts run. Render the HTML on the server first. |
 | Low-level drawing API | ✕ No | There is no canvas-style API to draw paths and text at coordinates; content comes from HTML, Markdown, images or the fluent API. |
 
@@ -126,7 +126,7 @@ Passwords, permissions and protection.
 | Remove JavaScript and active content | ✓ Yes | `PdfSanitizer` takes out scripts, launch, submit and media actions, XFA, media and 3D annotations, and optionally attachments. |
 | Sanitising | ½ Partly | `PdfSanitizer` removes active content and `PdfCompactor` metadata and application data; hidden layers and hidden text stay. |
 
-## Digital signatures {changed 1.22.0}
+## Digital signatures {changed 1.23.0}
 
 Signing and checking signatures.
 
@@ -135,6 +135,7 @@ Signing and checking signatures.
 | PAdES and PKCS#7 detached signatures | ✓ Yes | `ETSI.CAdES.detached` and `adbe.pkcs7.detached`. |
 | RSA, RSA-PSS and ECDSA keys | ✓ Yes | SHA-256 and other hash algorithms. |
 | Visible signature box | ✓ Yes | Page, position, size, text and border. |
+| Empty signature fields | ✓ Yes | `data-pdf-signature` in the HTML makes a field that `PdfSigner` signs later. |
 | External signers | ✓ Yes | HSMs, smart cards, PKCS#11 tokens and cloud signing services, also async. |
 | RFC 3161 timestamps | ✓ Yes | From the timestamp server you name. |
 | Document timestamps | ✓ Yes |  |
@@ -179,7 +180,7 @@ Information about the document and files inside it.
 | Read document properties | ✓ Yes | `PdfDocumentProperties`: properties, XMP, version, page sizes, encryption, PDF/A and PDF/UA claims. |
 | Strip photo metadata | ✓ Yes | `PdfOptions.StripImageMetadata` removes EXIF (GPS too), XMP and IPTC from embedded JPEGs. |
 
-## Editing existing PDFs
+## Editing existing PDFs {changed 1.23.0}
 
 Changing files you already have.
 
@@ -196,9 +197,9 @@ Changing files you already have.
 | Edit existing text and content | ✕ No | No find-and-replace or content editing. |
 | Insert blank pages, crop or resize pages | ✕ No |  |
 | N-up and imposition | ✕ No |  |
-| Convert an existing PDF to PDF/A | ✕ No | Only new documents are made as PDF/A. |
+| Convert an existing PDF to PDF/A | ✓ Yes | `PdfToPdfA`: PDF/A-2b, 2u, 3b or 3u from any PDF, with what it changed and what it could not fix. |
 
-## Reading, rendering and conversion {changed 1.21.0}
+## Reading, rendering and conversion {changed 1.23.0}
 
 Getting things out of existing PDFs.
 
@@ -218,5 +219,6 @@ Getting things out of existing PDFs.
 | OCR | ✕ No | Text in scans and outlines cannot be extracted. |
 | PDF to HTML | ✓ Yes | Page images with a selectable, searchable text layer and working links. |
 | Reflowing PDF to HTML | ✓ Yes | `PdfHtmlMode.Structured`: headings, paragraphs, lists and tables in reading order, from a tagged PDF's tags or else from the layout, optionally with styles and pictures. |
+| PDF to Markdown | ✓ Yes | `PdfToMarkdown`: GitHub Flavored Markdown with headings, lists, links and tables. |
 | Extract images | ✓ Yes | `PdfImages`: original JPEGs or PNG, with where each is drawn and its EXIF. |
 | PDF to Word, Excel or PowerPoint | ✕ No |  |

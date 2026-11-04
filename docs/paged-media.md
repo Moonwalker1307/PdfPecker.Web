@@ -1,6 +1,6 @@
 # Paged media
 
-## Page rules and margin boxes {changed 1.22.0}
+## Page rules and margin boxes {changed 1.23.0}
 
 `@page` rules set the page size, margins and background, and their margin boxes (`@top-left`, `@top-center`,
 `@bottom-right` and the other thirteen) print headers and footers with `counter(page)` and `counter(pages)`, chosen
@@ -18,9 +18,19 @@ page box, as CSS Paged Media 3 says). On top of that:
 - **Running headers**: `string-set` copies text from the document (`content()`, `attr()`, strings and counters) into
   a named string, and `string(name)` shows it in a margin box: the chapter title in the page header, say. As in the
   spec, `string(name, first | start | last | first-except)` picks which value a page shows.
+- **Running elements**: `position: running(logo)` takes an element out of the flow, and `content: element(logo)` in a
+  margin box lays it out there on each page, with the styles it has in the document, as Prince, WeasyPrint and
+  Paged.js do: a logo, a small table or a formatted title in the header. `element(name, first | start | last |
+  first-except)` picks which one a page shows, and page counters in its `::before` and `::after` count the page that
+  shows it.
+- **Pages as tall as their content**: `@page { size: 80mm auto }` gives each page the width and as much height as its
+  content needs, for receipts and labels on a roll. Content longer than 200 inches, the most PDF readers accept,
+  continues on pages of that height.
 - **Tables of contents**: `target-counter(attr(href), page)` shows the page number of the element a link points to,
   and `leader(dotted)` (or `solid`, `space`, or a string) fills the space before it. `target-text()` shows the
-  linked element's text. The document is laid out again with the numbers it finds, so they are always right.
+  linked element's text. `target-counters(attr(href), section, ".")` writes every level of a nested counter, for
+  cross references such as "see 2.3.1". The document is laid out again with the numbers it finds, so they are
+  always right.
 - **Page count in the content**: `counter(pages)` works anywhere, not only in margin boxes, as in Prince: "This report
   has 12 pages" on its first page.
 - **Sections**: `-pdfpecker-target-pages(attr(href), first | last | count | current)` gives the first or last page of
@@ -40,8 +50,9 @@ h2 { string-set: chapter content(); break-before: page }
 nav a::after { content: leader(dotted) target-counter(attr(href), page) }
 ```
 
-Chrome supports named pages and margin boxes, but not running strings, `target-counter()`, `leader()`, the page count
-in the content or section page numbers; `-pdfpecker-target-pages()` is PdfPecker's own.
+Chrome supports named pages and margin boxes, but not running strings or elements, `target-counter()`,
+`target-counters()`, `leader()`, the page count in the content or section page numbers; `-pdfpecker-target-pages()`
+and `size: <width> auto` are PdfPecker's own.
 
 ## Footnotes {new 1.9.0}
 
@@ -64,12 +75,16 @@ continues on the next page. Each call links to its note, and tagged PDFs mark th
 <p>Paid on the last banking day<span class="note">Or the day before a holiday.</span>.</p>
 ```
 
-## Running header and footer from HTML {changed 1.21.0}
+## Running header and footer from HTML {changed 1.23.0}
 
 An element with the `data-sticky-pdf-header` or `data-sticky-pdf-footer` attribute is
 taken out of the flow and drawn at the top or bottom of every page, and the page content flows in the space between.
 Inside it, `{page}` and `{total-pages}` (or `{pages}`) are replaced with the page number and page count. An optional
 `height` attribute (`height="17mm"`) reserves at least that much space.
+
+Each of the tokens, `{section-page:id}` included, takes a counter style after a colon: `{page:upper-roman}` for a
+preface numbered i, ii, iii, `{page:lower-alpha}`, or a style from the document's own `@counter-style` rules, such as
+one that pads numbers to three digits. An unknown style name gives decimal numbers, as in CSS.
 
 ```html
 <header data-sticky-pdf-header height="17mm">ACME Ltd · Payslip</header>
@@ -102,6 +117,14 @@ document.
 <footer data-sticky-pdf-footer>Page {page} of {total-pages}</footer>
 <footer data-sticky-pdf-footer data-sticky-pdf-page="appendix">Appendix · page {page}</footer>
 ```
+
+Elements with `data-sticky-pdf-even-header` and `data-sticky-pdf-even-footer` take the place of the running bands on
+the even pages (2, 4, ...), for documents printed on both sides. On a named page the page's own even band wins, then
+its running band, then the document's even band.
+
+A `position: fixed` box, such as a watermark or a page frame, paints over the running header and footer when its
+`z-index` is `auto` or 0 or more, as over a header Chrome prints in the flow; with a negative `z-index` it stays under
+them.
 
 ## Shrink to fit {new 1.18.0}
 

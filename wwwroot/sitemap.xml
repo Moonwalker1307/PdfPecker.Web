@@ -30,9 +30,14 @@
   <url><loc>https://pdfpecker.net/docs/stamping/</loc></url>
   <url><loc>https://pdfpecker.net/docs/compacting/</loc></url>
   <url><loc>https://pdfpecker.net/docs/removing-active-content/</loc></url>
+  <url><loc>https://pdfpecker.net/docs/pdf-to-pdfa/</loc></url>
   <url><loc>https://pdfpecker.net/docs/text-extraction/</loc></url>
   <url><loc>https://pdfpecker.net/docs/pdf-to-image/</loc></url>
   <url><loc>https://pdfpecker.net/docs/pdf-to-html/</loc></url>
+  <url><loc>https://pdfpecker.net/docs/pdf-to-markdown/</loc></url>
+  <url><loc>https://pdfpecker.net/docs/razor/</loc></url>
+  <url><loc>https://pdfpecker.net/docs/command-line/</loc></url>
+  <url><loc>https://pdfpecker.net/docs/snapshot-testing/</loc></url>
   <url><loc>https://pdfpecker.net/docs/barcodes/</loc></url>
   <url><loc>https://pdfpecker.net/docs/wkhtmltopdf-alternative/</loc></url>
   <url><loc>https://pdfpecker.net/docs/htmlrenderer-pdfsharp-alternative/</loc></url>

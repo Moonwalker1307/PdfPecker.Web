@@ -19,6 +19,17 @@ dotnet add package PdfPecker
 
 The package targets `net8.0`, `net9.0` and `net10.0`, so it works on .NET 8 and later.
 
+### Other packages {new 1.23.0}
+
+Four more packages are released with PdfPecker under the same version:
+
+| Package | What it is |
+|---|---|
+| `PdfPecker.Fluent` | A [fluent C# API](/docs/fluent-api/) in the style of QuestPDF |
+| `PdfPecker.Razor` | [Razor components](/docs/razor/) to PDF |
+| `PdfPecker.Cli` | The `pdfpecker` [command-line tool](/docs/command-line/) (`dotnet tool install -g PdfPecker.Cli`) |
+| `PdfPecker.Testing` | [Snapshot tests](/docs/snapshot-testing/) for PDFs |
+
 ## Usage
 
 ```csharp
@@ -78,4 +89,6 @@ own machine and documents.
 - [HTML and CSS support](/docs/html-and-css/) and [Paged media](/docs/paged-media/): what your templates can use.
 - [Fonts](/docs/fonts/): register your own fonts and use any Unicode text.
 - [Fluent C# API](/docs/fluent-api/): build PDFs from C# code instead of HTML, in the style of QuestPDF.
+- [Razor components](/docs/razor/) and the [command line](/docs/command-line/): other ways in.
+- [Snapshot testing](/docs/snapshot-testing/): check in your tests that PDFs come out as before.
 - [Limitations](/docs/limitations/): what PdfPecker does not do (yet).

@@ -12,7 +12,7 @@ options.Fonts.AddDirectory(@"C:\Windows\Fonts");               // read once, loa
 byte[] pdf = HtmlToPdf.Convert("<p style=\"font-family: 'Open Sans'\">Łódź, Ελλάδα, Москва</p>", options);
 ```
 
-## @font-face {changed 1.17.0}
+## @font-face {changed 1.23.0}
 
 Documents can bring their own fonts with `@font-face` (files, `data:` URIs or `ResourceResolver` URLs; `local()`
 refers to registered fonts):
@@ -27,7 +27,9 @@ collections, WOFF and WOFF2 (including WOFF2 collections; decoded with .NET's bu
 weight; a missing bold or italic face is synthesized. With the `font-stretch` descriptor (a keyword, a percentage or a
 range such as `75% 100%`), faces of one family are matched by width first, as in browsers, and a variable font's
 `wdth` axis is kept within the declared range. `font-display` is accepted and ignored, since nothing loads
-progressively. A character that the chosen font lacks is drawn with the next
+progressively. `size-adjust`, `ascent-override`, `descent-override` and `line-gap-override` work as in Chrome, so a
+fallback face sized to match a web font keeps the web font's size and line height: `size-adjust` scales the face's
+widths, kerning and metrics, and the overrides replace its line metrics. A character that the chosen font lacks is drawn with the next
 font in the `font-family` list that has it, then the standard font, then any other registered font.
 
 ## Variable fonts {new 1.8.0}
