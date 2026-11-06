@@ -239,8 +239,8 @@ swaps them), and <code>initial-letter</code> makes no drop cap in a vertical box
 <li><a href="/docs/languages/#cjk-punctuation-trimming">CJK punctuation trimming</a> does not use the vertical <code>vhal</code> feature, and the
 <code>text-spacing</code> shorthand is not read. <code>hanging-punctuation</code> is not supported.</li>
 <li>In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
-glyph for another (see <a href="/docs/fonts/#opentype-features">OpenType features</a>) and fractions; contextual alternates
-(<code>calt</code>) and ordinals are not applied, and <code>small-caps</code> is synthesized from scaled
+glyph for another (see <a href="/docs/fonts/#opentype-features">OpenType features</a>), fractions and ordinals; contextual
+alternates (<code>calt</code>) apply only when you turn them on with <code>font-feature-settings</code>, and <code>small-caps</code> is synthesized from scaled
 capitals when the font has no small capitals of its own. <code>font-variant-alternates</code> and <code>font-palette</code> are not supported, so
 <a href="/docs/fonts/#colour-fonts">colour fonts</a> use their default palette.</li>
 <li>Solid underlines, overlines and line-throughs are a little thinner than Chrome's (about 1.5 px for 20 px text where
@@ -272,6 +272,7 @@ in Chrome, not the first page of the named run.</li>
 rather than between them and their own underline. <code>filter: blur()</code> and <code>drop-shadow()</code> draw the box as an image;
 its text stays selectable, and the colour filters keep everything as vectors.</li>
 <li><code>text-overflow</code> applies only at the end of the line, as in the spec and Chrome.</li>
+<li><code>visibility: collapse</code> acts as <code>hidden</code>, also on table rows and columns, which keep their room.</li>
 <li>Background images on the <code>@page</code> box are positioned in the page box, as CSS Paged Media 3 says; Chrome sizes that
 area like the root element, so <code>right</code>, <code>bottom</code> and percentage positions can land elsewhere than in Chrome.</li>
 <li><code>inline-size</code>, <code>block-size</code> and their <code>min-</code> and <code>max-</code> forms always mean width and height, also in vertical
