@@ -33,8 +33,8 @@ marks every PDF feature as supported, partly supported or missing.
 - [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) does not use the vertical `vhal` feature, and the
   `text-spacing` shorthand is not read. `hanging-punctuation` is not supported.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
-  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)) and fractions; contextual alternates
-  (`calt`) and ordinals are not applied, and `small-caps` is synthesized from scaled
+  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)), fractions and ordinals; contextual
+  alternates (`calt`) apply only when you turn them on with `font-feature-settings`, and `small-caps` is synthesized from scaled
   capitals when the font has no small capitals of its own. `font-variant-alternates` and `font-palette` are not supported, so
   [colour fonts](/docs/fonts/#colour-fonts) use their default palette.
 - Solid underlines, overlines and line-throughs are a little thinner than Chrome's (about 1.5 px for 20 px text where
@@ -66,6 +66,7 @@ marks every PDF feature as supported, partly supported or missing.
   rather than between them and their own underline. `filter: blur()` and `drop-shadow()` draw the box as an image;
   its text stays selectable, and the colour filters keep everything as vectors.
 - `text-overflow` applies only at the end of the line, as in the spec and Chrome.
+- `visibility: collapse` acts as `hidden`, also on table rows and columns, which keep their room.
 - Background images on the `@page` box are positioned in the page box, as CSS Paged Media 3 says; Chrome sizes that
   area like the root element, so `right`, `bottom` and percentage positions can land elsewhere than in Chrome.
 - `inline-size`, `block-size` and their `min-` and `max-` forms always mean width and height, also in vertical

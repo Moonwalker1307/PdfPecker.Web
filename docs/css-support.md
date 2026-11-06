@@ -78,7 +78,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`scrollbar-gutter`](https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter) | – No effect |  |
 | [`size`](https://developer.mozilla.org/en-US/docs/Web/CSS/size) | ✓ Yes | The @page descriptor: A4, Letter, landscape or any length. |
 | [`text-overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow) | ✓ Yes | ellipsis, clip and strings. |
-| [`visibility`](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility) | ✓ Yes |  |
+| [`visibility`](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility) | ½ Partly | collapse acts as hidden, so a collapsed table row or column keeps its room. |
 | [`width`](https://developer.mozilla.org/en-US/docs/Web/CSS/width) | ✓ Yes | Also min-content, max-content, fit-content, stretch and -webkit-fill-available. |
 
 ### Borders, outlines and shadows
@@ -340,7 +340,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`font-synthesis-weight`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-weight) | ✓ Yes |  |
 | [`font-variant`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant) | ½ Partly | Contextual alternates (calt) are not on by default as in browsers; small caps are synthesized when the font lacks them. |
 | [`font-variant-alternates`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-alternates) | ✕ No |  |
-| [`font-variant-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-caps) | ½ Partly | Small caps synthesized when the font has no smcp feature. |
+| [`font-variant-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-caps) | ✓ Yes | Small caps are synthesized when the font has no smcp feature, as in Chrome. |
 | [`font-variant-east-asian`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-east-asian) | ✓ Yes |  |
 | [`font-variant-emoji`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-emoji) | ✕ No |  |
 | [`font-variant-ligatures`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-ligatures) | ½ Partly | Contextual alternates (calt) are not on by default as in browsers. |
@@ -820,7 +820,7 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [url()](https://developer.mozilla.org/en-US/docs/Web/CSS/url_value) | ✓ Yes | Data URIs, local files and, through your ResourceResolver, remote files. Stylesheets in data: URLs too. |
 | [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings, with colour interpolation methods such as in oklch. Also the old -webkit-gradient() syntax. |
 | [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✓ Yes | In backgrounds, list markers and generated content, chosen as Chrome chooses when it prints. |
-| [cross-fade(), element(), paint()](https://developer.mozilla.org/en-US/docs/Web/CSS/cross-fade) | ✕ No |  |
+| [cross-fade(), element(), paint()](https://developer.mozilla.org/en-US/docs/Web/CSS/cross-fade) | ✕ No | element() as an image; element() of a running element in page-margin boxes is supported. |
 | [counter(), counters(), symbols()](https://developer.mozilla.org/en-US/docs/Web/CSS/counter) | ✓ Yes |  |
 | string(), content(), target-counter(), target-text(), leader() | ✓ Yes | Paged media functions. |
 | target-counters() | ✓ Yes | Every level of a nested counter at the linked element. |
