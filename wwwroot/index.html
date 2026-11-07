@@ -58,6 +58,7 @@
     <a href="/docs/">Docs</a>
     <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
     <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
+    <a class="ext" href="https://pypi.org/project/pdfpecker/"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5h-3a2 2 0 0 0-2 2V6h5M8 1.5h1a2 2 0 0 1 2 2V8a2 2 0 0 1-2 2H6a2 2 0 0 0-2 2v.5M3 6H2.5a1 1 0 0 0-1 1v2a2 2 0 0 0 2 2H4M8 14.5h3a2 2 0 0 0 2-2V10H8M13 10h.5a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2H12"/></svg><span class="ext-label">PyPI</span></a>
   </nav>
 </header>
 
@@ -78,6 +79,7 @@
           <code>dotnet add package PdfPecker</code>
           <button type="button" class="copy" data-copy="dotnet add package PdfPecker" aria-label="Copy the install command">Copy</button>
         </div>
+        <p class="install-alt">From Python: <a href="/docs/python/"><code>pip install pdfpecker</code></a>, with an MCP server for AI agents.</p>
       </div>
       <div class="hero-art">
         <div class="logo-anim" role="img" aria-label="PdfPecker: a pixel-art woodpecker hammering a PDF document">
@@ -108,9 +110,10 @@
           <a href="/docs/html-to-pdf-csharp/">The C# guide</a> walks through invoices, headers and footers and ASP.NET Core.</p>
         <ul class="checks">
           <li>Runs wherever .NET 8 or later runs: Windows, Linux, macOS, x64 and ARM64, containers and serverless</li>
-          <li>Pure managed code: a 5.6 MB DLL instead of a 600 MB browser</li>
+          <li>Pure managed code: a 5.8 MB DLL instead of a 600 MB browser</li>
           <li>Never touches the network or your files unless you allow it</li>
           <li>Rather write C#? <a href="/docs/fluent-api/">PdfPecker.Fluent</a> builds PDFs in code, in the style of QuestPDF</li>
+          <li>Test your PDFs: <a href="/docs/snapshot-testing/">PdfPecker.Testing</a> compares them with stored snapshots and marks changed pixels</li>
         </ul>
       </div>
       <div class="code-card">
@@ -133,19 +136,19 @@ app.MapGet("/invoice", () =&gt;
       <p class="center sub">Built for invoices, payslips, reports, tickets and statements: the templates you control.</p>
       <div class="features">
         <article class="feature"><span class="icon" aria-hidden="true">🎨</span><h3>Modern CSS</h3>
-          <p>Flexbox, grid and multi-column layout, <code>var()</code> and <code>calc()</code>, gradients, shadows, corner shapes, transforms, filters and masks, container queries, <code>:has()</code> and nesting, laid out as Chrome lays them out. <a href="/docs/html-and-css/">All of it</a></p></article>
+          <p>Flexbox, grid and multi-column layout, <code>var()</code> and <code>calc()</code>, gradients, shadows, corner shapes, transforms, filters and masks, container queries, <code>@scope</code>, <code>:has()</code>, nesting, typed <code>attr()</code> and <code>zoom</code>, laid out as Chrome lays them out. <a href="/docs/html-and-css/">All of it</a></p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📝</span><h3>Markdown or C# code</h3>
-          <p>CommonMark 0.31 with GitHub tables, task lists, strikethrough and footnotes, plus definition lists and front matter. Or build documents in C# with <a href="/docs/fluent-api/">PdfPecker.Fluent</a>, in the style of QuestPDF.</p></article>
+          <p>CommonMark 0.31 with GitHub tables, task lists, strikethrough and footnotes, plus definition lists and front matter. Or build documents in C# with <a href="/docs/fluent-api/">PdfPecker.Fluent</a>, in the style of QuestPDF, from <a href="/docs/razor/">Razor components</a>, or with the <a href="/docs/command-line/"><code>pdfpecker</code> command-line tool</a>.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔤</span><h3>Real fonts</h3>
           <p>TrueType, OpenType, WOFF and WOFF2, subset and embedded, with kerning, ligatures, variable fonts, colour emoji, tabular figures, full Unicode and automatic hyphenation in eleven languages.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">📄</span><h3>Proper paging</h3>
-          <p>Page margin boxes and running headers with page numbers, its own margins for the first page, mirrored left and right pages, named pages, footnotes, tables of contents with page numbers, the page count and section page numbers anywhere in the content, repeated table headers, table rows that split across pages as in Chrome, orphans, widows and break control.</p></article>
+          <p>Page margin boxes with running headers and running elements, page numbers in any counter style, even-page headers, its own margins for the first page, mirrored left and right pages, named pages, footnotes, tables of contents with page numbers, the page count and section page numbers anywhere in the content, repeated table headers, table rows that split across pages as in Chrome, orphans, widows and break control.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">↔️</span><h3>Right-to-left and complex scripts</h3>
           <p>Arabic and Hebrew with full shaping, set with <code>dir</code> or <code>direction</code>, including right-to-left tables, flex and grid. Devanagari and eight more Indic scripts, Thai and Lao are shaped too. Chinese, Japanese and Korean break into lines by the kinsoku rules.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🖼️</span><h3>Images, SVG and barcodes</h3>
-          <p>PNG, JPEG, GIF, WebP, BMP and TIFF, responsive <code>srcset</code> and <code>picture</code>, photos turned upright by their EXIF, and SVG drawn as crisp vectors with gradients, masks, patterns, embedded images and every SVG filter, inline or from files. QR codes, EPC payment QR codes, Code 128 and EAN-13 are drawn for you, and scans and photos go straight into a PDF.</p></article>
+          <p>PNG, JPEG, GIF, WebP, BMP and TIFF, responsive <code>srcset</code> and <code>picture</code>, photos turned upright by their EXIF, and SVG drawn as crisp vectors with gradients, masks, patterns, embedded images and every SVG filter, inline or from files. QR codes, EPC payment and Swiss QR-bill codes, Data Matrix, Code 128 and EAN-13 are drawn for you, and scans and photos go straight into a PDF.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔒</span><h3>PDF/A and passwords</h3>
-          <p>Archival PDF/A-2, 3 and 4, AES-256 encryption, permissions, and text, image or SVG watermarks.</p></article>
+          <p>Archival PDF/A-2, 3 and 4, <a href="/docs/pdf-to-pdfa/">any PDF converted to PDF/A</a>, AES-256 encryption, permissions, and text, image or SVG watermarks.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">✍️</span><h3>Digital signatures</h3>
           <p>PAdES signatures with your certificate or a key in an HSM or cloud key vault, visible signature boxes and trusted timestamps, or signed into the empty signature field of your template, and certification signatures that say what may change. Verify signed PDFs and keep them verifiable for years.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🧾</span><h3>E-invoices</h3>
@@ -158,8 +161,8 @@ app.MapGet("/invoice", () =&gt;
           <p>Inputs, check boxes, radio buttons, selects and text areas become PDF form fields people can fill in, and the forms of existing PDFs can be filled and flattened from code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">♿</span><h3>Accessible PDFs</h3>
           <p>Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML, so screen readers follow headings, tables, lists and images.</p></article>
-        <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image and HTML</h3>
-          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image (or HTML straight into images), a whole PDF into one multi-page TIFF for fax and archives, or any PDF into one <a href="/docs/pdf-to-html/">HTML page</a>: with selectable, searchable text and working links, or as flowing headings, paragraphs and tables. No Ghostscript or native code.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">📸</span><h3>PDF to image, HTML and Markdown</h3>
+          <p>Its own renderer turns any PDF page into a PNG, JPEG or WebP image (or HTML straight into images), a whole PDF into one multi-page TIFF for fax and archives, or any PDF into one <a href="/docs/pdf-to-html/">HTML page</a> (with selectable, searchable text and working links, or as flowing headings, paragraphs and tables) or into <a href="/docs/pdf-to-markdown/">Markdown</a>. No Ghostscript or native code.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🔗</span><h3>Links and bookmarks</h3>
           <p>Clickable links, jumps inside the document, bookmarks from your headings or CSS, page labels such as i to iv, and the page, zoom and panel the PDF opens with.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🛡️</span><h3>Safe by default</h3>
@@ -184,7 +187,7 @@ app.MapGet("/invoice", () =&gt;
         <table class="compare">
           <thead><tr><th scope="col">Converter</th><th scope="col" class="wide">Engine</th><th scope="col" class="wide">To deploy</th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>30 pages</th><th scope="col" class="num"><span class="wide">Peak memory</span><span class="narrow">Memory</span></th></tr></thead>
           <tbody>
-            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">5.6 MB DLL</td><td class="num">0.92 ms</td><td class="num">33 ms</td><td class="num">92 MB</td></tr>
+            <tr class="win"><th scope="row">PdfPecker</th><td class="wide">own, managed</td><td class="wide">5.8 MB DLL</td><td class="num">0.92 ms</td><td class="num">33 ms</td><td class="num">92 MB</td></tr>
             <tr><th scope="row">HtmlRenderer.<wbr>PdfSharp</th><td class="wide">own, managed (CSS 2)</td><td class="wide">5.0 MB of DLLs</td><td class="num">4.9 ms</td><td class="num">360 ms</td><td class="num">255 MB</td></tr>
             <tr><th scope="row">wkhtmltopdf</th><td class="wide">Qt WebKit, native</td><td class="wide">about 90 MB</td><td class="num">282 ms</td><td class="num">600 ms</td><td class="num">165 MB</td></tr>
             <tr><th scope="row">Puppeteer<wbr>Sharp</th><td class="wide">Chromium</td><td class="wide">about 600 MB</td><td class="num">106 ms</td><td class="num">496 ms</td><td class="num">813 MB</td></tr>
@@ -366,6 +369,7 @@ PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
       <a href="/docs/html-to-pdf-csharp/">HTML to PDF in C#</a>
       <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
       <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
+      <a href="https://pypi.org/project/pdfpecker/">PyPI</a>
       <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
       <a href="/privacy/">Privacy</a>
     </nav>

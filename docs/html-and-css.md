@@ -30,7 +30,7 @@ attributes `topmargin`, `leftmargin`, `marginheight` and `marginwidth` set the p
 
 Markdown is converted to this HTML first; see [Markdown](/docs/markdown/).
 
-## CSS {changed 1.22.0}
+## CSS {changed 1.23.0}
 
 `<style>` blocks, `<link rel="stylesheet">`, `@import` (with `layer()`, `supports()` and media queries; a relative URL
 is relative to the importing stylesheet; stylesheets in `data:` URLs are read from the URL itself), inline `style` attributes, `@media` (media queries level 4:
@@ -38,7 +38,7 @@ is relative to the importing stylesheet; stylesheets in `data:` URLs are read fr
 `not`; the other features answer as a printer does: `prefers-color-scheme: light`, `hover` and `pointer: none`,
 `scripting: none`, `overflow-block: paged`, and `resolution`, `color` and `color-gamut: srgb`), `@supports` (property tests, `selector()`, `and`/`or`/`not`), `@layer` cascade layers, CSS nesting (`&`),
 `@property` (initial values and inheritance of registered custom properties; a rule whose `syntax` or `initial-value`
-is invalid is ignored, as in Chrome), `@container` (see
+is invalid is ignored, as in Chrome), `@scope` (see [Scoped styles](#scoped-styles)), `@container` (see
 [Container queries](#container-queries)) and `@page` (see [Paged media](/docs/paged-media/)). Selectors: type, `.class`, `#id`, `*`, attribute selectors (`[a]`, `=`, `~=`, `|=`,
 `^=`, `$=`, `*=`, with `i`/`s` flags), descendant, `>`, `+`, `~`, `:first-child`, `:last-child`, `:only-child`,
 `:nth-child()` and `:nth-last-child()` (incl. `of S`), `:first-of-type`, `:last-of-type`, `:only-of-type`,
@@ -48,7 +48,8 @@ not understand), `:root`, `:link`, `:empty`, `:lang()`, `:dir(ltr|rtl)` (from th
 first strong character; the `direction` property does not count, as in browsers), form states (`:checked`,
 `:disabled`, `:enabled`, `:required`, `:optional`, `:read-only`, `:placeholder-shown` and the like; `:valid` and
 `:invalid` check a field's `required`, `pattern`, `min`, `max`, `step` and the `email` and `url` types as Chrome does
-for a page nobody has typed into, and `:open` matches `details` and `dialog` with the `open` attribute), `::before`,
+for a page nobody has typed into, `:in-range` and `:out-of-range` compare number, range and date inputs with their
+`min` and `max` as Chrome does, and `:open` matches `details` and `dialog` with the `open` attribute), `::before`,
 `::after`, `::marker`, `::first-letter` (drop caps, floated or with [`initial-letter`](#drop-caps)), `::first-line` (with a background) and
 `::placeholder` (also `::-webkit-input-placeholder`) on text fields and textareas, with specificity and `!important`
 handled as in browsers. As when Chrome prints, interaction states such as `:hover`, `:focus` and `:target` never match,
@@ -60,7 +61,7 @@ still accepts (`-webkit-transform`, `-webkit-border-radius`, `-webkit-flex` and 
 property, `display: -webkit-box` lays out as the old flexbox with `-webkit-box-orient`, `-pack`, `-align` and `-flex`,
 and `-webkit-linear-gradient()`, `-webkit-radial-gradient()` and `-webkit-gradient()` draw as gradients.
 
-## CSS properties {changed 1.22.0}
+## CSS properties {changed 1.23.0}
 
 | Area | Properties |
 | --- | --- |
@@ -183,7 +184,7 @@ and position do not apply, but inherited properties such as colour and font stil
 still count. On replaced elements and form controls (`img`, `svg`, `input`, `select`, `progress` and the like) it hides
 the element, as CSS Display asks, and on the root element it acts as `block`.
 
-## Text wrapping and justification {new 1.17.0}
+## Text wrapping and justification {changed 1.23.0}
 
 `text-wrap: balance` evens out the lines of a heading or short paragraph (up to six lines, as in Chrome), and
 `text-wrap: pretty` rewraps a paragraph's last four lines so it does not end on a single short word. `text-wrap-mode`
@@ -199,6 +200,11 @@ With `text-align: justify`, `text-justify: auto` spreads the free space at space
 and Japanese characters and CJK punctuation (Korean Hangul only at spaces). `inter-word` uses only spaces,
 `inter-character` (or `distribute`) every character, as Firefox does, and `none` leaves lines unjustified. No-break
 spaces stretch like spaces. Right-to-left and bidirectional lines are justified at spaces only.
+
+`white-space-collapse` (`collapse`, `preserve`, `preserve-breaks`, `break-spaces`) sets how spaces and newlines
+collapse on its own, as newer style sheets write it instead of `white-space`. `hyphenate-limit-lines: 2` lets at most two
+lines in a row end in a hyphen; the line that would be the third breaks at a space instead. Chrome ignores it, so the
+specification is the reference.
 
 ## Vertical text {changed 1.21.0}
 
@@ -298,6 +304,63 @@ the inner edge Chrome 153 draws.
 .ticket { border-radius: 12px; corner-shape: scoop; }
 ```
 
+## Scoped styles {new 1.23.0}
+
+Rules in `@scope (.card) to (.card .content) { ... }` apply below each `.card` and above its limits, as in Chrome, so
+component styles do not leak into the content nested inside. `:scope` and `&` stand for the root, a selector without
+them matches below it, and between rules of equal specificity the one with the closest root wins. `@scope` without a
+start inside a `<style>` element is rooted at the style element's parent.
+
+```css
+@scope (.card) to (.card-body) {
+  :scope { border: 1px solid #ccc }
+  h3 { margin: 0 }          /* the card's own heading, not those in its body */
+}
+```
+
+## Typed attr() {new 1.23.0}
+
+`attr()` with a type works in any property, as in Chrome 133 and later, so bar charts, colours and badges can come from
+data attributes alone:
+
+```html
+<style>
+  .bar { width: attr(data-share type(<percentage>), 0%); background: attr(data-color type(<color>), gray) }
+</style>
+<div class="bar" data-share="64%" data-color="#2a9d8f"></div>
+```
+
+`type()` takes any `@property` syntax, and `raw-string`, `number` and units such as `attr(data-gap px)` work too. A
+failed substitution leaves the property unset, as in Chrome. A value from an attribute can never become a `url()`,
+`image-set()` or any other function that loads a resource, so data from users cannot make the PDF fetch a file.
+
+## Zoom {new 1.23.0}
+
+`zoom: 0.8` draws an element and its content at 80%, as Chrome computes it: every absolute length on it and its
+descendants (px, pt, mm, viewport units) is multiplied by the zoom, nested zooms multiply, percentages stay, and images
+show their own size zoomed. Templates that Chrome users shrink with `zoom` come out the same size.
+
+## Gap decorations {new 1.23.0}
+
+`column-rule` now also draws lines between the columns of grid and flex containers, and `row-rule` between their rows,
+as Chromium draws CSS Gap Decorations: table-like lines without borders on every cell.
+
+```css
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+        column-rule: 1px solid #ccc; row-rule: 1px dashed #ccc; rule-break: intersection }
+```
+
+Each rule property takes a list, with `repeat()`, for different lines in different gaps; `rule-break` (`none`, `normal`,
+`intersection`) sets where lines stop at spanning items and crossings, and `rule-inset` with `rule-overlap` moves their
+ends. Rules are cut where a container breaks across pages, and a gap that falls on a page break draws nothing.
+
+## Check boxes and radio buttons {new 1.23.0}
+
+`accent-color` paints checked check boxes and radio buttons as Chrome does, with a dark mark when white would not stand
+out from the accent. `appearance: none` takes the native look away: the control is drawn only by the page's CSS
+(`:checked`, `::before` and `::after` included), for custom check boxes and toggle switches, and it is not made a
+[form field](/docs/forms/), because a PDF field cannot know what the page's `:checked` style looks like.
+
 ## Scale content to fit a box {new 1.19.0}
 
 `-pdfpecker-scale-to-fit: shrink` on a box with a `height` or `max-height` draws its content smaller until it fits
@@ -311,7 +374,7 @@ most two levels deep.
 <div style="width: 80mm; height: 25mm; -pdfpecker-scale-to-fit: shrink">Dr. Maximiliane Alexandra von Rosenberg-Hohenstein</div>
 ```
 
-## Pagination {changed 1.22.0}
+## Pagination {changed 1.23.0}
 
 Lines and images are never cut in half at a page boundary; table header rows repeat at the top and `<tfoot>` rows at
 the bottom of every page a table spans, as in Chrome; backgrounds and borders continue across pages. A table row that
@@ -332,6 +395,13 @@ them (`break-after: avoid` in the default styles), and `break-before`/`break-aft
 starts on the next page and breaks there, as in Chrome. As in Chrome, a margin that runs past the end of a page is dropped or cut at the break rather than carried to the next one (except after a forced break), so a tall bottom margin makes no blank page, and a box's top and bottom borders and padding stay on the same page as its first and last content. A box shadow paints on the pages
 its box reaches but never adds a page of its own.
 
+`box-decoration-break: clone` closes each page's part of a block box that splits across pages, as Chrome prints it:
+every part gets the box's top and bottom border and padding, its own corners, shadow and background, so a framed
+section or card looks whole on each page. `continue: discard` keeps a box to the page it starts on (or to its `height`
+or `max-height`) and leaves out the content that does not fit. `-pdfpecker-repeat: each-page`, PdfPecker's own
+property, draws a box again at the top of each later page its parent continues on, such as a term's label beside a
+definition several pages long.
+
 ## Links and bookmarks {changed 1.21.0}
 
 `<a href>` becomes a clickable link, whether inline or a block (a card wrapped in a link),
@@ -348,7 +418,7 @@ collapsed.
 .no-bookmark { bookmark-level: none }
 ```
 
-## SVG {changed 1.22.0}
+## SVG {changed 1.23.0}
 
 Inline `<svg>` and SVG files (in `<img>` and as `url()` backgrounds, including `data:image/svg+xml` URIs) with `path` (all commands, arcs included), `rect` (incl. rounded), `circle`, `ellipse`, `line`,
 `polyline`, `polygon`, `text` and `tspan` (`x`, `y`, `dx`, `dy`, `text-anchor`, `dominant-baseline`, `direction`,
@@ -370,7 +440,16 @@ registered fonts and right-to-left text), `textPath` (text along a path, with `s
 under a filter stays selectable and searchable: an invisible copy of it is kept on top of the image. As in browsers, an SVG file is styled only by its own `<style>`
 elements and attributes, not by the page's CSS, and loads nothing else.
 
-## Images {changed 1.21.0}
+Shapes drawn by a `use` inherit its `fill`, `stroke` and other paint, as in Chrome, so sprite icons take the colour of
+their `use` and MathJax formulas follow the text colour. The geometry properties `cx`, `cy`, `r`, `rx`, `ry`, `x`, `y`,
+`width`, `height` and `d: path(...)`, and `stop-color` and `stop-opacity` on gradient stops, come from style sheets
+too, winning over the attributes as in Chrome. `vector-effect: non-scaling-stroke` keeps a stroke at the width the
+page gives it however the drawing is scaled, so hairline gridlines survive a chart scaled to fit. CSS `transform`
+works on SVG elements, turning about `transform-origin` within `transform-box` (`view-box`, `fill-box`,
+`stroke-box`). The `viewBox` scale is written exactly, so formulas from MathJax, drawn at about 1,000 units per em, keep
+their last glyph.
+
+## Images {changed 1.23.0}
 
 JPEG (embedded as-is, RGB, grayscale and CMYK), PNG (all colour types and bit depths, transparency,
 interlacing), GIF (transparency, interlacing), WebP (lossy, lossless and with alpha), BMP (1 to 32 bits, palettes, RLE, bit fields
@@ -391,6 +470,12 @@ the page makes the whole page [shrink to fit](/docs/paged-media/#shrink-to-fit),
 on its own only past 1.5 times the page width or with `ShrinkToFit` off. A percentage `width`, `max-width` or padding on an image is a share of
 the containing block, inline images draw their border, padding, background and shadow, and vertical margins on inline
 images and SVG take room in the line, all as in Chrome.
+
+`image-rendering: pixelated` or `crisp-edges` keeps an enlarged small image, such as a QR code or pixel art, sharp in
+every viewer: its pixels are written as blocks, where some viewers would smooth them. `-pdfpecker-image-quality: 80`
+writes images as JPEGs at that quality, and `-pdfpecker-image-max-resolution: 150dpi` downsamples images drawn denser
+than that, judged by the size each is drawn at; both are inherited, so a document sets them once on its root. A
+smaller version replaces an image only when it is smaller, and transparency stays lossless.
 
 An `<img>` whose picture is missing (no `src`, a file or `ResourceResolver` that finds nothing, or data that cannot be
 decoded) prints its `alt` text instead, as Chrome does, in the text style around it plus the image's own border,

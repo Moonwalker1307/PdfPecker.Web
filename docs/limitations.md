@@ -33,8 +33,8 @@ marks every PDF feature as supported, partly supported or missing.
 - [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) does not use the vertical `vhal` feature, and the
   `text-spacing` shorthand is not read. `hanging-punctuation` is not supported.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
-  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)) and fractions; contextual alternates
-  (`calt`) and ordinals are not applied, and `small-caps` is synthesized from scaled
+  glyph for another (see [OpenType features](/docs/fonts/#opentype-features)), fractions and ordinals; contextual
+  alternates (`calt`) apply only when you turn them on with `font-feature-settings`, and `small-caps` is synthesized from scaled
   capitals when the font has no small capitals of its own. `font-variant-alternates` and `font-palette` are not supported, so
   [colour fonts](/docs/fonts/#colour-fonts) use their default palette.
 - Solid underlines, overlines and line-throughs are a little thinner than Chrome's (about 1.5 px for 20 px text where
@@ -46,7 +46,7 @@ marks every PDF feature as supported, partly supported or missing.
 - SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS {changed 1.22.0}
+## CSS {changed 1.23.0}
 
 - Container queries: no `scroll-state()` queries, `style()` works only on custom properties, and style containment
   (counter scoping) and the `contain` property are not implemented. A document with container queries takes about two
@@ -66,6 +66,7 @@ marks every PDF feature as supported, partly supported or missing.
   rather than between them and their own underline. `filter: blur()` and `drop-shadow()` draw the box as an image;
   its text stays selectable, and the colour filters keep everything as vectors.
 - `text-overflow` applies only at the end of the line, as in the spec and Chrome.
+- `visibility: collapse` acts as `hidden`, also on table rows and columns, which keep their room.
 - Background images on the `@page` box are positioned in the page box, as CSS Paged Media 3 says; Chrome sizes that
   area like the root element, so `right`, `bottom` and percentage positions can land elsewhere than in Chrome.
 - `inline-size`, `block-size` and their `min-` and `max-` forms always mean width and height, also in vertical
@@ -76,8 +77,8 @@ marks every PDF feature as supported, partly supported or missing.
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` places images against the paper, as Chrome prints them, but gradients still move with
   their box.
-- Not supported: `contain`, `content-visibility`, `cross-fade()`, `element()`, `paint()`, `env()`, `anchor()`, `attr()`
-  outside `content`, `::selection` and `:nth-col()`. In `@page` margins and media queries, `ex`, `ch` and the other
+- Not supported: `contain`, `content-visibility`, `cross-fade()`, `element()` outside page-margin boxes, `paint()`,
+  `env()`, `anchor()`, `::selection` and `:nth-col()`. In `@page` margins and media queries, `ex`, `ch` and the other
   font units use the initial 16 px font.
 - [3D transforms](/docs/html-and-css/#3d-transforms) are drawn flat, since a PDF page has only flat transforms: a box with
   a perspective stays a rectangle or parallelogram where Chrome draws a trapezoid, only the parent's `perspective`
@@ -98,10 +99,9 @@ marks every PDF feature as supported, partly supported or missing.
   is otherwise laid out in standards mode; Chrome's quirks mode also, among other things, ignores the first paragraph's top margin in the
   body.
 
-## Backgrounds and transparency {changed 1.16.0}
+## Backgrounds and transparency {changed 1.23.0}
 
 - Inset box shadows of inline elements (`<span>`) are not drawn.
-  `box-decoration-break` applies to inline elements, not to blocks split across pages or columns.
 - Inline boxes nested more than 16 deep are not decorated, and one layout paints at most 50,000 inline box fragments
   with a shared budget for their layers, shadows and outlines; past it, fragments show only their background colour.
 - A translucent box shadow without blur is blended onto white rather than truly see-through. Blurs are drawn as
@@ -121,7 +121,7 @@ marks every PDF feature as supported, partly supported or missing.
 - Collapsed table borders on `col` and `colgroup` are not drawn; borders on cells, rows, row groups and the table are.
 - A table row with a cell that spans rows moves to the next page whole rather than breaking inside, as other rows do.
 
-## Images and SVG {changed 1.21.0}
+## Images and SVG {changed 1.23.0}
 
 - No AVIF images: decoding them needs an AV1 video decoder, which is not planned. Convert them to WebP, PNG or JPEG.
 - SVG filters are applied in pixels at 144 dpi, so filtered shapes become an image (text keeps an invisible,
@@ -130,8 +130,8 @@ marks every PDF feature as supported, partly supported or missing.
   alt text or a size has no box rather than Chrome's 16 px icon box.
 - An SVG `symbol` is not clipped to its viewport, and its `preserveAspectRatio` is always the default (`xMidYMid meet`).
 - A `foreignObject` inside an SVG group with a clip, mask or filter is drawn over the drawing without those effects, and
-  a `use` element's own `fill` and `stroke` reach the content it draws only through `context-fill` and
-  `context-stroke`.
+  one inside a pattern, mask or filter image is left out.
+- With `vector-effect: non-scaling-stroke`, markers still scale with the drawing, where Chrome keeps them at their size.
 
 ## Reading and changing existing PDFs {changed 1.21.0}
 

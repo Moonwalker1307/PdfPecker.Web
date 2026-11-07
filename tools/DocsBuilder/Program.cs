@@ -62,6 +62,9 @@ Section[] sections =
         new("paged-media", "paged-media", "Paged media", "@page rules, margin boxes, named pages, running headers and tables of contents with page numbers."),
         new("markdown", "markdown", "Markdown", "Convert CommonMark and GitHub Flavored Markdown to PDF or HTML."),
         new("fluent-api", "fluent-api", "Fluent C# API", "PdfPecker.Fluent: build PDFs from C# code in the style of QuestPDF, rendered by PdfPecker with no browser or native binaries."),
+        new("razor", "razor", "Razor components", "PdfPecker.Razor: turn Razor components with typed parameters, layouts and dependency injection into PDFs, without a browser or an ASP.NET Core host."),
+        new("command-line", "command-line", "Command line", "The pdfpecker dotnet tool: HTML and Markdown to PDF, merge, split, sign, compact and more from a terminal, with wkhtmltopdf's options."),
+        new("python", "python", "Python", "pdfpecker on PyPI: HTML and Markdown to PDF and PDF to images and text from Python, with an MCP server and an Agent Skill for AI agents."),
         new("images-to-pdf", "images-to-pdf", "Images to PDF", "Put PNG, JPEG, GIF, WebP, BMP or TIFF images into a PDF, one per page, at their own size or fitted to a page."),
         new("fonts", "fonts", "Fonts", "Register TrueType, OpenType, WOFF and WOFF2 fonts, use @font-face, and handle missing fonts."),
         new("languages", "languages", "Right-to-left, CJK and hyphenation", "Arabic and Hebrew text with bidi and shaping, Chinese, Japanese and Korean line breaking, and automatic hyphenation."),
@@ -82,9 +85,11 @@ Section[] sections =
         new("stamping", "stamping", "Stamping", "Put a stamp over or letterhead under the pages of any PDF."),
         new("compacting", "compacting", "Compacting", "Make any PDF smaller, losslessly or with images downsampled and recompressed, keeping bookmarks, forms, tags and PDF/A."),
         new("removing-active-content", "removing-active-content", "Removing active content", "Take JavaScript, launch and submit actions, XFA and media out of PDFs from others before passing them on."),
+        new("pdf-to-pdfa", "pdf-to-pdfa", "PDF to PDF/A", "Convert any existing PDF to PDF/A-2 or PDF/A-3 for archiving, with a report of what changed and what could not be fixed."),
         new("text-extraction", "text-extraction", "Text extraction", "Extract the text of any PDF in reading order with the position of every line and word, its images and its document properties."),
         new("pdf-to-image", "pdf-to-image", "PDF to image", "Render PDF pages to PNG, JPEG, WebP or TIFF with PdfPecker's own renderer, or HTML straight to images."),
         new("pdf-to-html", "pdf-to-html", "PDF to HTML", "Turn any PDF into one self-contained HTML page: page images with selectable, searchable text and working links."),
+        new("pdf-to-markdown", "pdf-to-markdown", "PDF to Markdown", "Turn any PDF into GitHub Flavored Markdown with headings, lists, links and tables, for search indexes and language models."),
     ]),
     new("Switching",
     [
@@ -99,6 +104,7 @@ Section[] sections =
         new("limitations", "limitations", "Limitations", "What PdfPecker does not support yet, and what it leaves out by design."),
         new("css-support", "css-support", "CSS support", "Every CSS property, at-rule, selector and unit, marked as supported, partly supported, missing or without effect on paper in PdfPecker."),
         new("pdf-features", "pdf-features", "PDF feature checklist", "Every PDF feature, from encryption and signatures to layers and PDF/X, marked as supported, partly supported or missing in PdfPecker."),
+        new("snapshot-testing", "snapshot-testing", "Snapshot testing", "PdfPecker.Testing: check in unit tests that PDFs come out as before, with page diff images, text and page count checks."),
         new("performance", "performance", "Performance", "PdfPecker's speed and memory compared with Chromium, wkhtmltopdf, iText and other .NET converters."),
         new("how-it-works", "how-it-works", "How it works", "PdfPecker's pipeline from HTML parsing through CSS and layout to the PDF writer and renderer."),
     ]),
@@ -201,6 +207,7 @@ partial class Program
             <a href="/docs/" aria-current="page">Docs</a>
             <a class="ext" href="https://github.com/Moonwalker1307/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="ext-label">GitHub</span></a>
             <a class="ext" href="https://www.nuget.org/packages/PdfPecker"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5 14 4.75v6.5L8 14.5 2 11.25v-6.5L8 1.5ZM2 4.75 8 8l6-3.25M8 8v6.5"/></svg><span class="ext-label">NuGet</span></a>
+            <a class="ext" href="https://pypi.org/project/pdfpecker/"><svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 1.5h-3a2 2 0 0 0-2 2V6h5M8 1.5h1a2 2 0 0 1 2 2V8a2 2 0 0 1-2 2H6a2 2 0 0 0-2 2v.5M3 6H2.5a1 1 0 0 0-1 1v2a2 2 0 0 0 2 2H4M8 14.5h3a2 2 0 0 0 2-2V10H8M13 10h.5a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2H12"/></svg><span class="ext-label">PyPI</span></a>
           </nav>
         </header>
         """;
@@ -212,6 +219,7 @@ partial class Program
             <nav aria-label="Footer">
               <a href="https://github.com/Moonwalker1307/PdfPecker">GitHub</a>
               <a href="https://www.nuget.org/packages/PdfPecker">NuGet</a>
+              <a href="https://pypi.org/project/pdfpecker/">PyPI</a>
               <a href="https://github.com/Moonwalker1307/PdfPecker/blob/main/THIRD-PARTY-NOTICES.md">License</a>
               <a href="/privacy/">Privacy</a>
             </nav>
