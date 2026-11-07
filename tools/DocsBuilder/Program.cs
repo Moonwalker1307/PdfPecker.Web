@@ -65,6 +65,7 @@ Section[] sections =
         new("razor", "razor", "Razor components", "PdfPecker.Razor: turn Razor components with typed parameters, layouts and dependency injection into PDFs, without a browser or an ASP.NET Core host."),
         new("command-line", "command-line", "Command line", "The pdfpecker dotnet tool: HTML and Markdown to PDF, merge, split, sign, compact and more from a terminal, with wkhtmltopdf's options."),
         new("python", "python", "Python", "pdfpecker on PyPI: HTML and Markdown to PDF and PDF to images and text from Python, with an MCP server and an Agent Skill for AI agents."),
+        new("rust", "rust", "Rust", "The pdfpecker crate: HTML and Markdown to PDF and PDF to images and text from Rust, with a safe API and no runtime dependencies."),
         new("images-to-pdf", "images-to-pdf", "Images to PDF", "Put PNG, JPEG, GIF, WebP, BMP or TIFF images into a PDF, one per page, at their own size or fitted to a page."),
         new("fonts", "fonts", "Fonts", "Register TrueType, OpenType, WOFF and WOFF2 fonts, use @font-face, and handle missing fonts."),
         new("languages", "languages", "Right-to-left, CJK and hyphenation", "Arabic and Hebrew text with bidi and shaping, Chinese, Japanese and Korean line breaking, and automatic hyphenation."),
