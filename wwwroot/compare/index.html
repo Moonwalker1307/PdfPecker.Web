@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HTML to PDF libraries for C# and .NET compared · PdfPecker</title>
-<meta name="description" content="PdfPecker, HtmlRenderer.PdfSharp, PeachPDF, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
+<meta name="description" content="PdfPecker, HtmlRenderer.PdfSharp, PeachPDF, IronPress, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
 <link rel="canonical" href="https://pdfpecker.net/compare/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PdfPecker">
 <meta property="og:title" content="HTML to PDF libraries for C# and .NET compared · PdfPecker">
-<meta property="og:description" content="PdfPecker, HtmlRenderer.PdfSharp, PeachPDF, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
+<meta property="og:description" content="PdfPecker, HtmlRenderer.PdfSharp, PeachPDF, IronPress, IronPDF, Syncfusion, SelectPdf, Aspose, iText pdfHTML, PuppeteerSharp, Playwright and wkhtmltopdf side by side: licence, dependencies, CSS, JavaScript, PDF/A, PDF/UA, signatures, forms, e-invoices and speed.">
 <meta property="og:url" content="https://pdfpecker.net/compare/">
 <meta property="og:image" content="https://pdfpecker.net/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -105,7 +105,29 @@
     </div>
   </section>
 
-  <section class="section alt">
+  <section class="section alt" id="rust">
+    <div class="wrap">
+      <h2 class="center">From Rust: PdfPecker and IronPress</h2>
+      <p class="center sub">PdfPecker is also a <a href="/docs/rust/">Rust crate</a>, so we compared it with IronPress, an HTML to PDF crate written in Rust,
+        and with Chrome driven from Rust. The Chrome score compares each engine's pages with what Chrome prints, over 54 test pages; 1 is identical.</p>
+      <div class="table-scroll">
+        <table class="compare">
+          <thead><tr><th scope="col">Engine</th><th scope="col" class="num"><span class="wide">Chrome score</span><span class="narrow">Chrome</span></th><th scope="col" class="num"><span class="wide">Typical page</span><span class="narrow">Page</span></th><th scope="col" class="num"><span class="wide">Invoice, </span>1 page</th><th scope="col" class="num"><span class="wide">Report, </span>29 pages</th><th scope="col" class="num wide">New process, first PDF</th><th scope="col" class="num wide">Peak memory, one PDF</th></tr></thead>
+          <tbody>
+            <tr class="win"><th scope="row"><span class="wide">PdfPecker 1.23.0 crate</span><span class="narrow">PdfPecker</span></th><td class="num">0.95</td><td class="num">1.5 ms</td><td class="num">0.72 ms</td><td class="num">28 ms</td><td class="num wide">22 ms</td><td class="num wide">26 MB</td></tr>
+            <tr><th scope="row"><span class="wide">IronPress 1.7.0</span><span class="narrow">IronPress</span></th><td class="num">0.47</td><td class="num">141 ms</td><td class="num">41 ms</td><td class="num">1,873 ms</td><td class="num wide">185 ms</td><td class="num wide">40 MB</td></tr>
+            <tr><th scope="row"><span class="wide">Chrome 153 via chromiumoxide</span><span class="narrow">Chrome</span></th><td class="num">1</td><td class="num">24 ms</td><td class="num">18 ms</td><td class="num">231 ms</td><td class="num wide">115 ms</td><td class="num wide">396 MB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Medians after warm-up on one 4-core Linux VM, November 2026, with all three called from the same Rust program; the typical page
+        is the median of 57 pages. The score is the overlap of the printed ink with Chrome's at 60 dpi. PdfPecker was closest to Chrome on 51 of the 54
+        pages and IronPress on 3. IronPress's own README times its four example documents, which are 2 KB or smaller; on this VM it took 1.4 to 26 ms
+        for them, and PdfPecker 0.05 to 0.58 ms. IronPress has a smaller binary of its own and used less memory over hundreds of conversions in a row.</p>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="wrap">
       <h2 class="center">Which one fits</h2>
       <p class="center sub">PdfPecker is a document engine, not a browser. Pick something else when you need what only a browser does.</p>
@@ -138,6 +160,10 @@
         <article class="feature"><h3>wkhtmltopdf</h3>
           <p>Archived since 2023 on a WebKit from 2016, so best kept for existing systems that already depend on it.
             <a href="/docs/wkhtmltopdf-alternative/">Moving from wkhtmltopdf</a></p></article>
+        <article class="feature"><h3>IronPress</h3>
+          <p>An MIT-licensed HTML to PDF crate written in Rust, also on NuGet, that compiles into a single binary. In our tests it was
+            about 90 times slower than the PdfPecker crate on a typical page, and half as close to what Chrome prints.
+            <a href="#rust">The comparison</a></p></article>
         <article class="feature"><h3>QuestPDF, not HTML at all</h3>
           <p>Builds documents in C# code instead of HTML, with a well-designed layout API and a live preview app. Free for
             companies under USD 1 million in revenue, otherwise a yearly licence per company, and it ships native Skia
@@ -153,7 +179,7 @@
     </div>
   </section>
 
-  <section class="section">
+  <section class="section alt">
     <div class="wrap narrow-wrap">
       <h2>Sources</h2>
       <ul class="sources">
@@ -165,6 +191,7 @@
         <li>SelectPdf: <a href="https://www.nuget.org/packages/Select.Pdf.NetCore">Windows edition</a>, <a href="https://www.nuget.org/packages/SelectPdf.HtmlToPdf.Universal">Universal edition</a>, <a href="https://www.webull.com/news/15701314229044224">Universal edition announcement</a></li>
         <li>Aspose: <a href="https://docs.aspose.com/html/net/convert-html-to-pdf/">Aspose.HTML to PDF</a>, <a href="https://docs.aspose.com/html/net/sandboxing/">sandboxing</a>, <a href="https://reference.aspose.com/html/net/aspose.html.saving/pdfsaveoptions/">Aspose.HTML PDF options</a>, <a href="https://tutorials.aspose.com/pdf/net/pdfa-compliance/">Aspose.PDF PDF/A and PDF/UA</a>, <a href="https://docs.aspose.com/pdf/net/convert-pdf-to-html/">Aspose.PDF to HTML</a></li>
         <li>iText pdfHTML: <a href="https://kb.itextpdf.com/itext/flexbox-suport-in-pdfhtml">flexbox</a>, <a href="https://itextpdf.com/blog/itext-suite-94-page-resizing-signature-profiles-expanded-flex">flexbox in 6.3</a>, <a href="https://kb.itextpdf.com/itext/implementing-grid-layout-support-in-itext">grid</a>, <a href="https://kb.itextpdf.com/itext/can-i-convert-an-html-form-to-a-pdf">forms</a>, <a href="https://kb.itextpdf.com/itext/new-high-level-html-to-pdf-ua-api">PDF/UA</a></li>
+        <li>IronPress: <a href="https://crates.io/crates/ironpress">crate</a>, <a href="https://github.com/gastongouron/ironpress">repository and benchmarks</a> (version 1.7.0)</li>
         <li>QuestPDF: <a href="https://www.nuget.org/packages/QuestPDF">NuGet package</a>, <a href="https://github.com/QuestPDF/QuestPDF">repository</a>, <a href="https://www.nuget.org/packages/QuestPDF/2026.9.1/License">licence</a> (version 2026.9.1)</li>
         <li>MigraDoc: <a href="https://www.nuget.org/packages/PDFsharp-MigraDoc">NuGet package</a> (version 6.5.0, AGPL-3.0; 6.2.4 was MIT), <a href="https://docs.pdfsharp.net/General/Overview/FAQ.html">licence FAQ</a></li>
         <li>Chromium: <a href="https://pptr.dev/api/puppeteer.pdfoptions">PDF options</a> (tagged and outline are marked experimental)</li>
