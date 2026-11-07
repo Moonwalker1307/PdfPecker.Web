@@ -626,6 +626,33 @@ body.dragging .visual { outline: 3px dashed var(--accent); outline-offset: -8px;
   .prose tr:has(td.mark) td:nth-child(3) { grid-column: 1 / -1; color: var(--muted); font-size: 14px; }
   .prose tr:has(td.mark) td:nth-child(3):empty { display: none; }
 }
+/* The status filters of the CSS support page (wwwroot/docs-filter.js). The bar sticks under the site header so the
+   toggles stay in reach on a long page; a toggle that is on is filled in its mark's colour, one that is off is grey. */
+.prose [hidden] { display: none !important; }
+.mark-filter { position: sticky; top: var(--header-height, 57px); z-index: 5; display: flex; flex-wrap: wrap; align-items: center;
+  gap: 8px; margin: 28px 0 0; padding: 10px 0; background: var(--bg); border-bottom: 1px solid var(--border); }
+.mark-filter-label { font: 700 11.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+.mark-toggle { --c: var(--muted); --soft: var(--alt); display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--panel); color: var(--muted); font-size: 14px; cursor: pointer; }
+.mark-toggle b { font-weight: 700; }
+.mark-toggle small { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .8; }
+.mark-toggle[aria-pressed=true] { border-color: var(--c); background: var(--soft); color: var(--c); font-weight: 600; }
+.mark-toggle[aria-pressed=false] span { text-decoration: line-through; }
+.mark-toggle:hover { border-color: var(--c); }
+.mark-toggle.y { --c: var(--new); --soft: var(--new-soft); }
+.mark-toggle.p { --c: var(--changed); --soft: var(--changed-soft); }
+.mark-toggle.n, .mark-toggle.x { --c: var(--text); --soft: var(--alt); }
+.mark-filter-status { margin-left: auto; font-size: 13.5px; color: var(--muted); }
+.prose .mark-filter-empty { margin-top: 20px; color: var(--muted); }
+.mark-filter + h2, .mark-filter + .mark-filter-empty + h2 { margin-top: 28px; }
+@media (max-width: 640px) {
+  /* On a phone the four toggles fit on one line without their counts, which the line under them gives instead. */
+  .mark-filter { gap: 6px; padding: 8px 0; }
+  .mark-filter-label, .mark-toggle small { display: none; }
+  .mark-toggle { gap: 4px; padding: 5px 9px; font-size: 13.5px; }
+  .mark-filter-status { flex-basis: 100%; margin-left: 0; }
+  .mark-filter-status:empty { display: none; }
+}
 /* What is new or changed since the previous PdfPecker version (marked in docs/*.md, see tools/DocsBuilder). Green and
    amber, as in changelogs and diffs, so the marks don't read as errors the way the site's red would. */
 .change { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1px solid var(--changed); border-radius: 999px;

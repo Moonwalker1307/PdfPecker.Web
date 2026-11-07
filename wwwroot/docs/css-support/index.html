@@ -206,7 +206,7 @@
         <a class="docs-changelog" href="/docs/changelog/">Changelog</a>
       </div>
     </div>
-    <article class="prose">
+    <article class="prose" data-mark-filter>
 <h1 id="css-support">CSS support</h1>
 <p>Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 602 properties below, PdfPecker supports 406, supports 15 in part and leaves out 70. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. <a href="/docs/html-and-css/">HTML and CSS support</a> explains how the supported features behave, and <a href="/docs/limitations/">Limitations</a> describes the gaps.</p>
 <p>A declaration PdfPecker does not support is dropped like any unknown property: the rest of the rule still applies and the conversion does not fail. The property list is the standards-track properties in MDN's browser compatibility data, grouped by the specification that defines them, plus the paged media properties PdfPecker reads. Property names link to MDN.</p>
@@ -4096,5 +4096,6 @@
   </div>
 </footer>
 <script src="/docs-search.js"></script>
+<script src="/docs-filter.js"></script>
 </body>
 </html>

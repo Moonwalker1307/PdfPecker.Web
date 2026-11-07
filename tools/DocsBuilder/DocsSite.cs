@@ -177,8 +177,10 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
 
                 """);
         }
-        sb.Append("""
-                <article class="prose">
+        // The CSS support page marks every row, so it gets toggles to show only some marks (wwwroot/docs-filter.js).
+        var filter = page.Slug == "css-support";
+        sb.Append($"""
+                <article class="prose"{(filter ? " data-mark-filter" : "")}>
 
             """);
         sb.Append(body.TrimEnd()).Append('\n');
@@ -197,7 +199,7 @@ sealed partial class ManualSite(Manual manual, string? previousVersion, IReadOnl
               </div>
 
               {Program.Footer}
-              <script src="/docs-search.js"></script>
+              <script src="/docs-search.js"></script>{(filter ? "\n<script src=\"/docs-filter.js\"></script>" : "")}
               </body>
               </html>
 
