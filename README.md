@@ -168,7 +168,8 @@ pdfpecker.net runs on [Cloudflare Containers](https://developers.cloudflare.com/
 (`worker/index.ts`, configured in `wrangler.jsonc`) answers every request: Cloudflare serves the page from `wwwroot`
 itself (with the headers in `wwwroot/_headers`), and everything else goes to one container built from the
 `Dockerfile`. The container sleeps after 10 minutes without requests and starts again on the next one, so the page
-loads at once and only the first conversion after a quiet spell waits for it.
+loads at once and only the first conversion after a quiet spell waits for it. The image is published with ReadyToRun,
+so that conversion does not also wait for the JIT to compile PdfPecker (an invoice in about 0.13 s instead of 0.3 s).
 
 - **Size:** Cloudflare has no 2 GB instance, so the container has 1 vCPU and 3 GiB with the .NET heap capped at 2 GB
   (`DOTNET_GCHeapHardLimit`), which gives the same limits as `--memory 2g`.
