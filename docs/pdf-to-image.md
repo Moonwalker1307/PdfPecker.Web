@@ -1,4 +1,4 @@
-# PDF to image
+# PDF to image {changed 1.24.0}
 
 `PdfToImage` and `PdfRenderer` render PDF pages to PNG, JPEG, WebP or TIFF (or raw RGBA pixels). This works for any PDF,
 not only PdfPecker's own output, and also uses no third-party packages: the PDF parser, font engines, JPEG and fax
@@ -86,6 +86,36 @@ shares decoded fonts and images between pages. Encrypted files open with the use
 (`PdfPasswordException` otherwise); unreadable files throw `InvalidDataException`, as does a page that needs more than
 20 million drawing operations (nested forms can multiply a few bytes into billions). Pass a cancellation token to
 bound the time a page may take.
+
+## Pixels for OCR and image processing {new 1.24.0}
+
+`PdfRenderer.RenderPage` can draw a page into a buffer of yours as grey, RGB or RGBA bytes, rows from the top without
+padding, instead of making a new `RenderedImage`. `GetPixelSize` gives the size to allocate, so one buffer can serve
+every page. Grey and RGB flatten a transparent page onto `BackgroundColor` over white, as JPEG output does.
+
+```csharp
+var renderer = PdfRenderer.Open(scanBytes, password: null);
+var options = new ImageOptions { Dpi = 300 };
+byte[] buffer = [];
+for (int i = 0; i < renderer.PageCount; i++)
+{
+    var (w, h) = renderer.GetPixelSize(i, options);
+    if (buffer.Length < w * h) buffer = new byte[w * h];
+    renderer.RenderPage(i, buffer, ImagePixelFormat.Gray, options);
+    // ... hand w x h grey pixels to OCR or image analysis
+}
+```
+
+`ImageToPixels.Convert` does the same for image files: it decodes a PNG, JPEG, GIF, WebP, BMP or TIFF (any page of a
+multi-page TIFF, with `GetFrameCount` and `ImageToPixelsOptions.Frame`) straight to `ImagePixels` in grey, RGB or RGBA,
+with the colour conversions, EXIF orientation and size limits of [ImageToPdf](/docs/images-to-pdf/), and without making
+a PDF of the image first. A 300 dpi A4 PNG decodes in about a third of the time that going through a PDF took, with a
+small fraction of the memory.
+
+```csharp
+ImagePixels scan = ImageToPixels.ConvertFile("page.png", new ImageToPixelsOptions { Format = ImagePixelFormat.Gray });
+Console.WriteLine($"{scan.Width} x {scan.Height}, {scan.Pixels.Length} bytes");
+```
 
 ## What the renderer supports
 

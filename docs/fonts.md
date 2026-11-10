@@ -1,4 +1,4 @@
-# Fonts
+# Fonts {changed 1.24.0}
 
 Register TrueType or OpenType fonts and use them by name in CSS. Only the glyphs a document uses are embedded, and
 text can use any Unicode character the fonts have (Greek, Cyrillic, Central European, CJK, ...):
@@ -52,7 +52,7 @@ bold is synthesized as for any other font. The optical size axis (`opsz`) follow
 `font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
 CFF2.
 
-## OpenType features {changed 1.18.0}
+## OpenType features {changed 1.24.0}
 
 `font-variant-numeric` and `font-feature-settings` turn on a font's optional glyphs, as in a browser. Tabular figures
 line up amounts in a column:
@@ -68,6 +68,10 @@ and the like) are applied; the font must have them. Fractions with `font-variant
 `font-feature-settings: "frac"` are formed as Chrome forms them: the font's contextual rules turn `1/2` and `11/16`
 into fractions and leave `a/b` as it is, and `tabular-nums` used with them does not widen the fraction's digits.
 Text copied from the PDF keeps the original characters.
+
+Contextual alternates and ligatures (`calt`, `clig`, `rclt`) are on by default, as Chrome applies them, so fonts such
+as Inter and Fira Code draw their arrows and programming ligatures; `font-feature-settings: "calt" 0` or
+`font-variant-ligatures: no-contextual` turns them off.
 
 ## Colour fonts {new 1.21.0}
 
@@ -107,6 +111,22 @@ embed the bundled Liberation fonts in their place instead: they have the same wi
 the text looks the same in every viewer, and any character they cover (Latin, Greek, Cyrillic, ...) works. PDF/A
 always does this. It adds a subset of each font used to the file (typically 10-25 KB per font).
 
+## Fonts read when needed {new 1.24.0}
+
+`AddDeferred` registers a face by its family, weight, style and the characters it has, and reads the file only when a
+document uses it: when CSS names the family, or when text has a character that the fonts before it lack and that its
+`unicode-range` includes. Large fonts such as Noto CJK then cost no time or memory in documents that do not need them.
+
+```csharp
+options.Fonts.AddDeferred("Noto Sans CJK SC", () => File.ReadAllBytes("NotoSansCJK-Regular.ttc"),
+                          unicodeRange: "U+3000-9FFF, U+FF00-FFEF", faceIndex: 2);
+```
+
+The loader is called at most once per face, and faces whose loaders return the same array share one parsed font, so a
+collection registered face by face is read and embedded once. A loader that throws an `IOException` or returns data
+that is not a font leaves the face out. Fallback skips any family whose ranges cannot draw a character, so a document
+in Latin script never opens the CJK file.
+
 ## Missing fonts and characters {changed 1.18.0}
 
 A family that no font provides falls back silently, like in a browser. To notice, set `MissingFont`: it is called
@@ -133,7 +153,7 @@ once for each such character before anything is written, so a test can make sure
 options.MissingCharacter = ch => throw new InvalidOperationException($"No font has U+{char.ConvertToUtf32(ch, 0):X4}");
 ```
 
-## How fonts are embedded {changed 1.22.0}
+## How fonts are embedded {changed 1.24.0}
 
 Registered and `@font-face` TrueType/OpenType fonts are embedded as subsets (Type0/CIDFontType2 for
 TrueType outlines, CIDFontType0 with an OpenType program for CFF outlines) with a ToUnicode map, so text can be
@@ -142,3 +162,7 @@ searched and copied. A font's Unicode characters are read from any of its cmap t
 Arial, Verdana, ...), Times (serif, Georgia, ...) or Courier (monospace, Consolas, ...), each in regular, bold,
 italic and bold italic. With `EmbedStandardFonts` or PDF/A, these are replaced by embedded subsets of the bundled,
 metric-compatible Liberation Sans, Serif and Mono.
+
+Subsets of large CFF fonts such as Noto CJK are small: a few Chinese characters in Noto Sans SC embed about 133 KB
+(1.93 MB in 1.23.0). A font's Unicode variation sequences (cmap format 14) draw the variant glyphs
+that variation selectors ask for.

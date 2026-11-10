@@ -1,6 +1,6 @@
 # Paged media
 
-## Page rules and margin boxes {changed 1.23.0}
+## Page rules and margin boxes {changed 1.24.0}
 
 `@page` rules set the page size, margins and background, and their margin boxes (`@top-left`, `@top-center`,
 `@bottom-right` and the other thirteen) print headers and footers with `counter(page)` and `counter(pages)`, chosen
@@ -37,6 +37,13 @@ page box, as CSS Paged Media 3 says). On top of that:
   the element a link points to, how many pages it covers, or the page counted from its first (with an optional counter
   style, as `target-counter()` takes): "Chapter 3, pages 12–17" in a table of contents, or "page 2 of 6" within a
   section. In a sticky header or footer, `{section-page:id}` (the id percent-encoded) is the page within that section.
+- **Every nth page and page groups**: `@page :nth(2n+1)` matches pages by their number, and
+  `@page :nth(1 of chapter)` the first page of each run of `chapter` pages, as in WeasyPrint and CSS GCPM. They style
+  the margin boxes and the page background, not the page size or margins.
+- **Bleed and printer's marks**: `@page { bleed: 3mm; marks: crop cross }` makes the sheet larger by the
+  bleed on every side, so backgrounds that reach the page edge run on past where it is cut, and draws crop marks and
+  registration crosses in the bleed. The paper size becomes the PDF's trim box and the larger sheet its bleed box, as
+  print shops expect and as WeasyPrint writes them. Marks without a `bleed` get one of 6pt, as the spec says.
 
 ```css
 @page { size: A4; margin: 20mm;

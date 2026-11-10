@@ -1,4 +1,4 @@
-# Barcodes {changed 1.23.0}
+# Barcodes {changed 1.24.0}
 
 `Barcode` draws QR codes, EPC payment QR codes, Code 128 and EAN-13 barcodes as SVG markup for your HTML template.
 The SVG stays vector graphics in the PDF, so the code scans at any print size. Like the rest of PdfPecker it needs no
@@ -95,3 +95,26 @@ guard bars. Both print the text below the bars unless `ShowText` is false.
   EAN-13). On by default; turn it off only when the layout leaves that space.
 - `Color` and `Background`: CSS colours, `#000` on `#fff` by default. Set `Background` to null for none, but keep the
   code dark on light, since scanners need the contrast.
+
+## Reading barcodes {new 1.24.0}
+
+`Barcode.Read` reads the QR codes, Data Matrix codes (square, rectangular and the DMRE sizes), Code 128 and EAN-13
+barcodes in a PNG, JPEG, GIF, WebP, BMP or TIFF image, and `PdfBarcodes.Find` those on the pages of a PDF, whether they
+are drawn as vectors, embedded as images or scanned. Codes may be turned, tilted, mirrored or light on dark.
+
+```csharp
+foreach (BarcodeResult code in Barcode.ReadFile("delivery-note.png"))
+    Console.WriteLine($"{code.Format}: {code.Text}");
+
+// Every code on the pages of a PDF, with its page and position in points from the top left
+foreach (BarcodeResult code in PdfBarcodes.Find(pdfBytes, new PdfBarcodeOptions { Formats = BarcodeFormat.QrCode }))
+    if (code.EpcPayment is { } payment)
+        Console.WriteLine($"Page {code.PageNumber}: {payment.Amount} EUR to {payment.Iban}");
+```
+
+Each `BarcodeResult` has its `Format`, its `Text` and `Bytes`, its `Corners` and bounding box (in pixels for an image,
+in points on the page for a PDF), `IsGs1` for GS1 data, and the payment of an EPC or Swiss QR-bill code parsed back
+into `EpcPayment` or `SwissQrBill`. `BarcodeReaderOptions` and `PdfBarcodeOptions` choose the `Formats`, whether to
+`TryInverted` light-on-dark codes and how many codes to return; `PdfBarcodeOptions` also takes a `Password`, `Pages`
+and the `Dpi` pages are rendered at (300 by default). Images and PDFs are handled as untrusted input, with a bounded
+amount of work per image.

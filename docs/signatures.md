@@ -106,7 +106,7 @@ table count too: an update that only points an object back at an older body stil
 replace" shadow attack), deleted objects, a table that had to be rebuilt (viewers follow the table and can show a
 different document), and an update that drops `/Perms` to turn the certification into an ordinary signature.
 
-## Verifying signatures {changed 1.22.0}
+## Verifying signatures {changed 1.24.0}
 
 `PdfSignatureVerifier` checks the signatures and document timestamps of any PDF, oldest first, and reports what it
 finds rather than throwing for a broken signature:
@@ -133,6 +133,10 @@ signature value verifies with the signer's certificate (`SignatureValid`) and an
 saying why not). Chains are built from the certificates in the
 signature, the PDF's Document Security Store and `ExtraCertificates`. Verification is offline by default:
 `RevocationMode` is `NoCheck` unless you set it, and `VerificationTime` checks the chain at another time.
+
+Each signature is read from the revision of the file it signed: its certification level, reason, location, name and
+signing time come from there, so a later update cannot strip a certification, and a signature dictionary that a later
+update wrote again or replaced is listed in `DisallowedChanges`. The byte range is checked in encrypted files too.
 
 A signature that hashes with SHA-1 (as its digest, in its signature algorithm, or in the old `adbe.pkcs7.sha1` format)
 is not `Valid`: SHA-1 collisions can be computed, so a document someone was led to sign can be swapped for another

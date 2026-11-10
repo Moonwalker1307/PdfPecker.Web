@@ -1,8 +1,8 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 137 features below, PdfPecker supports 94, supports 17 in part and leaves out 26. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 138 features below, PdfPecker supports 97, supports 16 in part and leaves out 25. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
-## File format and structure {changed 1.20.0}
+## File format and structure {changed 1.24.0}
 
 The PDF file itself: versions, cross-reference tables, pages and their boxes.
 
@@ -16,7 +16,7 @@ The PDF file itself: versions, cross-reference tables, pages and their boxes.
 | Open damaged files | ✓ Yes | Rebuilds a broken cross-reference table from the object headers. |
 | Page sizes, orientation and `@page` | ✓ Yes | A4, Letter, Legal, A3, A5, any custom size, landscape, and per-page sizes from CSS `@page`. |
 | Page rotation | ✓ Yes | `PdfPages.Rotate` on existing files; `/Rotate` is honoured when rendering. |
-| Page boxes (Crop, Bleed, Trim, Art) | ½ Partly | CropBox is read and kept. Bleed, trim and art boxes are not written, and CSS bleed and marks (crop marks) are ignored. |
+| Page boxes (Crop, Bleed, Trim, Art) | ½ Partly | CropBox is read and kept. CSS `@page { bleed; marks: crop cross }` writes the bleed and trim boxes with crop and cross marks; art boxes are not written. |
 | Very large documents | ✓ Yes | Streaming merge and `MaxPages` limits; the readers have resource limits for hostile input. |
 
 ## Creating content {changed 1.23.0}
@@ -109,7 +109,7 @@ Fillable fields.
 | XFA forms | ✕ No | XFA data is removed when filling; the AcroForm fields are filled instead. |
 | Fill in complex scripts | ½ Partly | Arabic, Hebrew and Indic values are stored but not shaped in the appearance. |
 
-## Security and encryption {changed 1.22.0}
+## Security and encryption {changed 1.24.0}
 
 Passwords, permissions and protection.
 
@@ -122,7 +122,7 @@ Passwords, permissions and protection.
 | Remove a password | ✓ Yes | `PdfProtector.Decrypt`. |
 | Write RC4 or AES-128 | ✕ No | Only the current AES-256 is written, on purpose. |
 | Certificate (public-key) encryption | ✕ No | The Adobe.PubSec handler is not supported. |
-| Redaction | ✕ No | No way to remove content under a region. |
+| Redaction | ✓ Yes | `PdfRedactor` removes text, image pixels, shapes, links and form fields under areas or matching text from the file, and draws a box over them. |
 | Remove JavaScript and active content | ✓ Yes | `PdfSanitizer` takes out scripts, launch, submit and media actions, XFA, media and 3D annotations, and optionally attachments. |
 | Sanitising | ½ Partly | `PdfSanitizer` removes active content and `PdfCompactor` metadata and application data; hidden layers and hidden text stay. |
 
@@ -199,13 +199,14 @@ Changing files you already have.
 | N-up and imposition | ✕ No |  |
 | Convert an existing PDF to PDF/A | ✓ Yes | `PdfToPdfA`: PDF/A-2b, 2u, 3b or 3u from any PDF, with what it changed and what it could not fix. |
 
-## Reading, rendering and conversion {changed 1.23.0}
+## Reading, rendering and conversion {changed 1.24.0}
 
 Getting things out of existing PDFs.
 
 | Feature | PdfPecker | Notes |
 | --- | --- | --- |
 | Render pages to PNG, JPEG, WebP and TIFF | ✓ Yes | Multi-page TIFF in colour, greyscale or CCITT Group 4. |
+| Read barcodes | ✓ Yes | `PdfBarcodes.Find` reads QR, Data Matrix, Code 128 and EAN-13 codes on pages, and `Barcode.Read` in images, with EPC and Swiss QR-bill payments parsed. |
 | All PDF image filters | ✓ Yes | Flate, LZW, RunLength, ASCII85, ASCIIHex, DCT, JPEG 2000, JBIG2 and CCITT. |
 | All font types | ✓ Yes | Type 1, CFF, TrueType, Type 3 and CID fonts. |
 | Fonts that are not embedded | ½ Partly | Standard fonts are substituted; CJK fonts and predefined CJK CMaps are not. |
@@ -215,7 +216,7 @@ Getting things out of existing PDFs.
 | Transparency groups, blend modes, soft masks | ✓ Yes |  |
 | Annotation appearances | ✓ Yes | Can be switched off. |
 | Text extraction with positions | ✓ Yes | Pages, lines and words with coordinates, font and size. |
-| Reading order | ½ Partly | Text extraction reads columns side by side across; structured PDF to HTML follows a tagged PDF's structure tree. |
+| Reading order | ✓ Yes | Text extraction, PDF to Markdown and structured PDF to HTML follow a tagged PDF's structure tree, and read columns, boxes, right-to-left columns and vertical CJK text in order from the layout. |
 | OCR | ✕ No | Text in scans and outlines cannot be extracted. |
 | PDF to HTML | ✓ Yes | Page images with a selectable, searchable text layer and working links. |
 | Reflowing PDF to HTML | ✓ Yes | `PdfHtmlMode.Structured`: headings, paragraphs, lists and tables in reading order, from a tagged PDF's tags or else from the layout, optionally with styles and pictures. |

@@ -1,6 +1,6 @@
-# CSS support
+# CSS support {changed 1.24.0}
 
-Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 602 properties below, PdfPecker supports 406, supports 15 in part and leaves out 70. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
+Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 602 properties below, PdfPecker supports 409, supports 13 in part and leaves out 69. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
 
 A declaration PdfPecker does not support is dropped like any unknown property: the rest of the rule still applies and the conversion does not fail. The property list is the standards-track properties in MDN's browser compatibility data, grouped by the specification that defines them, plus the paged media properties PdfPecker reads. Property names link to MDN.
 
@@ -78,7 +78,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`scrollbar-gutter`](https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter) | – No effect |  |
 | [`size`](https://developer.mozilla.org/en-US/docs/Web/CSS/size) | ✓ Yes | The @page descriptor: A4, Letter, landscape or any length. |
 | [`text-overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow) | ✓ Yes | ellipsis, clip and strings. |
-| [`visibility`](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility) | ½ Partly | collapse acts as hidden, so a collapsed table row or column keeps its room. |
+| [`visibility`](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility) | ✓ Yes | collapse on table rows and columns removes them as in Chrome. |
 | [`width`](https://developer.mozilla.org/en-US/docs/Web/CSS/width) | ✓ Yes | Also min-content, max-content, fit-content, stretch and -webkit-fill-available. |
 
 ### Borders, outlines and shadows
@@ -190,7 +190,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`image-rendering`](https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering) | ✓ Yes | pixelated and crisp-edges write enlarged images with their pixels repeated, so every viewer shows them sharp. |
 | [`object-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) | ✓ Yes |  |
 | [`object-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-position) | ✓ Yes |  |
-| [`object-view-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-view-box) | ✕ No |  |
+| [`object-view-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-view-box) | ✓ Yes | inset(), rect() and xywh(), without rounded corners. |
 
 ### Positioning, floats and shapes
 
@@ -338,12 +338,12 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`font-synthesis-small-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-small-caps) | ✓ Yes |  |
 | [`font-synthesis-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-style) | ✓ Yes |  |
 | [`font-synthesis-weight`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-weight) | ✓ Yes |  |
-| [`font-variant`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant) | ½ Partly | Contextual alternates (calt) are not on by default as in browsers; small caps are synthesized when the font lacks them. |
+| [`font-variant`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant) | ½ Partly | Small caps are synthesized when the font lacks them. |
 | [`font-variant-alternates`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-alternates) | ✕ No |  |
 | [`font-variant-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-caps) | ✓ Yes | Small caps are synthesized when the font has no smcp feature, as in Chrome. |
 | [`font-variant-east-asian`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-east-asian) | ✓ Yes |  |
 | [`font-variant-emoji`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-emoji) | ✕ No |  |
-| [`font-variant-ligatures`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-ligatures) | ½ Partly | Contextual alternates (calt) are not on by default as in browsers. |
+| [`font-variant-ligatures`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-ligatures) | ✓ Yes | Contextual alternates (calt, clig, rclt) are on by default, as in Chrome. |
 | [`font-variant-numeric`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric) | ✓ Yes |  |
 | [`font-variant-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-position) | ✓ Yes |  |
 | [`font-variation-settings`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variation-settings) | ✓ Yes |  |
@@ -726,7 +726,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) | ✓ Yes | syntax, inherits and initial-value. |
 | [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) | ✓ Yes | src (url(), local(), format()), font-weight and font-stretch ranges, font-style, unicode-range. font-display is accepted. size-adjust, ascent-override, descent-override and line-gap-override as in Chrome. |
 | [`@counter-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/@counter-style) | ✓ Yes | Every system and descriptor. |
-| [`@page`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page) | ✓ Yes | size, margins, borders, padding, backgrounds and background images, :first, :left, :right, :blank, named pages and all 16 margin boxes. marks, bleed and page-orientation are ignored. |
+| [`@page`](https://developer.mozilla.org/en-US/docs/Web/CSS/@page) | ✓ Yes | size, margins, borders, padding, backgrounds and background images, :first, :left, :right, :blank, named pages and all 16 margin boxes. bleed and marks (crop, cross) with trim and bleed boxes, and :nth() with page groups. page-orientation is ignored. |
 | [`@footnote`](https://developer.mozilla.org/en-US/docs/Web/CSS/@footnote) | ✓ Yes | The footnote area inside @page. |
 | [`@namespace`](https://developer.mozilla.org/en-US/docs/Web/CSS/@namespace) | ½ Partly | Accepted and ignored; HTML needs no namespaces. |
 | [`CSS nesting (&)`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting) | ✓ Yes |  |
@@ -807,13 +807,15 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [lab(), lch(), oklab(), oklch(), color()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) | ✓ Yes | Wide-gamut colours are mapped to sRGB. |
 | [color-mix(), relative colours (from)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) | ✓ Yes |  |
 | [light-dark()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) | ✓ Yes | Takes the light colour. |
-| contrast-color() | ✕ No |  |
+| contrast-color() | ✓ Yes | Black or white, whichever contrasts more. |
 | Device CMYK and spot colours (device-cmyk()) | ✕ No | Colours are written as RGB. |
 | [calc(), min(), max(), clamp()](https://developer.mozilla.org/en-US/docs/Web/CSS/calc) | ✓ Yes |  |
 | [round(), mod(), rem(), abs(), sign()](https://developer.mozilla.org/en-US/docs/Web/CSS/round) | ✓ Yes |  |
 | [sin(), cos(), tan(), asin(), acos(), atan(), atan2()](https://developer.mozilla.org/en-US/docs/Web/CSS/sin) | ✓ Yes |  |
 | [pow(), sqrt(), hypot(), log(), exp()](https://developer.mozilla.org/en-US/docs/Web/CSS/pow) | ✓ Yes |  |
-| calc-size(), progress(), random(), sibling-index(), sibling-count(), if() | ✕ No |  |
+| sibling-index(), sibling-count() | ✓ Yes |  |
+| if() with media(), supports() and style() | ✓ Yes |  |
+| calc-size(), progress(), random() | ✕ No |  |
 | [var() and custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/var) | ✓ Yes | Anywhere, in shorthands and inside math. |
 | [env()](https://developer.mozilla.org/en-US/docs/Web/CSS/env) | ✕ No |  |
 | [attr()](https://developer.mozilla.org/en-US/docs/Web/CSS/attr) | ✓ Yes | Typed attr() in any property, as in Chrome 133; never in url() or other resource functions. |

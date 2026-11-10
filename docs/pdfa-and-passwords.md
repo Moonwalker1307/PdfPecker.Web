@@ -1,6 +1,6 @@
 # PDF/A, passwords and watermarks
 
-## Watermarks and passwords {changed 1.8.0}
+## Watermarks and passwords {changed 1.24.0}
 
 ```csharp
 var options = new PdfOptions
@@ -43,6 +43,12 @@ properties in its XMP metadata, since PDF 2.0 deprecates the information diction
 PDF/UA, passes veraPDF 1.28 (flavours 2b, 2u, 3b, 3u, 4 and 4f) on documents with text, tables, lists, images, links,
 form fields, SVG and Markdown. AES-256 keys come from a password hash that is slow on purpose, which adds
 about 3 ms to a conversion.
+
+Passwords are prepared with SASLprep before they are hashed, as PDF 2.0 requires and as pypdf and PDFBox do, so a
+password typed in another normalization form (é as one character or as e and an accent) opens the file as it does in
+other PDF 2.0 readers. A password with control, private-use or bidi control characters, or with characters Unicode 3.2 had not
+assigned (most emoji), cannot be prepared and is refused with an `ArgumentException`. Files encrypted elsewhere with
+such passwords still open.
 
 To make a PDF you already have into PDF/A, whichever tool made it, see [PDF to PDF/A](/docs/pdf-to-pdfa/).
 

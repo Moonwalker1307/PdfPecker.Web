@@ -92,7 +92,7 @@ fonts have. The font decides whether dots, colons and quotes count as opening or
 `，。：` on the left, Traditional Chinese ones centre them), and `font-feature-settings` that set punctuation widths
 themselves (`palt`, `halt`, `pwid` and the like) turn trimming off, as in Chrome.
 
-## Hyphenation {changed 1.14.1}
+## Hyphenation {changed 1.24.0}
 
 `hyphens: auto` hyphenates words with the TeX hyphenation patterns (Liang's algorithm) of the text's language: the
 nearest `lang` attribute, else `PdfOptions.Language`. As in Chrome, a word is hyphenated only where it does not fit on
@@ -144,3 +144,15 @@ byte[] pdf = HtmlToPdf.Convert("""
     </body></html>
     """, options);
 ```
+
+`HyphenationPatterns.Deferred` reads its patterns only when a document hyphenates text in their language, so many
+languages can be offered without holding their patterns in memory:
+
+```csharp
+options.Hyphenation = new Dictionary<string, HyphenationPatterns>
+{
+    ["fi"] = HyphenationPatterns.Deferred(() => File.ReadAllText("hyph-fi.tex")),
+};
+```
+
+The function is called at most once, by the first conversion that needs the patterns.
