@@ -1,4 +1,4 @@
-# Text extraction {new 1.9.0}
+# Text extraction {changed 1.24.0}
 
 `PdfText` extracts the text of any PDF, not only those PdfPecker made, in reading order: as one string, or page by page
 with every line and word and where it is on the page. It reads what the PDF draws, using PdfPecker's own PDF parser and
@@ -47,9 +47,29 @@ Pages are read in parallel (`MaxDegreeOfParallelism`, default one per processor)
 the work, and inputs are handled as untrusted, as with [merging](/docs/merging/). A damaged file or page throws
 `InvalidDataException`, a wrong password `PdfPasswordException`.
 
-Columns side by side are read across, line by line, not one column after the other, and table cells on one row make
-one line. Text drawn only as outlines or images has no characters to extract; a scanned page needs OCR first. See
+Text drawn only as outlines or images has no characters to extract; a scanned page needs OCR first. See
 [Limitations](/docs/limitations/#reading-and-changing-existing-pdfs).
+
+## Reading order {new 1.24.0}
+
+A tagged PDF (PDF/UA, or any PDF with a structure tree) is read in the order of its tags. Other pages are read from
+their layout: columns, boxes and text set side by side come one after the other instead of across the page line by
+line, also when the columns are of unequal length, when a column starts higher than the first, and when a paragraph
+runs on from the foot of one column to the top of the next. Right-to-left columns are read from the right, pages
+turned with `/Rotate` as their text runs, Chinese and Japanese vertical writing down its columns, and the lines of a
+skewed scan's text layer in order. Table rows still make one line each, and a letter's date and signature stay in
+their place.
+
+```csharp
+// The order of 1.23.0 and earlier: every line from top to bottom, across columns.
+var options = new PdfTextOptions { Order = PdfTextOrder.TopToBottom };
+string text = PdfText.Extract(pdfBytes, options);
+```
+
+`PdfTextOrder.Reading` is the default. The same layout analysis gives [PDF to Markdown](/docs/pdf-to-markdown/) and the
+structured [PDF to HTML](/docs/pdf-to-html/) their order, so the three read a page alike. Numbers in Hebrew and Arabic
+lines keep their separators and signs (1,234.56 rather than 56.234,1), and Thai, Indic and Arabic text in PDFs from
+PdfPecker extracts as the letters written.
 
 ## Images {new 1.20.0}
 

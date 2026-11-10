@@ -44,14 +44,16 @@ Document.Create(container =>
 .GeneratePdf("hello.pdf");
 ```
 
-## What it covers {changed 1.23.0}
+## What it covers {changed 1.24.0}
 
 - **Layout**: `Column`, `Row`, `Table` (row and column spans, header and footer rows repeated on every page, cell backgrounds and borders that fill the
   row in any call order, as in QuestPDF), padding,
   borders, corner radius, background, sizes, alignment, page breaks, `Layers`, `Inlined`, `MultiColumn`, `EnsureSpace`,
   `Decoration`, lists, transforms and `ScaleToFit`, which draws content smaller until it fits a box of fixed size,
   for badges and labels. `Repeat` draws content again on each later page its parent continues on, `StopPaging` keeps
-  content to its first page, and `ExtendLastCellsToTableBottom` runs short columns to the end of a table.
+  content to its first page, and `ExtendLastCellsToTableBottom` runs short columns to the end of a table. The page's
+  `Header()`, `Content()` and `Footer()` align vertically as in QuestPDF, so `Content().AlignMiddle()` centres a cover
+  title on the page, and border calls in a row merge into one border.
 - **Text**: spans with font, size, weight, colour, decoration, spacing, superscript and subscript, OpenType features,
   justified text, `ClampLines`, headings that become bookmarks, links, and page numbers and the page count anywhere: in the header, the footer
   and the content. Section page numbers: `BeginPageNumberOfSection`, `EndPageNumberOfSection`,
