@@ -212,7 +212,7 @@
     <article class="prose">
 <h1 id="pdf-feature-checklist">PDF feature checklist</h1>
 <p class="changes"><b>Changed in 1.24.0:</b> <a href="#file-format-and-structure">File format and structure</a>, <a href="#security-and-encryption">Security and encryption</a>, <a href="#reading-rendering-and-conversion">Reading, rendering and conversion</a>.</p>
-<p>What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 138 features below, PdfPecker supports 97, supports 16 in part and leaves out 25. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The <a href="/docs/limitations/">limitations</a> page has the details of what is missing in HTML and CSS.</p>
+<p>What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 234 features below, PdfPecker supports 127, supports 38 in part and leaves out 69. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The list follows the PDF standard, ISO 32000-2 (PDF 2.0, which includes PDF 1.7), and the ISO profiles and RFCs built on it. The <a href="/docs/limitations/">limitations</a> page has the details of what is missing in HTML and CSS.</p>
 <h2 id="file-format-and-structure">File format and structure <span class="change">Changed in 1.24.0</span></h2>
 <p>The PDF file itself: versions, cross-reference tables, pages and their boxes.</p>
 <div class="table-scroll"><table>
@@ -273,6 +273,71 @@
 <td>Very large documents</td>
 <td class="mark y">✓ Yes</td>
 <td>Streaming merge and <code>MaxPages</code> limits; the readers have resource limits for hostile input.</td>
+</tr>
+<tr>
+<td>All object types (names, strings, arrays, dictionaries, streams)</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Text strings in PDFDocEncoding and UTF-16</td>
+<td class="mark y">✓ Yes</td>
+<td>Bookmarks, properties, field values and tags use UTF-16 when the text needs it.</td>
+</tr>
+<tr>
+<td>Hybrid-reference files (/XRefStm)</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written. Read; not written, since every current reader understands plain xref streams.</td>
+</tr>
+<tr>
+<td>Name trees and number trees</td>
+<td class="mark y">✓ Yes</td>
+<td>Embedded files, page labels and the structure parent tree.</td>
+</tr>
+<tr>
+<td>Page tree with inherited attributes</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Developer extensions (/Extensions)</td>
+<td class="mark y">✓ Yes</td>
+<td>Adobe extension level 8 is declared for AES-256 in PDF 1.7 files.</td>
+</tr>
+<tr>
+<td>Document parts (/DPartRoot)</td>
+<td class="mark n">✕ No</td>
+<td>PDF 2.0 page grouping, used by PDF/VT.</td>
+</tr>
+<tr>
+<td>External file streams (/F on a stream)</td>
+<td class="mark n">✕ No</td>
+<td>Stream data kept in another file. Left out on purpose: conversion never reads files by itself.</td>
+</tr>
+<tr>
+<td>User units (/UserUnit)</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written. Pages larger than 200 inches render at their real size.</td>
+</tr>
+<tr>
+<td>Thumbnail images (/Thumb)</td>
+<td class="mark n">✕ No</td>
+<td>Viewers make their own; <code>PdfCompactor</code> drops stored ones.</td>
+</tr>
+<tr>
+<td>Page-piece dictionaries (/PieceInfo)</td>
+<td class="mark n">✕ No</td>
+<td>Application data; <code>PdfCompactor</code> removes it.</td>
+</tr>
+<tr>
+<td>FlateDecode with PNG and TIFF predictors</td>
+<td class="mark y">✓ Yes</td>
+<td>Everything PdfPecker writes is Flate-compressed unless it is a JPEG.</td>
+</tr>
+<tr>
+<td>Crypt filters</td>
+<td class="mark y">✓ Yes</td>
+<td>AES-256 standard crypt filter; Identity and named filters read.</td>
 </tr>
 </tbody>
 </table></div>
@@ -410,6 +475,31 @@
 <td class="mark y">✓ Yes</td>
 <td><code>-webkit-text-stroke</code> and <code>paint-order</code>, written as PDF text render modes.</td>
 </tr>
+<tr>
+<td>Text state (spacing, scaling, rise, leading)</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Embedded Type 1 fonts</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written.</td>
+</tr>
+<tr>
+<td>Type 3 fonts</td>
+<td class="mark y">✓ Yes</td>
+<td>Written for colour glyphs.</td>
+</tr>
+<tr>
+<td>Composite (Type 0) fonts with CIDFonts</td>
+<td class="mark y">✓ Yes</td>
+<td>Identity-H encoding.</td>
+</tr>
+<tr>
+<td>Embedded CMaps and /UseCMap</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="graphics-images-and-colour">Graphics, images and colour</h2>
@@ -482,6 +572,86 @@
 <td>Filters and blur</td>
 <td class="mark p">½ Partly</td>
 <td>CSS filter, <code>backdrop-filter</code> and blurred shadows; blurs are drawn as 144 dpi images, colour filters stay vectors.</td>
+</tr>
+<tr>
+<td>Paths, fills and strokes</td>
+<td class="mark y">✓ Yes</td>
+<td>Line widths, caps, joins, miter limits and dash patterns.</td>
+</tr>
+<tr>
+<td>Graphics state (/ExtGState)</td>
+<td class="mark y">✓ Yes</td>
+<td>Opacity, blend mode, soft mask and line settings.</td>
+</tr>
+<tr>
+<td>Form XObjects</td>
+<td class="mark y">✓ Yes</td>
+<td>Shared content, stamps, watermarks and appearances.</td>
+</tr>
+<tr>
+<td>Reference XObjects (page from another file)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>PostScript XObjects</td>
+<td class="mark n">✕ No</td>
+<td>Deprecated in the spec; skipped when rendering, as viewers do.</td>
+</tr>
+<tr>
+<td>Rendering intents</td>
+<td class="mark n">✕ No</td>
+<td>Screen rendering ignores them, as most viewers do.</td>
+</tr>
+<tr>
+<td>Halftones, transfer functions, black generation, undercolour removal</td>
+<td class="mark n">✕ No</td>
+<td>Device-dependent printer settings; ignored when rendering. <code>PdfToPdfA</code> removes the ones PDF/A forbids.</td>
+</tr>
+<tr>
+<td>Marked content (BMC, BDC, EMC)</td>
+<td class="mark y">✓ Yes</td>
+<td>Written for tags, artifacts and /ActualText; read for reading order and extraction.</td>
+</tr>
+<tr>
+<td>DeviceRGB and DeviceGray</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>Indexed colour</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written. Palette PNGs are stored as RGB.</td>
+</tr>
+<tr>
+<td>Functions: sampled, exponential, stitching, PostScript calculator</td>
+<td class="mark p">½ Partly</td>
+<td>Exponential and stitching functions are written for gradients; all four types are read.</td>
+</tr>
+<tr>
+<td>Knockout groups</td>
+<td class="mark n">✕ No</td>
+<td>Rare outside print production.</td>
+</tr>
+<tr>
+<td>Image soft masks with /Matte (pre-multiplied colour)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Inline images (BI ... EI)</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written.</td>
+</tr>
+<tr>
+<td>Stencil and colour-key masks</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written.</td>
+</tr>
+<tr>
+<td>Alternate images</td>
+<td class="mark n">✕ No</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -561,6 +731,142 @@
 <td class="mark n">✕ No</td>
 <td></td>
 </tr>
+<tr>
+<td>Bookmark colour and bold or italic style</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Navigation nodes (presentation steps)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Measurement and geospatial features</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Document requirements (/Requirements)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="annotations">Annotations</h2>
+<p>Which kinds of annotation PdfPecker writes, and which it shows when rendering. Existing annotations are drawn from their stored appearance and kept when merging.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>PdfPecker</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text (sticky note) and Popup</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created. The note icon renders; pop-ups do not open, as on paper.</td>
+</tr>
+<tr>
+<td>FreeText</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created.</td>
+</tr>
+<tr>
+<td>Line, Square, Circle, Polygon and PolyLine</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created.</td>
+</tr>
+<tr>
+<td>Highlight, Underline, Squiggly and StrikeOut</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created.</td>
+</tr>
+<tr>
+<td>Caret, Rubber stamp and Ink</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created.</td>
+</tr>
+<tr>
+<td>Redact (marked for redaction)</td>
+<td class="mark n">✕ No</td>
+<td><code>PdfRedactor</code> removes content directly instead of marking it.</td>
+</tr>
+<tr>
+<td>Watermark annotations</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created. Watermarks are written as page content.</td>
+</tr>
+<tr>
+<td>Printer's mark and trap network</td>
+<td class="mark p">½ Partly</td>
+<td>Shown when the PDF stores its appearance; not created. Crop and cross marks from <code>@page { marks }</code> are page content.</td>
+</tr>
+<tr>
+<td>Projection</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Annotations without an appearance stream</td>
+<td class="mark n">✕ No</td>
+<td>PdfPecker draws only stored appearances; it does not build one for a note or highlight that has none.</td>
+</tr>
+<tr>
+<td>Hidden, NoView and Print flags</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="actions">Actions</h2>
+<p>What a link, bookmark or field can do when clicked.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>PdfPecker</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GoTo (jump inside the document)</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>GoToR and GoToE (other or embedded PDF)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>GoToDp (document part, PDF 2.0)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Named actions (next page, print)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Launch</td>
+<td class="mark n">✕ No</td>
+<td>By design; <code>PdfSanitizer</code> removes it.</td>
+</tr>
+<tr>
+<td>Hide, SetOCGState, Rendition, Sound, Movie, Trans, GoTo3DView</td>
+<td class="mark n">✕ No</td>
+<td>Media ones are removed by <code>PdfSanitizer</code>.</td>
+</tr>
+<tr>
+<td>Additional actions (/AA) on pages, fields and the document</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="forms-acroform">Forms (AcroForm)</h2>
@@ -613,6 +919,16 @@
 <td>Fill in complex scripts</td>
 <td class="mark p">½ Partly</td>
 <td>Arabic, Hebrew and Indic values are stored but not shaped in the appearance.</td>
+</tr>
+<tr>
+<td>Comb, file-select and rich-text fields</td>
+<td class="mark p">½ Partly</td>
+<td>Not created. Read and filled as ordinary text fields, without comb spacing or rich text.</td>
+</tr>
+<tr>
+<td>FDF and XFDF import and export</td>
+<td class="mark n">✕ No</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -676,6 +992,31 @@
 <td>Sanitising</td>
 <td class="mark p">½ Partly</td>
 <td><code>PdfSanitizer</code> removes active content and <code>PdfCompactor</code> metadata and application data; hidden layers and hidden text stay.</td>
+</tr>
+<tr>
+<td>AES-256 revision 5 (Adobe extension level 3)</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written.</td>
+</tr>
+<tr>
+<td>Unencrypted metadata (/EncryptMetadata false)</td>
+<td class="mark p">½ Partly</td>
+<td>Read, not written.</td>
+</tr>
+<tr>
+<td>Unencrypted wrapper documents (PDF 2.0)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>AES-GCM encryption (ISO/TS 32003)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Integrity protection (ISO/TS 32004)</td>
+<td class="mark n">✕ No</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
@@ -755,6 +1096,127 @@
 <td class="mark p">½ Partly</td>
 <td>Uses the platform's online check; the OCSP and CRL data stored in the PDF is not used.</td>
 </tr>
+<tr>
+<td>adbe.pkcs7.sha1</td>
+<td class="mark p">½ Partly</td>
+<td>Not written. Verified only with <code>AllowSha1</code>.</td>
+</tr>
+<tr>
+<td>adbe.x509.rsa_sha1</td>
+<td class="mark n">✕ No</td>
+<td>An obsolete PKCS#1 format.</td>
+</tr>
+<tr>
+<td>Field locking (FieldMDP, /Lock)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Usage rights (UR3)</td>
+<td class="mark n">✕ No</td>
+<td>Adobe Reader extensions.</td>
+</tr>
+<tr>
+<td>Seed values (/SV)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>EdDSA and SHA-3 (ISO 32001, ISO 32002)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="tagging-and-accessibility">Tagging and accessibility</h2>
+<p>The structure that screen readers and reflow use.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>PdfPecker</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF 2.0 structure namespaces</td>
+<td class="mark p">½ Partly</td>
+<td>Written for PDF/UA-2.</td>
+</tr>
+<tr>
+<td>Alternate text (/Alt)</td>
+<td class="mark y">✓ Yes</td>
+<td>From <code>alt</code> and form tooltips.</td>
+</tr>
+<tr>
+<td>Replacement text (/ActualText)</td>
+<td class="mark y">✓ Yes</td>
+<td>For ligatures and glyphs that copy as other characters.</td>
+</tr>
+<tr>
+<td>Abbreviation expansions (/E)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Table and list attributes</td>
+<td class="mark y">✓ Yes</td>
+<td>Headers, scope, row and column spans, list numbering.</td>
+</tr>
+<tr>
+<td>Layout attributes (placement, spacing, colour)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Artifacts (headers, footers, decoration)</td>
+<td class="mark y">✓ Yes</td>
+<td>Running bands and decoration are marked; extraction can leave them out.</td>
+</tr>
+<tr>
+<td>Pronunciation hints</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Tagging an untagged existing PDF</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="print-production">Print production</h2>
+<p>Settings for print shops and prepress.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>PdfPecker</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Printer's marks</td>
+<td class="mark p">½ Partly</td>
+<td>Crop and cross marks from <code>@page { marks }</code>, as page content.</td>
+</tr>
+<tr>
+<td>Separation dictionaries</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>Trapping</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>OPI (Open Prepress Interface)</td>
+<td class="mark n">✕ No</td>
+<td><code>PdfToPdfA</code> removes it.</td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="standards">Standards</h2>
@@ -823,6 +1285,79 @@
 <td class="mark n">✕ No</td>
 <td></td>
 </tr>
+<tr>
+<td>Well-Tagged PDF (WTPDF)</td>
+<td class="mark p">½ Partly</td>
+<td>PDF/UA-2 output follows the same rules; WTPDF itself is not declared.</td>
+</tr>
+<tr>
+<td>PDF/R raster (ISO 23504)</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>PAdES with a signature policy or commitment type</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="internet-standards-rfcs">Internet standards (RFCs)</h2>
+<p>The RFCs that PDF signatures and links depend on.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>PdfPecker</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RFC 8118: the application/pdf media type</td>
+<td class="mark y">✓ Yes</td>
+<td>Files follow it; embedded files carry their own MIME type.</td>
+</tr>
+<tr>
+<td>RFC 5652: Cryptographic Message Syntax</td>
+<td class="mark y">✓ Yes</td>
+<td>Own CMS writer and reader.</td>
+</tr>
+<tr>
+<td>RFC 5035: signing-certificate-v2 attribute</td>
+<td class="mark y">✓ Yes</td>
+<td>Required by PAdES.</td>
+</tr>
+<tr>
+<td>RFC 5280: X.509 certificates and CRLs</td>
+<td class="mark y">✓ Yes</td>
+<td>Chains are checked with the platform's certificate store.</td>
+</tr>
+<tr>
+<td>RFC 6960: OCSP</td>
+<td class="mark p">½ Partly</td>
+<td>Fetched for long-term validation; stored responses are not used when verifying.</td>
+</tr>
+<tr>
+<td>RFC 8017 and RFC 4055: RSA PKCS#1 and RSA-PSS</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>RFC 5758: ECDSA in CMS</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
+<tr>
+<td>RFC 8032 and RFC 8419: EdDSA in CMS</td>
+<td class="mark n">✕ No</td>
+<td></td>
+</tr>
+<tr>
+<td>RFC 3986: URIs in links</td>
+<td class="mark y">✓ Yes</td>
+<td></td>
+</tr>
 </tbody>
 </table></div>
 <h2 id="metadata-and-attachments">Metadata and attachments</h2>
@@ -880,6 +1415,16 @@
 <td>Strip photo metadata</td>
 <td class="mark y">✓ Yes</td>
 <td><code>PdfOptions.StripImageMetadata</code> removes EXIF (GPS too), XMP and IPTC from embedded JPEGs.</td>
+</tr>
+<tr>
+<td>Associated files (/AF)</td>
+<td class="mark y">✓ Yes</td>
+<td>Document-level, with /AFRelationship, for PDF/A-3 and e-invoices.</td>
+</tr>
+<tr>
+<td>Web Capture</td>
+<td class="mark n">✕ No</td>
+<td></td>
 </tr>
 </tbody>
 </table></div>
