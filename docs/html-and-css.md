@@ -121,11 +121,13 @@ balanced (`column-fill: balance`) or filled in turn (`column-fill: auto`). `colu
 repeated table headers and right-to-left columns work as in Chrome, which also ignores `break-before: page` inside
 columns.
 
-## Percentage heights {new 1.11.0}
+## Percentage heights {changed 1.25.0}
 
 Percentage `height`, `min-height` and `max-height` resolve as in browsers when the containing block's height is
 definite: a length, a chain of percentages up to the page (`html, body { height: 100% }`), a stretched flex or grid
-item, a flex item grown in a container of definite height, an `aspect-ratio` height, or the padding box for absolutely
+item, a flex item grown in a container of definite height, a column flex item flexed from a length basis
+(`flex: 1 1 0`) or with a height of its own, also when the container has only a `min-height`, a stretched flex item
+whose own `min-height` sizes the row, an `aspect-ratio` height, or the padding box for absolutely
 positioned boxes. Children of a table cell resolve against it when the cell has a fixed height or the table has a
 height. Against an `auto` height a percentage behaves as `auto`, as in browsers.
 
@@ -213,14 +215,19 @@ collapse on its own, as newer style sheets write it instead of `white-space`. `h
 lines in a row end in a hyphen; the line that would be the third breaks at a space instead. Chrome ignores it, so the
 specification is the reference.
 
-## Vertical text {changed 1.21.0}
+## Vertical text {changed 1.25.0}
 
 `writing-mode: vertical-rl`, `vertical-lr`, `sideways-rl` and `sideways-lr` on blocks, inline-blocks, flex items and
 table cells turn the box's text a quarter turn, as Chrome draws Latin text in those modes (in `vertical-lr` the
 lines run from left to right, as in Chrome; floats and boxes with a size inside vertical text get their size and side
 as Chrome gives them): column headers in narrow
-table cells, labels along the side of a card, and spine text. See [Limitations](/docs/limitations/#text-and-fonts) for
-what is not done yet, such as upright CJK.
+table cells, labels along the side of a card, and spine text.
+
+Chinese and Japanese characters stand upright, one em each, drawn with the font's vertical forms (`vert`), as Chrome
+sets them. `text-orientation` chooses: `mixed` (the default) stands CJK upright and turns Latin text, `upright` stands
+every character upright, and `sideways` turns them all. `text-combine-upright: all` sets an element's text across the
+line in one em, as dates and numbers are set in Japanese, and images and SVG stay upright with their natural ratio.
+See [Limitations](/docs/limitations/#text-and-fonts) for what is not done yet.
 
 ```html
 <th style="writing-mode: sideways-lr">Quarter 1</th>   <!-- reads from bottom to top -->
@@ -381,13 +388,15 @@ most two levels deep.
 <div style="width: 80mm; height: 25mm; -pdfpecker-scale-to-fit: shrink">Dr. Maximiliane Alexandra von Rosenberg-Hohenstein</div>
 ```
 
-## Pagination {changed 1.23.0}
+## Pagination {changed 1.25.0}
 
 Lines and images are never cut in half at a page boundary; table header rows repeat at the top and `<tfoot>` rows at
 the bottom of every page a table spans, as in Chrome; backgrounds and borders continue across pages. A table row that
 does not fit at the bottom of a page breaks inside, cell by cell, as Chrome breaks it, with the header and footer
 repeated around it; it moves to the next page whole only when a cell would have nothing before the break (its first
-lines with `orphans`, an image or a drawing), when it has `break-inside: avoid`, or when it has cells spanning rows.
+lines with `orphans`, an image or a drawing) or when it has `break-inside: avoid`. Rows with cells that span rows
+break the same way, and a spanning cell goes on below the header repeated on the next page; a spanning cell taller than
+its rows shares the extra height out over them, as in Chrome.
 `break-before` and `break-after` work on table rows and row groups, `break-inside: avoid` on a `tbody` keeps a group
 together, and `break-after: avoid` on a group's header row keeps it with the next row, as in Chrome.
 A flex row that crosses the end of a page breaks inside its items, as in Chrome, and moves to the next page whole only

@@ -4,6 +4,36 @@ What changed in each PdfPecker release on [NuGet](https://www.nuget.org/packages
 manual for any of these versions can be downloaded as a PDF with the version picker next to Download PDF; the source
 of every change is in the [PdfPecker repository](https://github.com/Moonwalker1307/PdfPecker).
 
+## 1.25.0
+
+Released 12 November 2026.
+
+- Announce 1.25.0 as the last release for .NET 8 and 9 ([#739](https://github.com/Moonwalker1307/PdfPecker/pull/739))
+- Bound the stops premultiplied gradient interpolation adds ([#740](https://github.com/Moonwalker1307/PdfPecker/pull/740))
+- Solid text decorations as thick and placed as in Chrome ([#738](https://github.com/Moonwalker1307/PdfPecker/pull/738))
+- font-variant-alternates and @font-feature-values ([#736](https://github.com/Moonwalker1307/PdfPecker/pull/736))
+- text-autospace between ideographs and Latin letters or digits ([#734](https://github.com/Moonwalker1307/PdfPecker/pull/734))
+- Interpolate translucent CSS gradient stops premultiplied ([#737](https://github.com/Moonwalker1307/PdfPecker/pull/737))
+- font-palette and @font-palette-values for colour fonts ([#735](https://github.com/Moonwalker1307/PdfPecker/pull/735))
+- Ruby annotations above their base text ([#733](https://github.com/Moonwalker1307/PdfPecker/pull/733))
+- A flex row with an object-fit: cover image moves whole to the next page ([#732](https://github.com/Moonwalker1307/PdfPecker/pull/732))
+- Images keep a given height when min-width or max-width limits their width ([#731](https://github.com/Moonwalker1307/PdfPecker/pull/731))
+- Table rows with cells that span rows break across pages ([#718](https://github.com/Moonwalker1307/PdfPecker/pull/718))
+- Count positioned boxes carried up through captures against the relayout budget ([#729](https://github.com/Moonwalker1307/PdfPecker/pull/729))
+- Tables count against the relayout budget ([#728](https://github.com/Moonwalker1307/PdfPecker/pull/728))
+- Target .NET 11 ([#725](https://github.com/Moonwalker1307/PdfPecker/pull/725))
+- PDF/A-2a and PDF/A-3a ([#715](https://github.com/Moonwalker1307/PdfPecker/pull/715))
+- Look at most 64 characters for a cluster one font should draw ([#724](https://github.com/Moonwalker1307/PdfPecker/pull/724))
+- Charge the renderer's budget for the pixel rows that paths cross ([#723](https://github.com/Moonwalker1307/PdfPecker/pull/723))
+- Upright CJK, text-combine-upright and upright images in vertical text ([#719](https://github.com/Moonwalker1307/PdfPecker/pull/719))
+- Draw annotations that have no appearance stream ([#722](https://github.com/Moonwalker1307/PdfPecker/pull/722))
+- Shape Khmer, Myanmar, Sinhala and Tibetan as HarfBuzz does ([#721](https://github.com/Moonwalker1307/PdfPecker/pull/721))
+- PDF/X-4 output for print shops ([#720](https://github.com/Moonwalker1307/PdfPecker/pull/720))
+- CMYK colours with device-cmyk() ([#717](https://github.com/Moonwalker1307/PdfPecker/pull/717))
+- Percentage heights in flex items with a definite flexed or stretched height ([#716](https://github.com/Moonwalker1307/PdfPecker/pull/716))
+- SVG filters count the pixels their content fills ([#714](https://github.com/Moonwalker1307/PdfPecker/pull/714))
+- Skip substituting declarations that a later one of the property overrides ([#713](https://github.com/Moonwalker1307/PdfPecker/pull/713))
+
 ## 1.24.0
 
 Released 10 November 2026.

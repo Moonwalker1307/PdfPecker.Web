@@ -17,7 +17,11 @@ File.WriteAllBytes("hello.pdf", pdf);
 dotnet add package PdfPecker
 ```
 
-The package targets `net8.0`, `net9.0` and `net10.0`, so it works on .NET 8 and later.
+The package targets `net8.0`, `net9.0`, `net10.0` and `net11.0`, so it works on .NET 8 and later.
+
+**1.25.0 is the last release for .NET 8 and 9.** Microsoft ended support for both on 10 November 2026. The next
+release targets .NET 10 and later only; 1.25.0 and earlier releases keep working on .NET 8 and 9. This applies to
+PdfPecker.Fluent, PdfPecker.Testing, PdfPecker.Razor and the `pdfpecker` tool too.
 
 ### Other packages {new 1.23.0}
 
@@ -59,7 +63,7 @@ footers and the rest are set with [`PdfOptions`](/docs/options/).
 
 ## System requirements
 
-**Required:** the .NET 8, .NET 9 or .NET 10 runtime (or later). Nothing else: the library is pure managed code with no
+**Required:** the .NET 8, 9, 10 or 11 runtime (or later). Nothing else: the library is pure managed code with no
 native binaries, browser or third-party packages, so it runs wherever .NET runs (Windows, Linux, macOS; x64 and ARM64).
 The rendered pages are the same on every version; only the compressed bytes can differ, because each .NET version ships
 its own zlib build.

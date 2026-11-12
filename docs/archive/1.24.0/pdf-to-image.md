@@ -1,0 +1,135 @@
+# PDF to image {changed 1.24.0}
+
+`PdfToImage` and `PdfRenderer` render PDF pages to PNG, JPEG, WebP or TIFF (or raw RGBA pixels). This works for any PDF,
+not only PdfPecker's own output, and also uses no third-party packages: the PDF parser, font engines, JPEG and fax
+decoders, rasterizer and the PNG, JPEG, WebP and TIFF encoders are all part of the library.
+
+```csharp
+// Every page as PNG bytes (rendered in parallel), or one page (0-based index)
+byte[][] pages = PdfToImage.Convert(pdfBytes, new ImageOptions { Dpi = 150 });
+byte[] first = PdfToImage.ConvertPage(pdfBytes, 0);
+
+// report.pdf -> out/report-1.png, out/report-2.png, ...
+PdfToImage.ConvertFile("report.pdf", "out");
+
+// JPEG or lossless WebP: report.pdf -> out/report-1.jpg, ... (or .webp)
+PdfToImage.ConvertFile("report.pdf", "out", new ImageOptions { Format = PdfImageFormat.Jpeg, Quality = 90 });
+byte[][] webps = PdfToImage.Convert(pdfBytes, new ImageOptions { Format = PdfImageFormat.WebP });
+
+// Open once, render many pages; RenderedImage also exposes the RGBA pixels
+var renderer = PdfRenderer.Open(pdfBytes, password: null);
+RenderedImage image = renderer.RenderPage(2, new ImageOptions { Width = 800 });
+image.SavePng("page3.png");
+File.WriteAllBytes("page3.jpg", image.ToJpeg(quality: 85));
+File.WriteAllBytes("page3.webp", image.ToWebP());
+
+// The whole PDF as one multi-page TIFF, here black and white for fax or archiving
+byte[] tiff = PdfToImage.ConvertToTiff(pdfBytes, new ImageOptions { Dpi = 200, TiffColorMode = TiffColorMode.BlackAndWhite });
+PdfToImage.ConvertFileToTiff("report.pdf", "report.tif");
+```
+
+## HTML to images {new 1.13.0}
+
+`HtmlToImage` converts HTML straight to one image per page, for previews, thumbnails and e-mails. It is the shortcut
+for `HtmlToPdf.Convert` followed by `PdfToImage.Convert`, takes the same `PdfOptions` and `ImageOptions`, and gives
+the same images. `Security` and `Signature` are ignored, since they change nothing on the page.
+
+```csharp
+byte[][] pages = HtmlToImage.Convert(html, new PdfOptions { PageSize = PageSize.A4 }, new ImageOptions { Dpi = 96 });
+byte[][] jpegs = await HtmlToImage.ConvertAsync(html, imageOptions: new ImageOptions { Format = PdfImageFormat.Jpeg });
+```
+
+## Output formats {changed 1.19.0}
+
+Output formats (`ImageOptions.Format`, default `Png`; `RenderedImage.Encode()`/`Save()` use it too):
+
+- **PNG**: lossless, RGB for opaque pages and RGBA otherwise.
+- **JPEG**: baseline JFIF with the standard (IJG) quantisation tables scaled by `Quality` (1 to 100, default 85) and
+  Huffman tables optimised per image. Below quality 90 colour is subsampled 4:2:0; from 90 it keeps full resolution
+  (4:4:4), which keeps coloured text sharp. JPEG has no transparency, so a `Transparent` render is flattened onto
+  `BackgroundColor` (white by default). At quality 90 a 150 DPI text page decodes at about 45 dB PSNR.
+- **WebP**: always lossless (VP8L), alpha included, decoding to exactly the PNG's pixels and usually 50% to 70%
+  smaller. Pages with up to 256 colours use a palette (packed 2, 4 or 8 pixels per byte when small); others use
+  subtract-green and per-tile prediction, then LZ77, a colour cache and canonical prefix codes. Here `Quality` is the
+  compression effort (default 29): higher spends more time searching for a smaller file and never changes a pixel;
+  85, the default before 1.19.0, makes files about 1% smaller and takes nearly twice as long. Lossy WebP is
+  not written. WebP is limited to 16,384 pixels per side (JPEG to 65,535); larger images throw `NotSupportedException`.
+- **TIFF**: lossless, one page per file with `Format = PdfImageFormat.Tiff` (`.tif` from `ConvertFile`, or
+  `RenderedImage.ToTiff()`), or every page in one multi-page file with `ConvertToTiff`, `ConvertToTiffAsync`,
+  `ConvertFileToTiff` and `PdfRenderer.RenderAllToTiff`. See [TIFF](#tiff).
+
+## TIFF {new 1.10.0}
+
+`ImageOptions.TiffColorMode` picks `Color` (the default: RGB, or RGBA when the render is transparent), `Grayscale` or
+`BlackAndWhite`. `TiffCompression` defaults to CCITT Group 4 for black and white and LZW otherwise; `None`, `Lzw`,
+`Deflate`, `PackBits` and `CcittGroup4` (always black and white) can be set, and all of them are lossless. For black and
+white, `TiffThreshold` (1 to 255, default 128) is the brightness below which a pixel becomes black. Greyscale and black
+and white flatten transparency onto `BackgroundColor`, and `Dpi` is written into the file so it prints at the right
+size. Files are classic TIFF, so output over 4 GB throws `NotSupportedException` (BigTIFF is not written).
+
+```csharp
+// Greyscale archive copy with Deflate
+byte[] archive = PdfToImage.ConvertToTiff(pdfBytes, new ImageOptions
+{
+    Dpi = 300,
+    TiffColorMode = TiffColorMode.Grayscale,
+    TiffCompression = TiffCompression.Deflate,
+});
+```
+
+## Options {changed 1.19.0}
+
+`ImageOptions` sets `Dpi` (default 150) or a target `Width`/`Height` in pixels, `BackgroundColor` or `Transparent`,
+`RenderAnnotations`, `Password`, `MaxDegreeOfParallelism`, `PngCompression`, `Format`, `Quality` (85 for JPEG and 29 for WebP until it
+is set; an `ArgumentOutOfRangeException` outside 1 to 100) and the [TIFF](#tiff) options. A `PdfRenderer` is thread-safe and
+shares decoded fonts and images between pages. Encrypted files open with the user or owner password
+(`PdfPasswordException` otherwise); unreadable files throw `InvalidDataException`, as does a page that needs more than
+20 million drawing operations (nested forms can multiply a few bytes into billions). Pass a cancellation token to
+bound the time a page may take.
+
+## Pixels for OCR and image processing {new 1.24.0}
+
+`PdfRenderer.RenderPage` can draw a page into a buffer of yours as grey, RGB or RGBA bytes, rows from the top without
+padding, instead of making a new `RenderedImage`. `GetPixelSize` gives the size to allocate, so one buffer can serve
+every page. Grey and RGB flatten a transparent page onto `BackgroundColor` over white, as JPEG output does.
+
+```csharp
+var renderer = PdfRenderer.Open(scanBytes, password: null);
+var options = new ImageOptions { Dpi = 300 };
+byte[] buffer = [];
+for (int i = 0; i < renderer.PageCount; i++)
+{
+    var (w, h) = renderer.GetPixelSize(i, options);
+    if (buffer.Length < w * h) buffer = new byte[w * h];
+    renderer.RenderPage(i, buffer, ImagePixelFormat.Gray, options);
+    // ... hand w x h grey pixels to OCR or image analysis
+}
+```
+
+`ImageToPixels.Convert` does the same for image files: it decodes a PNG, JPEG, GIF, WebP, BMP or TIFF (any page of a
+multi-page TIFF, with `GetFrameCount` and `ImageToPixelsOptions.Frame`) straight to `ImagePixels` in grey, RGB or RGBA,
+with the colour conversions, EXIF orientation and size limits of [ImageToPdf](/docs/images-to-pdf/), and without making
+a PDF of the image first. A 300 dpi A4 PNG decodes in about a third of the time that going through a PDF took, with a
+small fraction of the memory.
+
+```csharp
+ImagePixels scan = ImageToPixels.ConvertFile("page.png", new ImageToPixelsOptions { Format = ImagePixelFormat.Gray });
+Console.WriteLine($"{scan.Width} x {scan.Height}, {scan.Pixels.Length} bytes");
+```
+
+## What the renderer supports
+
+
+- **Files**: cross-reference tables and streams, object streams, incremental updates, damaged files (rebuilt by
+  scanning), RC4 and AES-128/256 encryption, all standard filters (Flate, LZW, ASCII85, ASCIIHex, RunLength, predictors).
+- **Graphics**: paths, fills (non-zero and even-odd), strokes with joins, caps and dashes, clipping, anti-aliasing,
+  all blend modes, constant alpha, soft masks, transparency groups, axial, radial, function and mesh shadings
+  (types 1 to 7), tiling patterns, form XObjects, optional content (layers) and annotation appearances.
+- **Text**: embedded TrueType, OpenType, CFF and Type 1 fonts, Type 3 fonts, CID fonts with CMaps, vertical text,
+  all text rendering modes. The 14 standard fonts and non-embedded fonts are drawn with built-in Liberation and
+  DejaVu-derived faces stretched to the document's widths.
+- **Images**: every bit depth and colour space (Gray, RGB, CMYK, Lab, ICC-based, Indexed, Separation, DeviceN),
+  baseline and progressive JPEG, JPEG 2000 (`JPXDecode`, including embedded alpha), JBIG2 (generic, text, symbol,
+  refinement and halftone regions, with `JBIG2Globals`), CCITT fax, stencil masks, colour-key masks and soft masks.
+
+For what the renderer does not support yet, see [Limitations](/docs/limitations/).

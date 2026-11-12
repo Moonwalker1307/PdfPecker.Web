@@ -1,14 +1,14 @@
 # PDF feature checklist
 
-What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 234 features below, PdfPecker supports 127, supports 38 in part and leaves out 69. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The list follows the PDF standard, ISO 32000-2 (PDF 2.0, which includes PDF 1.7), and the ISO profiles and RFCs built on it. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
+What the PDF format and other PDF libraries offer, and whether PdfPecker does it. Of the 234 features below, PdfPecker supports 130, supports 37 in part and leaves out 67. Some of those are left out on purpose, such as JavaScript in PDFs and the old RC4 encryption. The list follows the PDF standard, ISO 32000-2 (PDF 2.0, which includes PDF 1.7), and the ISO profiles and RFCs built on it. The [limitations](/docs/limitations/) page has the details of what is missing in HTML and CSS.
 
-## File format and structure {changed 1.24.0}
+## File format and structure {changed 1.25.0}
 
 The PDF file itself: versions, cross-reference tables, pages and their boxes.
 
 | Feature | PdfPecker | Notes |
 | --- | --- | --- |
-| Write PDF 1.4 and 1.7 | ✓ Yes | 1.4 for plain output, 1.7 when tagged, encrypted or PDF/A. |
+| Write PDF 1.4 and 1.7 | ✓ Yes | 1.4 for plain output, 1.7 when tagged, encrypted or PDF/A, 1.6 for PDF/X-4. |
 | Write PDF 2.0 | ✓ Yes | Used for PDF/A-4 and PDF/UA-2 output. |
 | Compressed object streams and xref streams | ✓ Yes | `PdfCompactor` packs objects into them; `HtmlToPdf` writes a classic xref table. |
 | Incremental updates | ✓ Yes | Signing and long-term validation append to the file, so earlier signatures stay valid. |
@@ -16,7 +16,7 @@ The PDF file itself: versions, cross-reference tables, pages and their boxes.
 | Open damaged files | ✓ Yes | Rebuilds a broken cross-reference table from the object headers. |
 | Page sizes, orientation and `@page` | ✓ Yes | A4, Letter, Legal, A3, A5, any custom size, landscape, and per-page sizes from CSS `@page`. |
 | Page rotation | ✓ Yes | `PdfPages.Rotate` on existing files; `/Rotate` is honoured when rendering. |
-| Page boxes (Crop, Bleed, Trim, Art) | ½ Partly | CropBox is read and kept. CSS `@page { bleed; marks: crop cross }` writes the bleed and trim boxes with crop and cross marks; art boxes are not written. |
+| Page boxes (Crop, Bleed, Trim, Art) | ½ Partly | CropBox is read and kept. CSS `@page { bleed; marks: crop cross }` writes the bleed and trim boxes with crop and cross marks, and PDF/X-4 gives every page both; art boxes are not written. |
 | Very large documents | ✓ Yes | Streaming merge and `MaxPages` limits; the readers have resource limits for hostile input. |
 | All object types (names, strings, arrays, dictionaries, streams) | ✓ Yes |  |
 | Text strings in PDFDocEncoding and UTF-16 | ✓ Yes | Bookmarks, properties, field values and tags use UTF-16 when the text needs it. |
@@ -50,7 +50,7 @@ Ways to produce a new PDF.
 | Content rendered by JavaScript | ✕ No | By design: no scripts run. Render the HTML on the server first. |
 | Low-level drawing API | ✕ No | There is no canvas-style API to draw paths and text at coordinates; content comes from HTML, Markdown, images or the fluent API. |
 
-## Text and fonts {changed 1.21.0}
+## Text and fonts {changed 1.25.0}
 
 How text is stored, so it looks right and stays searchable.
 
@@ -62,8 +62,8 @@ How text is stored, so it looks right and stays searchable.
 | Variable fonts | ✓ Yes | Instanced at the weight and width the CSS asks for. |
 | Copyable, searchable Unicode text | ✓ Yes | `ToUnicode` maps on every embedded font. |
 | Kerning, ligatures and OpenType features | ✓ Yes | Numerals, fractions, small capitals, super and subscripts. |
-| Complex scripts | ½ Partly | Arabic, Hebrew, nine Indic scripts, Thai and Lao are shaped. Khmer, Myanmar, Sinhala, Tibetan and others are not. |
-| Vertical text | ½ Partly | Drawn as turned horizontal text; CJK characters are not set upright. |
+| Complex scripts | ½ Partly | Arabic, Hebrew, nine Indic scripts, Khmer, Myanmar, Sinhala, Tibetan, Thai and Lao are shaped. Mongolian, Javanese, Adlam, Syriac and others are not. |
+| Vertical text | ½ Partly | CJK characters stand upright with the font's vertical forms, `text-combine-upright` and upright images, as in Chrome; tables inside vertical text are turned with it. |
 | Fallback fonts | ✓ Yes | Bundled fonts for Central European, Greek, Cyrillic and symbols when your fonts lack a character. |
 | Colour fonts and emoji | ½ Partly | COLR colour fonts, versions 0 and 1 (such as Noto Color Emoji), print in colour as text; SVG and bitmap colour glyphs are not drawn. |
 | Outlined and stroked text | ✓ Yes | `-webkit-text-stroke` and `paint-order`, written as PDF text render modes. |
@@ -73,7 +73,7 @@ How text is stored, so it looks right and stays searchable.
 | Composite (Type 0) fonts with CIDFonts | ✓ Yes | Identity-H encoding. |
 | Embedded CMaps and /UseCMap | ✓ Yes |  |
 
-## Graphics, images and colour
+## Graphics, images and colour {changed 1.25.0}
 
 What can be drawn on a page.
 
@@ -86,8 +86,8 @@ What can be drawn on a page.
 | Tiling patterns | ✓ Yes | Repeated backgrounds and SVG patterns. |
 | Images: JPEG, PNG, GIF, WebP, BMP, TIFF | ✓ Yes | JPEG is passed through unchanged; PNG alpha becomes a soft mask. |
 | AVIF images | ✕ No | Needs an AV1 decoder, which is not planned. |
-| sRGB output intent | ✓ Yes | Written for PDF/A. |
-| CMYK | ½ Partly | CMYK JPEGs are embedded (converted to RGB for PDF/A). There is no CSS `device-cmyk()` colour, so text and shapes are always RGB. |
+| sRGB output intent | ✓ Yes | Written for PDF/A; PDF/X-4 writes the press's CMYK intent instead. |
+| CMYK | ✓ Yes | CSS `device-cmyk()` is written as DeviceCMYK for text, backgrounds, borders and SVG shapes; CMYK JPEGs are embedded. Mixes, shadows and gradients of CMYK colours stay RGB, and PDF/A converts to RGB. |
 | Spot colours (Separation, DeviceN) | ✕ No | Not written. Read and rendered in existing PDFs. |
 | Overprint control | ✕ No | Not written, and not simulated when rendering. |
 | Filters and blur | ½ Partly | CSS filter, `backdrop-filter` and blurred shadows; blurs are drawn as 144 dpi images, colour filters stay vectors. |
@@ -132,22 +132,22 @@ What a reader can click or open in a viewer.
 | Measurement and geospatial features | ✕ No |  |
 | Document requirements (/Requirements) | ✕ No |  |
 
-## Annotations
+## Annotations {changed 1.25.0}
 
 Which kinds of annotation PdfPecker writes, and which it shows when rendering. Existing annotations are drawn from their stored appearance and kept when merging.
 
 | Feature | PdfPecker | Notes |
 | --- | --- | --- |
-| Text (sticky note) and Popup | ½ Partly | Shown when the PDF stores its appearance; not created. The note icon renders; pop-ups do not open, as on paper. |
-| FreeText | ½ Partly | Shown when the PDF stores its appearance; not created. |
-| Line, Square, Circle, Polygon and PolyLine | ½ Partly | Shown when the PDF stores its appearance; not created. |
-| Highlight, Underline, Squiggly and StrikeOut | ½ Partly | Shown when the PDF stores its appearance; not created. |
-| Caret, Rubber stamp and Ink | ½ Partly | Shown when the PDF stores its appearance; not created. |
+| Text (sticky note) and Popup | ½ Partly | Shown from the appearance the PDF stores, or drawn from its properties when it has none; not created. The note icon renders; pop-ups do not open, as on paper. |
+| FreeText | ½ Partly | Shown from the appearance the PDF stores, or drawn from its properties when it has none; not created. |
+| Line, Square, Circle, Polygon and PolyLine | ½ Partly | Shown from the appearance the PDF stores, or drawn from its properties when it has none; not created. |
+| Highlight, Underline, Squiggly and StrikeOut | ½ Partly | Shown from the appearance the PDF stores, or drawn from its properties when it has none; not created. |
+| Caret, Rubber stamp and Ink | ½ Partly | Shown when the PDF stores its appearance (ink is also drawn without one); not created. |
 | Redact (marked for redaction) | ✕ No | `PdfRedactor` removes content directly instead of marking it. |
 | Watermark annotations | ½ Partly | Shown when the PDF stores its appearance; not created. Watermarks are written as page content. |
 | Printer's mark and trap network | ½ Partly | Shown when the PDF stores its appearance; not created. Crop and cross marks from `@page { marks }` are page content. |
 | Projection | ✕ No |  |
-| Annotations without an appearance stream | ✕ No | PdfPecker draws only stored appearances; it does not build one for a note or highlight that has none. |
+| Annotations without an appearance stream | ✓ Yes | Notes, highlights, underlines, strike-outs, squiggly lines, shapes, lines with their arrowheads, ink and free text are drawn from their properties when rendering, as viewers draw them. |
 | Hidden, NoView and Print flags | ✓ Yes |  |
 
 ## Actions
@@ -256,7 +256,7 @@ Settings for print shops and prepress.
 | Trapping | ✕ No |  |
 | OPI (Open Prepress Interface) | ✕ No | `PdfToPdfA` removes it. |
 
-## Standards
+## Standards {changed 1.25.0}
 
 ISO and industry profiles.
 
@@ -265,13 +265,13 @@ ISO and industry profiles.
 | PDF/A-1 | ✕ No | Only PDF/A-2 and later. |
 | PDF/A-2b, 2u, 3b, 3u | ✓ Yes | Checked with veraPDF in CI. |
 | PDF/A-4 and PDF/A-4f | ✓ Yes |  |
-| PDF/A level a (2a, 3a) | ½ Partly | Tagging is there (PDF/UA), but the level a conformance itself is not declared. |
+| PDF/A level a (2a, 3a) | ✓ Yes | Tagged from the HTML with a declared language; checked with veraPDF in CI, also with PDF/UA-1. |
 | PDF/A-4e (engineering) | ✕ No |  |
 | Tagged PDF | ✓ Yes | Structure tree built from the HTML. |
 | PDF/UA-1 and PDF/UA-2 | ✓ Yes | Accessible PDFs, also combined with PDF/A. |
 | Factur-X and ZUGFeRD | ✓ Yes | All profiles from Minimum to Extended and XRechnung; embedded and read back. |
 | XRechnung, Peppol BIS 3.0 and OIOUBL XML | ✓ Yes | Built from invoice data, totals checked against EN 16931. |
-| PDF/X (print production) | ✕ No | No PDF/X-1a, X-3 or X-4. |
+| PDF/X (print production) | ½ Partly | PDF/X-4 for the press whose ICC profile you pass; no PDF/X-1a or X-3. |
 | PDF/E and PDF/VT | ✕ No |  |
 | Well-Tagged PDF (WTPDF) | ½ Partly | PDF/UA-2 output follows the same rules; WTPDF itself is not declared. |
 | PDF/R raster (ISO 23504) | ✕ No |  |

@@ -26,7 +26,7 @@ passes veraPDF's PDF/UA-1 checks, on its own and together with PDF/A-2b or PDF/A
 title: `Title`, the `<title>` element or else the first heading; without one, conversion throws `ArgumentException`, as
 it does when `Security` leaves out `PdfPermissions.ExtractForAccessibility`.
 
-## PDF/UA-2 {new 1.7.0}
+## PDF/UA-2 {changed 1.25.0}
 
 `PdfUA2` (ISO 14289-2:2024) is the PDF 2.0 successor: the file is written as PDF 2.0, its tags are in the PDF 2.0
 structure namespace (block quotes, quotes and code, which PDF 2.0 dropped, keep their PDF 1.7 type and are role mapped
@@ -35,6 +35,10 @@ lists state their numbering and form fields describe themselves, and the XMP say
 2024. It has the same title and language requirements as `PdfUA1` and passes veraPDF's PDF/UA-2 checks, on its own and
 with `PdfA4`. PDF/UA-1 and PDF/A-2 and 3 are based on PDF 1.7, PDF/UA-2 and PDF/A-4 on PDF 2.0, so `PdfUA2` with
 `PdfA2b` (or any PDF/A-2 or 3 level) and `PdfUA1` with `PdfA4` throw `ArgumentException`.
+
+The PDF/A level A conformances, `PdfA2a` and `PdfA3a`, are the accessible archive levels: they tag the
+document from its HTML whatever `Accessibility` says and declare its language, and they combine with `PdfUA1` (see
+[PDF/A](/docs/pdfa-and-passwords/#pdfa)).
 
 ## What your HTML needs {changed 1.23.0}
 

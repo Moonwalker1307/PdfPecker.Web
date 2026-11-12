@@ -117,7 +117,7 @@ ImagePixels scan = ImageToPixels.ConvertFile("page.png", new ImageToPixelsOption
 Console.WriteLine($"{scan.Width} x {scan.Height}, {scan.Pixels.Length} bytes");
 ```
 
-## What the renderer supports
+## What the renderer supports {changed 1.25.0}
 
 
 - **Files**: cross-reference tables and streams, object streams, incremental updates, damaged files (rebuilt by
@@ -125,6 +125,8 @@ Console.WriteLine($"{scan.Width} x {scan.Height}, {scan.Pixels.Length} bytes");
 - **Graphics**: paths, fills (non-zero and even-odd), strokes with joins, caps and dashes, clipping, anti-aliasing,
   all blend modes, constant alpha, soft masks, transparency groups, axial, radial, function and mesh shadings
   (types 1 to 7), tiling patterns, form XObjects, optional content (layers) and annotation appearances.
+  Comments that carry no appearance of their own (notes, highlights, underlines, strike-outs, squiggly lines, shapes,
+  lines with their arrowheads, ink and free text) are drawn from their properties, as viewers draw them.
 - **Text**: embedded TrueType, OpenType, CFF and Type 1 fonts, Type 3 fonts, CID fonts with CMaps, vertical text,
   all text rendering modes. The 14 standard fonts and non-embedded fonts are drawn with built-in Liberation and
   DejaVu-derived faces stretched to the document's widths.

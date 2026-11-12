@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HTML to PDF in C# and .NET without a browser · PdfPecker</title>
-<meta name="description" content="PdfPecker is a fast, free (MIT) C# library that converts HTML and Markdown to PDF in .NET 8, 9 and 10. No browser, no native binaries, no third-party packages.">
+<meta name="description" content="PdfPecker is a fast, free (MIT) C# library that converts HTML and Markdown to PDF in .NET 8, 9, 10 and 11. No browser, no native binaries, no third-party packages.">
 <link rel="canonical" href="https://pdfpecker.net/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PdfPecker">
 <meta property="og:title" content="HTML to PDF in C# and .NET without a browser · PdfPecker">
-<meta property="og:description" content="PdfPecker is a fast, free (MIT) C# library that converts HTML and Markdown to PDF in .NET 8, 9 and 10. No browser, no native binaries, no third-party packages.">
+<meta property="og:description" content="PdfPecker is a fast, free (MIT) C# library that converts HTML and Markdown to PDF in .NET 8, 9, 10 and 11. No browser, no native binaries, no third-party packages.">
 <meta property="og:url" content="https://pdfpecker.net/">
 <meta property="og:image" content="https://pdfpecker.net/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -36,7 +36,7 @@
       "url": "https://pdfpecker.net/",
       "codeRepository": "https://github.com/Moonwalker1307/PdfPecker",
       "programmingLanguage": "C#",
-      "runtimePlatform": ".NET 8, .NET 9, .NET 10",
+      "runtimePlatform": ".NET 8, .NET 9, .NET 10, .NET 11",
       "license": "https://opensource.org/licenses/MIT",
       "image": "https://pdfpecker.net/og-image.png"
     }
@@ -66,7 +66,7 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow"><span>Open source · MIT ·</span> <span>C# and .NET 8, 9 and 10</span></p>
+        <p class="eyebrow"><span>Open source · MIT ·</span> <span>C# and .NET 8, 9, 10 and 11</span></p>
         <h1>HTML to PDF in <em>under a millisecond</em>.</h1>
         <p class="lead">PdfPecker turns HTML and Markdown into PDFs, and PDFs into images, from plain .NET.
           No browser to start, no native binaries to ship, no third-party packages. Just one small DLL.</p>
@@ -144,11 +144,11 @@ app.MapGet("/invoice", () =&gt;
         <article class="feature"><span class="icon" aria-hidden="true">📄</span><h3>Proper paging</h3>
           <p>Page margin boxes with running headers and running elements, page numbers in any counter style, even-page headers, its own margins for the first page, mirrored left and right pages, named pages, footnotes, tables of contents with page numbers, the page count and section page numbers anywhere in the content, repeated table headers, table rows that split across pages as in Chrome, orphans, widows and break control.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">↔️</span><h3>Right-to-left and complex scripts</h3>
-          <p>Arabic and Hebrew with full shaping, set with <code>dir</code> or <code>direction</code>, including right-to-left tables, flex and grid. Devanagari and eight more Indic scripts, Thai and Lao are shaped too. Chinese, Japanese and Korean break into lines by the kinsoku rules.</p></article>
+          <p>Arabic and Hebrew with full shaping, set with <code>dir</code> or <code>direction</code>, including right-to-left tables, flex and grid. Devanagari and eight more Indic scripts, Khmer, Myanmar, Sinhala, Tibetan, Thai and Lao are shaped too. Chinese, Japanese and Korean break into lines by the kinsoku rules, with ruby and upright vertical text.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🖼️</span><h3>Images, SVG and barcodes</h3>
           <p>PNG, JPEG, GIF, WebP, BMP and TIFF, responsive <code>srcset</code> and <code>picture</code>, photos turned upright by their EXIF, and SVG drawn as crisp vectors with gradients, masks, patterns, embedded images and every SVG filter, inline or from files. QR codes, EPC payment and Swiss QR-bill codes, Data Matrix, Code 128 and EAN-13 are drawn for you, and scans and photos go straight into a PDF.</p></article>
-        <article class="feature"><span class="icon" aria-hidden="true">🔒</span><h3>PDF/A and passwords</h3>
-          <p>Archival PDF/A-2, 3 and 4, <a href="/docs/pdf-to-pdfa/">any PDF converted to PDF/A</a>, AES-256 encryption, permissions, and text, image or SVG watermarks.</p></article>
+        <article class="feature"><span class="icon" aria-hidden="true">🔒</span><h3>PDF/A, PDF/X and passwords</h3>
+          <p>Archival PDF/A-2, 3 and 4, <a href="/docs/pdf-to-pdfa/">any PDF converted to PDF/A</a>, <a href="/docs/pdfa-and-passwords/#pdfx-4-for-print-shops">PDF/X-4 for print shops</a>, AES-256 encryption, permissions, and text, image or SVG watermarks.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">✍️</span><h3>Digital signatures</h3>
           <p>PAdES signatures with your certificate or a key in an HSM or cloud key vault, visible signature boxes and trusted timestamps, or signed into the empty signature field of your template, and certification signatures that say what may change. Verify signed PDFs and keep them verifiable for years.</p></article>
         <article class="feature"><span class="icon" aria-hidden="true">🧾</span><h3>E-invoices</h3>
@@ -341,7 +341,7 @@ PdfToImage.ConvertFile("report.pdf", "out");</code></pre>
         <div class="fit-card yes"><h3>Great for</h3>
           <ul><li>Invoices, payslips and receipts</li><li>Reports and statements</li><li>Tickets, labels and letters</li><li>Docs and READMEs from Markdown</li></ul></div>
         <div class="fit-card no"><h3>Not for</h3>
-          <ul><li>Pages that need JavaScript to render</li><li>Screenshots of live websites</li><li>Fetching images from the web on its own</li><li>Khmer, Myanmar and a few other scripts that need shaping (yet)</li></ul></div>
+          <ul><li>Pages that need JavaScript to render</li><li>Screenshots of live websites</li><li>Fetching images from the web on its own</li><li>Mongolian, Javanese and a few other scripts that need shaping (yet)</li></ul></div>
       </div>
     </div>
   </section>

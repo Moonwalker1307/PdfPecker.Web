@@ -28,7 +28,7 @@ and shaped too, with `direction` deciding which way a text chunk runs from its `
 the original characters in logical order. A font without OpenType Arabic
 features is shaped with the Unicode presentation forms instead.
 
-## Indic, Thai and Lao scripts {new 1.12.0}
+## Indic, Thai and Lao scripts {changed 1.25.0}
 
 Devanagari, Bengali, Gurmukhi, Gujarati, Oriya, Tamil, Telugu, Kannada and Malayalam are shaped as HarfBuzz shapes
 them, from a port of its Indic shaper: conjuncts and half forms join, reph moves above its cluster and pre-base vowel
@@ -42,7 +42,9 @@ options.Fonts.AddFile("fonts/NotoSansDevanagari-Regular.ttf");
 byte[] pdf = HtmlToPdf.Convert("<p lang='hi' style=\"font-family: 'Noto Sans Devanagari'\">कुल राशि: ₹1,250</p>", options);
 ```
 
-Khmer, Myanmar, Sinhala, Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped yet (see
+Khmer, Myanmar, Sinhala and Tibetan are shaped as HarfBuzz shapes them too, from ports of its Khmer and Myanmar
+shapers and its Universal Shaping Engine: vowel signs are reordered, subscript consonants and Tibetan stacks are placed,
+and a broken cluster gets a dotted circle. Mongolian, Javanese, Adlam and Syriac are not shaped yet (see
 [Limitations](/docs/limitations/#text-and-fonts)).
 
 ## Chinese, Japanese and Korean line breaking {changed 1.17.0}
@@ -91,6 +93,31 @@ Trimming needs a font with the OpenType `halt` feature, which Noto Sans CJK, Sou
 fonts have. The font decides whether dots, colons and quotes count as opening or closing (Simplified Chinese fonts draw
 `，。：` on the left, Traditional Chinese ones centre them), and `font-feature-settings` that set punctuation widths
 themselves (`palt`, `halt`, `pwid` and the like) turn trimming off, as in Chrome.
+
+## Space between CJK and Latin text {new 1.25.0}
+
+`text-autospace: normal` puts an eighth of an em between a Chinese, Japanese or Korean character and a Latin letter or
+digit next to it, as Chrome does, so `PdfPecker 1.25 版本` does not need typed spaces. `ideograph-alpha` and
+`ideograph-numeric` add only the space before letters or before digits. The space crosses inline elements, is left out
+next to punctuation, spaces and fullwidth forms and at the start of a line, and is off by default, as in Chrome.
+
+```css
+:lang(ja), :lang(zh) { text-autospace: normal; }
+```
+
+## Ruby annotations {new 1.25.0}
+
+`<ruby>`, `<rt>` and `<rp>` set furigana and other annotations over their base text, as Chrome does: the annotation
+at half the font size, centred over the base and spread round it when the two differ in width, over the kana beside it
+when it is wider, and in the line's leading where it fits, so lines with a normal line height do not move apart. The
+parentheses in `<rp>`, for readers without ruby, are not drawn.
+
+```html
+<p lang="ja"><ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby>を読む</p>
+```
+
+Vertical Japanese text, with upright characters and `text-combine-upright`, is described under
+[Vertical text](/docs/html-and-css/#vertical-text).
 
 ## Hyphenation {changed 1.24.0}
 

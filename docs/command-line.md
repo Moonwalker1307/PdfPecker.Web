@@ -16,10 +16,10 @@ every PdfPecker release under the same version, and carries the library inside i
 
 ## Native executable {new 1.24.0}
 
-A .NET 10 SDK installs the tool as a Native AOT executable from a package for its platform (`PdfPecker.Cli.linux-x64`,
+A .NET 10 or 11 SDK installs the tool as a Native AOT executable from a package for its platform (`PdfPecker.Cli.linux-x64`,
 `win-arm64`, `osx-arm64`, ...: Linux x64 and Arm64 with glibc or musl, macOS and Windows on x64 and Arm64). It starts a
 command in a few milliseconds, where the framework-dependent tool spends about a third of a second starting the
-runtime and compiling: the sample invoice converts in 17 ms instead of 355 ms. On other platforms a .NET 10 SDK
+runtime and compiling: the sample invoice converts in 17 ms instead of 355 ms. On other platforms a .NET 10 or 11 SDK
 installs `PdfPecker.Cli.any`, the framework-dependent tool, and .NET 8 and 9 SDKs install the framework-dependent tool
 as before. The commands and their output are the same in every case. On Windows the SDK starts the native tool through
 a `pdfpecker.cmd` file, which Command Prompt and PowerShell run as `pdfpecker`; Git Bash needs the full name,
