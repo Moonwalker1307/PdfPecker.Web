@@ -11,7 +11,7 @@ macOS, in Docker and in serverless functions.
 dotnet add package PdfPecker
 ```
 
-PdfPecker works with .NET 8, .NET 9 and .NET 10 and is free under the MIT license.
+PdfPecker works with .NET 8, 9, 10 and 11 and is free under the MIT license.
 
 ## Convert an HTML string to PDF
 

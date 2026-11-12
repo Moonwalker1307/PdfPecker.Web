@@ -15,38 +15,33 @@ marks every PDF feature as supported, partly supported or missing.
   range, colour and image inputs are not drawn. Form fields have no JavaScript (no calculations, formats or submit actions), and a field inside a
   transformed box, a running header or footer, or a `position: fixed` box is drawn but not fillable.
 
-## Text and fonts {changed 1.24.0}
+## Text and fonts {changed 1.25.0}
 
 - Without registered fonts or `EmbedStandardFonts`, text uses the standard PDF fonts, so characters are limited to
   the Windows-1252 set (Western European languages) plus what the [built-in fallback fonts](/docs/fonts/#missing-fonts-and-characters)
   add: Central European, Greek and Cyrillic letters and common symbols. They have no CJK or other scripts, and no
   emoji: register fonts for those.
 - Complex-script shaping covers Arabic and Hebrew (and other scripts written with Arabic letters, such as Persian and
-  Urdu), [nine Indic scripts, Thai and Lao](/docs/languages/#indic-thai-and-lao-scripts). Khmer, Myanmar, Sinhala,
-  Tibetan, Mongolian, Javanese, Adlam and Syriac are not shaped, so their vowel signs and conjuncts come out wrong.
+  Urdu), [nine Indic scripts, Khmer, Myanmar, Sinhala, Tibetan, Thai and Lao](/docs/languages/#indic-thai-and-lao-scripts).
+  Mongolian, Javanese, Adlam and Syriac are not shaped, so their vowel signs and conjuncts come out wrong.
   Thai and Lao text breaks only at spaces, since there is no dictionary for word breaks.
-- [Vertical text](/docs/html-and-css/#vertical-text) is drawn as turned horizontal text: Chinese and Japanese characters
-  are turned rather than upright (`text-orientation` and `text-combine-upright` are not supported), tables and images
-  inside vertical text are turned with it (Chrome keeps images upright and lays tables out vertically), and a vertical
-  `html` or `body` is laid out horizontally. `vi` and `vb` stay the page width and height in vertical boxes (Chrome
+- In [vertical text](/docs/html-and-css/#vertical-text), tables are turned with the text (Chrome lays them out
+  vertically), and a vertical `html` or `body` is laid out horizontally. `vi` and `vb` stay the page width and height in vertical boxes (Chrome
   swaps them), and `initial-letter` makes no drop cap in a vertical box.
 - [CJK punctuation trimming](/docs/languages/#cjk-punctuation-trimming) does not use the vertical `vhal` feature, and the
   `text-spacing` shorthand is not read. `hanging-punctuation` is not supported.
 - In Latin and other simple scripts, shaping is limited to kerning, standard ligatures and features that swap one
   glyph for another (see [OpenType features](/docs/fonts/#opentype-features)), contextual alternates, fractions and
   ordinals, and `small-caps` is synthesized from scaled
-  capitals when the font has no small capitals of its own. `font-variant-alternates` and `font-palette` are not supported, so
-  [colour fonts](/docs/fonts/#colour-fonts) use their default palette.
-- Solid underlines, overlines and line-throughs are a little thinner than Chrome's (about 1.5 px for 20 px text where
-  Chrome draws 2 px), and a solid overline sits about a pixel lower; dashed, dotted, double and wavy lines match Chrome.
-  `text-decoration` on SVG text is always a solid line in the text's fill, and is not drawn on `textPath` text.
+  capitals when the font has no small capitals of its own.
+- `text-decoration` on SVG text is always a solid line in the text's fill, and is not drawn on `textPath` text.
 - Automatic hyphenation (`hyphens: auto`) has [built-in patterns](/docs/languages/#hyphenation) for English, Danish,
   German, Dutch, Norwegian, Swedish, Spanish, French, Italian, Portuguese and Polish; other languages need their
   patterns in `PdfOptions.Hyphenation`.
 - SVG `<text>` uses only the first value of position lists; in a text chunk with right-to-left
   text, `dx` on its `tspan`s is ignored.
 
-## CSS {changed 1.24.0}
+## CSS {changed 1.25.0}
 
 - Container queries: no `scroll-state()` queries, `style()` works only on custom properties, and style containment
   (counter scoping) and the `contain` property are not implemented. A document with container queries takes about two
@@ -70,9 +65,8 @@ marks every PDF feature as supported, partly supported or missing.
   area like the root element, so `right`, `bottom` and percentage positions can land elsewhere than in Chrome.
 - `inline-size`, `block-size` and their `min-` and `max-` forms always mean width and height, also in vertical
   writing modes; the logical margins, paddings, insets and borders do follow `writing-mode`.
-- [Percentage heights](/docs/html-and-css/#percentage-heights) still count as `auto` in a flexed item of a container
-  that has only a `min-height`, against a table row's height on its own, and in footnotes and
-  running headers and footers. When pages differ in size, a box resolves its percentage height against the page it
+- [Percentage heights](/docs/html-and-css/#percentage-heights) still count as `auto` against a table row's height on
+  its own, and in footnotes and running headers and footers. When pages differ in size, a box resolves its percentage height against the page it
   starts on and keeps that height if it breaks onto a page of another height (Chrome recomputes it there).
 - `background-attachment: fixed` places images against the paper, as Chrome prints them, but gradients still move with
   their box.
@@ -92,8 +86,6 @@ marks every PDF feature as supported, partly supported or missing.
 - [`display: contents`](/docs/html-and-css/#display-contents): a link to the `id` of such an element finds no place on
   the page when its children are blocks, and in a tagged PDF the wrapper's own tag (a list or link around blocks) is
   left out; its children are tagged.
-- Gradient stops that fade to transparent are mixed in unpremultiplied colours, so the middle of such a gradient is a
-  little greyer than in Chrome.
 - A document without a doctype reads lengths without a unit as pixels and takes Chrome's quirks-mode line heights, but
   is otherwise laid out in standards mode; Chrome's quirks mode also, among other things, ignores the first paragraph's top margin in the
   body.

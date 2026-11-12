@@ -52,7 +52,7 @@ bold is synthesized as for any other font. The optical size axis (`opsz`) follow
 `font-optical-sizing: none` is set. CFF2 fonts are embedded as ordinary CFF fonts, since few PDF readers can draw
 CFF2.
 
-## OpenType features {changed 1.24.0}
+## OpenType features {changed 1.25.0}
 
 `font-variant-numeric` and `font-feature-settings` turn on a font's optional glyphs, as in a browser. Tabular figures
 line up amounts in a column:
@@ -73,7 +73,16 @@ Contextual alternates and ligatures (`calt`, `clig`, `rclt`) are on by default, 
 as Inter and Fira Code draw their arrows and programming ligatures; `font-feature-settings: "calt" 0` or
 `font-variant-ligatures: no-contextual` turns them off.
 
-## Colour fonts {new 1.21.0}
+`font-variant-alternates` turns on `historical-forms` and the stylistic sets, character variants and stylistic, swash,
+ornament and annotation alternates that an `@font-feature-values` rule names for a family, as in Chrome.
+`font-feature-settings` wins over it.
+
+```css
+@font-feature-values Inter { @styleset { open-digits: 1; } @character-variant { alt-a: 1; } }
+h1 { font-family: Inter; font-variant-alternates: styleset(open-digits) character-variant(alt-a); }
+```
+
+## Colour fonts {changed 1.25.0}
 
 Text in a COLR colour font, version 0 or 1, such as Noto Color Emoji or Nabla, prints in colour the way Chrome prints
 it: layers, gradients (also sweep gradients), blend and composite modes, clip boxes and variable colour fonts at the
@@ -86,6 +95,15 @@ parts, as Google Fonts serves Noto Color Emoji, each emoji is drawn with the par
 var options = new PdfOptions();
 options.Fonts.AddFile("fonts/NotoColorEmoji-Regular.ttf");     // family "Noto Color Emoji"
 var pdf = HtmlToPdf.Convert("<p style='font-family: sans-serif, \"Noto Color Emoji\"'>Ready 🚀 👍🏽</p>", options);
+```
+
+`font-palette` picks another of the font's palettes: `light` or `dark` from the palette types the font gives them, or a
+palette of your own from an `@font-palette-values` rule, which starts from a `base-palette` and changes colours with
+`override-colors`, as in Chrome.
+
+```css
+@font-palette-values --brand { font-family: Nabla; base-palette: 2; override-colors: 0 #0b5fff, 1 #ffb000; }
+.logo { font-family: Nabla; font-palette: --brand; }
 ```
 
 ## Font properties {new 1.17.0}

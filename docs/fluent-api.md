@@ -10,7 +10,8 @@ dotnet add package PdfPecker.Fluent
 ```
 
 It is released together with PdfPecker, always with the same version, and depends on the PdfPecker release of that
-version. It runs on .NET 8, 9 and 10, and is trimmable and Native AOT compatible.
+version. It runs on .NET 8, 9, 10 and 11, and is trimmable and Native AOT compatible. 1.25.0 is the last release for .NET 8 and
+9; the next release targets .NET 10 and later only.
 
 ```csharp
 using PdfPecker.Fluent;

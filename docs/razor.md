@@ -11,8 +11,9 @@ dotnet add package PdfPecker.Razor
 ```
 
 The package is released with PdfPecker under the same version. It depends on PdfPecker and on
-`Microsoft.AspNetCore.Components.Web` of the app's .NET version (8, 9 or 10), which holds `HtmlRenderer`. The project
-with the `.razor` files uses the Razor SDK, `<Project Sdk="Microsoft.NET.Sdk.Razor">`, so they compile to C# classes.
+`Microsoft.AspNetCore.Components.Web` of the app's .NET version (8, 9, 10 or 11), which holds `HtmlRenderer`. 1.25.0 is
+the last release for .NET 8 and 9; the next release needs .NET 10 or later. The project with the `.razor` files uses the
+Razor SDK, `<Project Sdk="Microsoft.NET.Sdk.Razor">`, so they compile to C# classes.
 
 ## A template
 

@@ -1,6 +1,6 @@
-# CSS support {changed 1.24.0}
+# CSS support {changed 1.25.0}
 
-Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 602 properties below, PdfPecker supports 409, supports 13 in part and leaves out 69. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
+Every standard CSS property, at-rule, selector and value type, and whether PdfPecker draws it. Of the 602 properties below, PdfPecker supports 414, supports 13 in part and leaves out 64. Another 111 are for scrolling, animation and interaction, which have no effect on a printed page, so PdfPecker ignores them on purpose. [HTML and CSS support](/docs/html-and-css/) explains how the supported features behave, and [Limitations](/docs/limitations/) describes the gaps.
 
 A declaration PdfPecker does not support is dropped like any unknown property: the rest of the rule still applies and the conversion does not fail. The property list is the standards-track properties in MDN's browser compatibility data, grouped by the specification that defines them, plus the paged media properties PdfPecker reads. Property names link to MDN.
 
@@ -328,7 +328,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`font-kerning`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-kerning) | ✓ Yes |  |
 | [`font-language-override`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-language-override) | ✕ No |  |
 | [`font-optical-sizing`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-optical-sizing) | ✓ Yes |  |
-| [`font-palette`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-palette) | ✕ No |  |
+| [`font-palette`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-palette) | ✓ Yes | light, dark, normal and @font-palette-values palettes of COLR colour fonts, as in Chrome. |
 | [`font-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-size) | ✓ Yes |  |
 | [`font-size-adjust`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-size-adjust) | ✓ Yes |  |
 | [`font-stretch`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-stretch) | ✓ Yes |  |
@@ -339,7 +339,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`font-synthesis-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-style) | ✓ Yes |  |
 | [`font-synthesis-weight`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis-weight) | ✓ Yes |  |
 | [`font-variant`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant) | ½ Partly | Small caps are synthesized when the font lacks them. |
-| [`font-variant-alternates`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-alternates) | ✕ No |  |
+| [`font-variant-alternates`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-alternates) | ✓ Yes | historical-forms and the stylistic, styleset, character-variant, swash, ornaments and annotation names of @font-feature-values. |
 | [`font-variant-caps`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-caps) | ✓ Yes | Small caps are synthesized when the font has no smcp feature, as in Chrome. |
 | [`font-variant-east-asian`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-east-asian) | ✓ Yes |  |
 | [`font-variant-emoji`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-emoji) | ✕ No |  |
@@ -373,21 +373,21 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`math-shift`](https://developer.mozilla.org/en-US/docs/Web/CSS/math-shift) | ✕ No | MathML is not laid out. |
 | [`math-style`](https://developer.mozilla.org/en-US/docs/Web/CSS/math-style) | ✕ No | MathML is not laid out. |
 | [`overflow-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap) | ✓ Yes |  |
-| [`ruby-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/ruby-align) | ✕ No | Ruby annotations are not laid out. |
-| [`ruby-overhang`](https://developer.mozilla.org/en-US/docs/Web/CSS/ruby-overhang) | ✕ No | Ruby annotations are not laid out. |
-| [`ruby-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/ruby-position) | ✕ No | Ruby annotations are not laid out. |
+| [`ruby-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/ruby-align) | ✕ No | Not read; ruby annotations are spread space-around, the default. |
+| [`ruby-overhang`](https://developer.mozilla.org/en-US/docs/Web/CSS/ruby-overhang) | ✕ No | Not read; an annotation wider than its base overhangs the text beside it, as in Chrome. |
+| [`ruby-position`](https://developer.mozilla.org/en-US/docs/Web/CSS/ruby-position) | ✕ No | Not read; annotations go over their base, the default. |
 | [`tab-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/tab-size) | ✓ Yes |  |
 | [`text-align`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align) | ✓ Yes | Right-to-left and bidi lines justify at spaces only. |
 | [`text-align-last`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align-last) | ✓ Yes |  |
-| [`text-autospace`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-autospace) | ✕ No |  |
+| [`text-autospace`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-autospace) | ✓ Yes | normal, auto, ideograph-alpha and ideograph-numeric: an eighth of an em between CJK and Latin letters or digits, as in Chrome. |
 | [`text-box`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box) | ✓ Yes | Trims block lines as Chrome does; inline boxes are not trimmed, as in Chrome. |
 | [`text-box-edge`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-edge) | ✓ Yes |  |
 | [`text-box-trim`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-trim) | ✓ Yes |  |
-| [`text-combine-upright`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-combine-upright) | ✕ No |  |
+| [`text-combine-upright`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-combine-upright) | ✓ Yes | all sets the text across the line in one em. |
 | [`text-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-fit) | ✕ No |  |
 | [`text-indent`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-indent) | ✓ Yes |  |
 | [`text-justify`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-justify) | ✓ Yes | inter-character spreads CJK text. |
-| [`text-orientation`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-orientation) | ✕ No | No upright CJK in vertical text. |
+| [`text-orientation`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-orientation) | ✓ Yes | mixed, upright and sideways, with the font's vertical forms. |
 | [`text-spacing-trim`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-spacing-trim) | ½ Partly | normal, space-all, space-first and trim-start; needs a font with the halt feature. |
 | [`text-transform`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform) | ✓ Yes |  |
 | [`text-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap) | ✓ Yes | balance (up to six lines), pretty and stable. |
@@ -405,7 +405,7 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`word-break`](https://developer.mozilla.org/en-US/docs/Web/CSS/word-break) | ✓ Yes |  |
 | [`word-spacing`](https://developer.mozilla.org/en-US/docs/Web/CSS/word-spacing) | ✓ Yes |  |
 | [`wrap-inside`](https://developer.mozilla.org/en-US/docs/Web/CSS/wrap-inside) | ✕ No |  |
-| [`writing-mode`](https://developer.mozilla.org/en-US/docs/Web/CSS/writing-mode) | ½ Partly | Vertical modes are drawn as turned horizontal text, as Chrome does for Latin; CJK is not set upright. |
+| [`writing-mode`](https://developer.mozilla.org/en-US/docs/Web/CSS/writing-mode) | ½ Partly | Vertical modes with upright CJK and upright images, as in Chrome; tables inside vertical text are turned with it. |
 
 ### Text decoration
 
@@ -731,8 +731,8 @@ A declaration PdfPecker does not support is dropped like any unknown property: t
 | [`@namespace`](https://developer.mozilla.org/en-US/docs/Web/CSS/@namespace) | ½ Partly | Accepted and ignored; HTML needs no namespaces. |
 | [`CSS nesting (&)`](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting) | ✓ Yes |  |
 | [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope) | ✓ Yes | Scope roots, limits and proximity, as in Chrome. |
-| [`@font-feature-values`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-feature-values) | ✕ No |  |
-| [`@font-palette-values`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-palette-values) | ✕ No |  |
+| [`@font-feature-values`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-feature-values) | ✓ Yes | Names for font-variant-alternates, per family. |
+| [`@font-palette-values`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-palette-values) | ✓ Yes | font-family, base-palette and override-colors. |
 | [`@custom-media`](https://developer.mozilla.org/en-US/docs/Web/CSS/@custom-media) | ✕ No |  |
 | [`@function`](https://developer.mozilla.org/en-US/docs/Web/CSS/@function) | ✕ No |  |
 | [`@position-try`](https://developer.mozilla.org/en-US/docs/Web/CSS/@position-try) | ✕ No | Anchor positioning is not supported. |
@@ -808,7 +808,7 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [color-mix(), relative colours (from)](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix) | ✓ Yes |  |
 | [light-dark()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) | ✓ Yes | Takes the light colour. |
 | contrast-color() | ✓ Yes | Black or white, whichever contrasts more. |
-| Device CMYK and spot colours (device-cmyk()) | ✕ No | Colours are written as RGB. |
+| Device CMYK and spot colours (device-cmyk()) | ½ Partly | device-cmyk() is written as DeviceCMYK for text, backgrounds, borders, rules and SVG shapes, so a print shop gets the inks it names; colours mixed from it stay RGB. Spot colours are not written. |
 | [calc(), min(), max(), clamp()](https://developer.mozilla.org/en-US/docs/Web/CSS/calc) | ✓ Yes |  |
 | [round(), mod(), rem(), abs(), sign()](https://developer.mozilla.org/en-US/docs/Web/CSS/round) | ✓ Yes |  |
 | [sin(), cos(), tan(), asin(), acos(), atan(), atan2()](https://developer.mozilla.org/en-US/docs/Web/CSS/sin) | ✓ Yes |  |
@@ -820,7 +820,7 @@ A rule whose selector PdfPecker cannot parse is skipped as a whole, as browsers 
 | [env()](https://developer.mozilla.org/en-US/docs/Web/CSS/env) | ✕ No |  |
 | [attr()](https://developer.mozilla.org/en-US/docs/Web/CSS/attr) | ✓ Yes | Typed attr() in any property, as in Chrome 133; never in url() or other resource functions. |
 | [url()](https://developer.mozilla.org/en-US/docs/Web/CSS/url_value) | ✓ Yes | Data URIs, local files and, through your ResourceResolver, remote files. Stylesheets in data: URLs too. |
-| [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings, with colour interpolation methods such as in oklch. Also the old -webkit-gradient() syntax. |
+| [linear-gradient(), radial-gradient(), conic-gradient() and repeating forms](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient) | ✓ Yes | Drawn as PDF shadings, with colour interpolation methods such as in oklch; translucent stops blend premultiplied, as in Chrome. Also the old -webkit-gradient() syntax. |
 | [image-set()](https://developer.mozilla.org/en-US/docs/Web/CSS/image/image-set) | ✓ Yes | In backgrounds, list markers and generated content, chosen as Chrome chooses when it prints. |
 | [cross-fade(), element(), paint()](https://developer.mozilla.org/en-US/docs/Web/CSS/cross-fade) | ✕ No | element() as an image; element() of a running element in page-margin boxes is supported. |
 | [counter(), counters(), symbols()](https://developer.mozilla.org/en-US/docs/Web/CSS/counter) | ✓ Yes |  |

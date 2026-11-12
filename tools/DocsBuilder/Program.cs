@@ -72,7 +72,7 @@ Section[] sections =
     ]),
     new("PDF features",
     [
-        new("pdfa-and-passwords", "pdfa-and-passwords", "PDF/A, passwords and watermarks", "PDF/A-2, 3 and 4 for archiving, AES-256 passwords and permissions, and watermarks."),
+        new("pdfa-and-passwords", "pdfa-and-passwords", "PDF/A, passwords and watermarks", "PDF/A-2, 3 and 4 for archiving, PDF/X-4 for print shops, AES-256 passwords and permissions, and watermarks."),
         new("accessibility", "accessibility", "Accessibility", "Tagged PDF, PDF/UA-1 and PDF/UA-2 built from your HTML."),
         new("forms", "forms", "Fillable forms", "HTML inputs, check boxes, radio buttons, selects and text areas as fillable PDF form fields, and filling and flattening the forms of existing PDFs."),
         new("signatures", "signatures", "Digital signatures", "Sign PDFs with PAdES signatures, visible boxes, timestamps, existing fields and external signers, verify signatures, and add long-term validation data."),
