@@ -3,7 +3,7 @@
 # conversion slots to the limit and refuses documents that would exceed it:
 #   docker run -p 8080:8080 --memory 2g --pids-limit 200 --read-only pdfpecker-web
 # Behind a reverse proxy or CDN, pass its addresses so rate limits apply per visitor: -e TrustedProxies=10.0.0.0/8
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:11.0 AS build
 WORKDIR /src
 COPY PdfPecker.Web.csproj .
 # The NuGet cache mount keeps downloaded packages between builds on the same machine, so a changed csproj does not
